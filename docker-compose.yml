@@ -1,14 +1,14 @@
-version: '3.8'
 name: laravel-reactjs-project
 
 services:
     app:
         build:
-            context: ./php
-            dockerfile: Dockerfile
+            context: ./www
+            dockerfile: /Dockerfile
         container_name: Laravel-React-Web
         volumes:
             - ./www:/var/www/html
+            - ./php/php.ini:/usr/local/etc/php/php.ini
         restart: always
 
     web:
@@ -26,13 +26,13 @@ services:
     # === ReactJS Frontend ===
     react:
         build:
-            context: ./react
-            dockerfile: Dockerfile
+            context: ./reactjs
+            dockerfile: /Dockerfile
         container_name: Laravel-React-Frontend
         ports: 
             - 3001:3000
         volumes:
-            - ./react:/app
+            - ./reactjs:/app
         restart: always
 
     mysql:
