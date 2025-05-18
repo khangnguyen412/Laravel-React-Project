@@ -1,9 +1,7 @@
-============================================
 ## Laravel - Reactjs Project 
 - Descripttion: Project Laravel + ReactJs for fullstack web.
 - Purpose: Create CMS system
 
-============================================
 ## Technology in project:
 - Language: HTML, CSS, PHP, JS
 - Tailwind
@@ -11,7 +9,6 @@
 - Laravel
 - Reactjs
 
-============================================
 ## How to start and testing project
 ### Start with docker (don't need install xampp, wamp)
 - Install docker desktop first
@@ -35,18 +32,17 @@ docker exec Laravel-React-Web php artisan serve --host=0.0.0.0 --port=80
 docker exec -it Laravel-React-Web bash
 ```
 
-============================================
 ## Project structure 
-project
-    + docker-compose
-    + .env
-    + nginx
+- project
+    - docker-compose
+    - .env
+    - nginx
         + default.conf
-    + php
+    - php
         + php.ini
-    + www (laravel project) 
+    - www (laravel project) 
         + Dockerfile
-    + react (react project) 
+    - react (react project) 
         + Dockerfile
 
 The source was set up by KhangNguyen — do not copy
