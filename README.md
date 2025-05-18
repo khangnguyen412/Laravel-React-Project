@@ -34,8 +34,7 @@ docker exec -it Laravel-React-Web bash
 
 ## Project structure 
 - project
-    - docker-compose
-    - .env
+    - mysql
     - nginx
         + default.conf
     - php
@@ -44,5 +43,11 @@ docker exec -it Laravel-React-Web bash
         + Dockerfile
     - react (react project) 
         + Dockerfile
+    - dockerignore
+    - .env
+    - .gitignore
+    - docker-compose
+    - start-project.bat
+    - start-project.sh
 
 The source was set up by KhangNguyen — do not copy
