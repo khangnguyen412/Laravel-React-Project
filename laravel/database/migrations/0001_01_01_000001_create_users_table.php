@@ -11,12 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /**
+         *  - Bảng users
+         *  - Các mối liên hệ:
+         *      posts (1-n)
+         *      products (1-n)
+         *      profiles(1-1)
+         */
         Schema::create('users', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
-            $table->string('name');
+            $table->string('user_name');
+            $table->string('display_name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('address');
+            $table->string('phone');
+            $table->string('image')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

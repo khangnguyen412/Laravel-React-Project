@@ -1,16 +1,22 @@
 name: laravel-reactjs-project
 
 services:
+    # === Laravel Backend ===
     app:
         build:
-            context: ./www
+            context: ./laravel
             dockerfile: /Dockerfile
         container_name: Laravel-React-Web
         volumes:
-            - ./www:/var/www/html
+            - ./laravel:/var/www/html
             - ./php/php.ini:/usr/local/etc/php/php.ini
         restart: always
+        depends_on:
+            - mysql
+        networks:
+            - laravel
 
+    # === Server Config ===
     web:
         image: nginx:latest
         container_name: Laravel-React-Nginx
@@ -18,10 +24,12 @@ services:
             - "85:80"
         volumes:
             - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-            - ./www:/var/www/html
+            - ./laravel:/var/www/html
         restart: always
         depends_on:
             - app
+        networks:
+            - laravel
 
     # === ReactJS Frontend ===
     react:
@@ -29,12 +37,15 @@ services:
             context: ./reactjs
             dockerfile: /Dockerfile
         container_name: Laravel-React-Frontend
-        ports: 
+        ports:
             - 3001:3000
         volumes:
             - ./reactjs:/app
         restart: always
+        networks:
+            - laravel
 
+    # === SQl ===
     mysql:
         image: mysql:8.0
         container_name: Laravel-React-Mysql
@@ -46,3 +57,9 @@ services:
         ports:
             - 3312:3306
         restart: always
+        networks:
+            - laravel
+
+networks:
+    laravel:
+        driver: bridge
