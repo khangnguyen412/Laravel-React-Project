@@ -1,7 +1,7 @@
 # The source was set up by KhangNguyen — do not copy :)
 # Source được setup bởi GPT và KhangNguyen, cấm cop dưới mọi hình thức :)
 
-FROM node:22-alpine
+FROM node:16-alpine
 
 WORKDIR /app
 

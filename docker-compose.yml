@@ -53,7 +53,7 @@ services:
             MYSQL_DATABASE: laravel_react_db # tên data đây là database mặc định khi tạo csdl
             MYSQL_ROOT_PASSWORD: khang412 # password gốc
         volumes:
-            - ./mysql:/var/lib/mysql
+            - ./mysql:/var/lib/mysql # xóa hết trong ./mysql trước khi build lại
         ports:
             - 3312:3306
         restart: always

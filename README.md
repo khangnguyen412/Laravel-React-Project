@@ -12,12 +12,12 @@
 ## How to start and testing project
 ### Start with docker (don't need install xampp, wamp)
 - Install docker desktop
-- Create dir ./mysql
+- Create dir ./mysql. If you have to rerun docker compose, make sure ./mysql is clear first
 - Use cmd in this path
 - Start project with the command below (just the first time): 
 ```
+docker-compose down
 docker-compose up -d --build
-docker exec Laravel-React-Web php artisan serve --host=0.0.0.0 --port=80
 ```
 - On Window, start project 2nd time onwards with the command below:
 ```
@@ -27,20 +27,30 @@ docker exec Laravel-React-Web php artisan serve --host=0.0.0.0 --port=80
 ```
 .\start-project.sh
 ```
-- Use terminal in docker:
+- Use terminal laravel in docker:
 ```
 docker exec -it Laravel-React-Web bash
+```
+- Use terminal react in docker:
+```
+docker exec -it Laravel-React-Frontend sh
+```
+- Migrate and seeding:
+```
+docker exec -it Laravel-React-Web bash
+php artisan migrate
+php artisan db:seed
 ```
 
 ## Project structure 
 - project
+    - laravel (laravel project) 
+        + Dockerfile
     - mysql
     - nginx
         + default.conf
     - php
         + php.ini
-    - laravel (laravel project) 
-        + Dockerfile
     - react (react project) 
         + Dockerfile
         + README-REACTJS.MD

@@ -11,7 +11,7 @@ WORKDIR /var/www/html
 RUN apt-get update && apt-get install -y libfreetype6-dev libjpeg-dev libpng-dev libzip-dev zip unzip git curl
 RUN rm -rf /var/lib/apt/lists/* 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg 
-RUN docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql opcache zip
+RUN docker-php-ext-install gd mysqli pdo pdo_mysql opcache zip
 
 # cài thêm xdebug để có thông báo lỗi đẹp hơn trên local
 RUN pecl install xdebug && docker-php-ext-enable xdebug
@@ -31,3 +31,5 @@ RUN composer dump-autoload --optimize
 
 # Đảm bảo quyền truy cập cho thư mục storage và bootstrap/cache
 # RUN chmod -R 777 storage bootstrap/cache
+
+CMD ["php-fpm"]
