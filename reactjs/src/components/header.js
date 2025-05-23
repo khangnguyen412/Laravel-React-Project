@@ -2,7 +2,7 @@ import React from "react";
 import side_bar from '../hooks/sidebar.js';
 
 const Header = () => {
-    side_bar();
+    // side_bar();
     return (
         <header class="bg-white">
             <nav class="bg-white shadow-lg">
@@ -77,4 +77,4 @@ const Header = () => {
         </header>
     )
 }
-export default Header
+// export default Header

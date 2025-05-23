@@ -43,22 +43,37 @@ php artisan db:seed
 ```
 
 ## Project structure 
-- project
-    - laravel (laravel project) 
-        + Dockerfile
-    - mysql
-    - nginx
-        + default.conf
-    - php
-        + php.ini
-    - react (react project) 
-        + Dockerfile
-        + README-REACTJS.MD
-    - dockerignore
-    - .env
-    - .gitignore
-    - docker-compose
-    - start-project.bat
-    - start-project.sh
+```
+Laravel-React-Project/
+├── laravel/                # Laravel project
+│   ├── Dockerfile          # File cấu hình Docker cho Laravel
+│   └── .env                # Biến môi trường của Laravel
+├── mysql/                  # Thư mục chứa dữ liệu MySQL
+├── nginx/
+│   └── default.conf        # Cấu hình Nginx
+├── php/
+│   └── php.ini             # Cấu hình PHP
+├── react/                  # React project
+│   ├── Dockerfile          # File cấu hình Docker cho React
+│   ├── README-REACTJS.MD   # Hướng dẫn về React
+│   ├── public/             # Show giao diện lên web
+│   ├── src/                # Thư mục nguồn của React
+│   │    ├── assets         # Hình ảnh, font,...
+│   │    ├── components     # Các component tái sử dụng
+│   │    ├── hooks          # Custom hooks
+│   │    ├── pages          # Các trang (page) ứng dụng
+│   │    ├── services       # API, fetch dữ liệu
+│   │    ├── store          # Redux, context,...
+│   │    └── utils          # Hàm hỗ trợ chung
+│   ├── App.js              # Component gốc của React
+│   ├── index.js            # Điểm khởi đầu ứng dụng
+│   └── styles.css          # File CSS
+├── dockerignore            # Danh sách file không cần build Docker
+├── .env                    # Biến môi trường chung
+├── .gitignore              # Danh sách file không commit lên Git
+├── docker-compose.yml      # Tệp cấu hình Docker Compose
+├── start-project.bat       # Script bắt đầu dự án (Windows)
+└── start-project.sh        # Script bắt đầu dự án (Linux/Mac)
+```
 
 The source was set up by KhangNguyen — do not copy

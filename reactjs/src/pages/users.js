@@ -1,10 +1,10 @@
 import React from "react";
-import Header from "../components/header.js";
+// import Header from "../components/header.js";
 
 const user_page = () => {
     return (
         <body>
-            <Header />
+            {/* <Header /> */}
             <main>
                 <div class="container sm:container md:container lg:container xl:container 2xl:container mx-auto p-4">
                     <form action="/video-38-submit" method="POST">
