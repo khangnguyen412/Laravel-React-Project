@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import logo from '../logo.svg';
 import '../App.css';
 
-function DefaultApp() {
+function AppDefault() {
     return (
         <div className="App">
             <header className="App-header">
@@ -13,10 +13,10 @@ function DefaultApp() {
                 <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer" >
                     Learn React
                 </a>
-                <Link to="/user-page">User-Page</Link>
+                <Link to="/template">Template</Link>
             </header>
         </div>
     );
 }
 
-export default DefaultApp;
+export default AppDefault;

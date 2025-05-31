@@ -3,9 +3,9 @@ import React from "react";
 import Sidebar from "../assets/js/sidebar";
 
 const Header = () => {
+    Sidebar();
     return (
         <React.Fragment>
-            <Sidebar></Sidebar>
             <header className="bg-white">
                 <nav className="bg-white shadow-lg">
                     <div className="max-w-6xl mx-auto px-4">
@@ -14,9 +14,9 @@ const Header = () => {
                             <div className="flex space-x-4">
                                 <a href="/" className="flex items-center py-5 px-2 text-gray-700 hover:text-gray-900">
                                     <svg className="h-6 w-6 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                                     </svg>
-                                    <span className="font-bold">MyWebsite</span>
+                                    <span className="font-bold">CMS System</span>
                                 </a>
                             </div>
 
@@ -40,7 +40,7 @@ const Header = () => {
                             <div className="md:hidden flex items-center">
                                 <button className="mobile-menu-button p-2 bg-white rounded-lg shadow-lg">
                                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                                     </svg>
                                 </button>
                             </div>
@@ -54,7 +54,7 @@ const Header = () => {
                         <div className="mb-8">
                             <a href="/" className="flex items-center text-blue-600">
                                 <svg className="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                                 </svg>
                                 <span className="font-bold text-xl">MyWebsite</span>
                             </a>
