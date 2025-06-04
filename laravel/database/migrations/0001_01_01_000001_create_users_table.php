@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone');
             $table->string('image')->nullable();
+            $table->string('api_token')->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

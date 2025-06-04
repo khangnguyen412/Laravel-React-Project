@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('meta_value')->nullable();
             $table->string('field_id')->unique();
             $table->string('field_type');
+            $table->morphs('model');
             $table->timestamps();
         });
     }

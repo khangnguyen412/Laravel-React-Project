@@ -18,8 +18,9 @@ return new class extends Migration
         Schema::create('media', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('model_type', 191)->index(); // Giữ độ dài mặc định 255
-            $table->unsignedBigInteger('model_id');
+            // $table->string('model_type', 191)->index(); // Giữ độ dài mặc định 255
+            // $table->unsignedBigInteger('model_id');
+            $table->morphs('model');
             $table->string('collection_name');
             $table->string('file_name');
             $table->string('mime_type')->nullable();
