@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import '../../assets/css/login-page.css';
 import Scrollable from "../../assets/js/scrollable";
 
 const Login = () => {
+    const [Email, SetEmail] = useState('')
+    const [Password, SetPassWord] = useState('')
+    useEffect(() =>{
+        const HandleLogin = async () => {
+            const Login = await fetch('http://localhost:8000/api/v1/login',{
+                method: 'POST',
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ Email, Password })
+            })
+            const Data = await Login.json();
+
+            console.log(Login)
+            if(!Login.ok){
+                alert('Đăng Nhập Thất Bại!');
+                window.location.href = '/users';
+                return false
+            }
+
+            localStorage.setItem('token', Data.token);
+            window.location.href = '/users';
+        }
+    })
     Scrollable();
 
     return (

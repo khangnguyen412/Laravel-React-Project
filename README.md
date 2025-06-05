@@ -38,7 +38,16 @@ docker exec -it Laravel-React-Frontend sh
 - Migrate and seeding:
 ```
 docker exec -it Laravel-React-Web bash
+php artisan config:clear
+php artisan cache:clear
 php artisan migrate
+php artisan db:seed
+```
+
+- Reset migrate and seeding:
+```
+docker exec -it Laravel-React-Web bash
+hp artisan migrate:fresh
 php artisan db:seed
 ```
 

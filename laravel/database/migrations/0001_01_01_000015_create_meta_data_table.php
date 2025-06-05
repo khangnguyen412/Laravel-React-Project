@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        /**
-         *  - Bảng profiles
-         *  - Các mối liên hệ:
-         *      users (1-n)
-         */
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('meta_data', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('bio')->nullable();
-            $table->string('avatar')->nullable();
+            $table->morphs('model');
+            $table->string('meta_key')->index();
+            $table->text('meta_value')->nullable();
+            $table->string('field_id')->unique();
+            $table->string('field_type');
             $table->timestamps();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('parent_id')->constrained('meta_data')->onDelete('cascade');
         });
     }
 
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('meta_data');
     }
 };

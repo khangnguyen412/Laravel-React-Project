@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\ControllerUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/login', []);
+use App\Http\Controllers\ControllerAuth;
+use App\Http\Controllers\ControllerUsers;
 
-Route::group(['prefix' => '/user'], function(){
+Route::post('/login', [ControllerAuth::class, 'login']);
+
+Route::middleware('check.auth')->group(['prefix' => '/user'], function(){
     Route::get('/', [ControllerUsers::class, 'index']);
 });

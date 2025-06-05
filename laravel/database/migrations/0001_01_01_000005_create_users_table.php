@@ -28,10 +28,12 @@ return new class extends Migration
             $table->string('password');
             $table->string('address');
             $table->string('phone');
-            $table->string('image')->nullable();
+            $table->string('bio')->nullable();
+            $table->string('avatar')->nullable();
             $table->string('api_token')->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->foreignId('role_id')->constrained('roles')->onDelete('cascade');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

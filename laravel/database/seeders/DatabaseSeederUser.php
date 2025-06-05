@@ -14,32 +14,38 @@ class DatabaseSeederUser extends Seeder
      */
     public function run(): void
     {
-        $users = [];
-        $i = 0;
-        for ($i = 0; $i <= 10; $i++) {
-            $user = [
-                'user_name'         => "user_{$i}",
-                'display_name'      => "User {$i}",
-                'email'             => "user_{$i}@example.com",
+        $arr = [
+            [
+                'user_name'         => "admin",
+                'display_name'      => "Admin CMS",
+                'email'             => "example@example.com",
                 'email_verified_at' => now(),
-                'password'          => Hash::make('password'),
-                'address'           => "Address {$i}",
-                'phone'             => "0987654321",
-                'image'             => "default_avatar.png",
-                'remember_token'    => '123',
+                'password'          => bcrypt('admin@123'),
+                'address'           => "Lạc Long Quân",
+                'phone'             => "000000000",
+                'bio'               => "Learn, Keep Learning, Learn Forever",
+                'avatar'            => "",
+                'remember_token'    => "",
+                'role_id'           => 1,
                 'created_at'        => now(),
                 'updated_at'        => now(),
-            ];
-            DB::table('users')->insert($user);
-            $user_id = DB::getPdo()->lastInsertId();
-            $profile = [
-                'bio'           => "This is the bio for User {$i}",
-                'created_at'    => now(),
-                'avatar'        => '123',
-                'updated_at'    => now(),
-                'user_id'       => $user_id,
-            ];
-            DB::table('profiles')->insert($profile);
-        }
+            ],
+            [
+                'user_name'         => "khangnguyen",
+                'display_name'      => "Khang Nguyễn",
+                'email'             => "khang.nmq@gmail.com",
+                'email_verified_at' => now(),
+                'password'          => bcrypt('khang412'),
+                'address'           => "Lạc Long Quân",
+                'phone'             => "0973626954",
+                'bio'               => "Learn, Keep Learning, Learn Forever",
+                'avatar'            => "",
+                'remember_token'    => "",
+                'role_id'           => 1,
+                'created_at'        => now(),
+                'updated_at'        => now(),
+            ],
+        ];
+        DB::table('users')->insert($arr);
     }
 }
