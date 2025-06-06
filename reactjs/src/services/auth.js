@@ -36,5 +36,23 @@ export const Login = async (email, password) => {
 }
 
 export const CheckAuth = async () => {
-    
+    const token = localStorage.getItem('token');
+    if (!token) {
+        if (window.location.pathname !== '/login') {
+            window.location.href = '/login';
+        }
+        return false
+    }
+
+    const Respone = await fetch(`${API_URL}/user`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+
+    if (!Respone.ok) {
+        Logout()
+        return false
+    }
+    return true
 }

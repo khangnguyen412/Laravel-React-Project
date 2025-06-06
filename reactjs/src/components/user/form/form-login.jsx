@@ -1,14 +1,26 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import '../../assets/css/login-page.css';
-import Scrollable from "../../assets/js/scrollable";
-import { Login } from "../../services/auth";
+/**
+ *  CSS
+ */
+import '../../../assets/css/login-page.css';
+
+/**
+ *  JS
+ */
+import Scrollable from "../../../assets/js/scrollable";
+
+/**
+ *  Service
+ */
+import { Login } from "../../../services/auth";
 
 const LoginForm = () => {
     const [email, SetEmail] = useState('')
     const [password, SetPassWord] = useState('')
-    const HandleLogin = async () => {
+    const HandleLogin = async (e) => {
+        e.preventDefault();
         try {
             await Login(email, password);
         } catch (e) {
@@ -22,7 +34,7 @@ const LoginForm = () => {
             <div className="bg-gray-100 flex items-center justify-center login-wrap">
                 <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
                     <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Đăng nhập</h2>
-                    <div className="space-y-4">
+                    <form onSubmit={HandleLogin} className="space-y-4">
                         {/* Email */}
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email hoặc tên đăng nhập</label>
@@ -45,10 +57,10 @@ const LoginForm = () => {
                         </div>
 
                         {/* Submit Button */}
-                        <button onClick={HandleLogin} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200" >
+                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200" >
                             Đăng nhập
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </React.Fragment>

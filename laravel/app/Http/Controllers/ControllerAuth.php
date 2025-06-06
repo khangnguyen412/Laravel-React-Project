@@ -80,7 +80,6 @@ class ControllerAuth extends Controller
             $token = Str::random(60);
             $user->api_token = hash('sha256', $token);
             $user->save();
-            // $user->update(['api_token' => hash('sha256', $token)]);
 
             return response()->json([
                 'status'    => 200,

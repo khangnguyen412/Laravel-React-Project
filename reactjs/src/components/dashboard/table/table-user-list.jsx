@@ -46,7 +46,7 @@ function CreateUser() {
                             </tr>
                         ) : (
                             UserList.map((item) => (
-                                <tr className="bg-white border-b">
+                                <tr className="bg-white border-b" key={item.id}>
                                     <td className="px-6 py-4 font-medium text-gray-900">
                                         {item.display_name}
                                     </td>

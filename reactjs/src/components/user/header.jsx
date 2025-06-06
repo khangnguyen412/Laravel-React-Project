@@ -1,17 +1,27 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react"; // eslint-disable-line
 import { Link } from "react-router-dom";
 
-import Sidebar from "../assets/js/sidebar";
-import { Login, Logout } from "../services/auth"; // eslint-disable-line
+import Sidebar from "../../assets/js/sidebar";
+import { Login, Logout, CheckAuth } from "../../services/auth"; // eslint-disable-line
 
 const Header = () => {
     const HandleLogout = async () => {
-        try{
+        try {
             await Logout()
-        }catch {
+        } catch {
             console.log('Lỗi')
         }
     };
+
+    const [IsAuth, SetIsAuth] = useState(false);
+    useEffect(() => {
+        const AuthStatus = async () => {
+            const GetAuthStatus = await CheckAuth();
+            SetIsAuth(GetAuthStatus)
+        }
+        AuthStatus()
+    })
+    
     Sidebar();
     return (
         <React.Fragment>
@@ -25,24 +35,26 @@ const Header = () => {
                                     <svg className="h-6 w-6 mr-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                                     </svg>
-                                    <span className="font-bold">CMS System</span>
+                                    <span className="font-bold">CMS Website</span>
                                 </a>
                             </div>
 
                             {/* Primary Nav */}
                             <ul className="hidden md:flex items-center space-x-1">
                                 <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
-                                    <a href="/">Trang chủ</a>
+                                    <Link>Trang Chủ</Link>
                                 </li>
                                 <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
-                                    <a href="/about">Giới thiệu</a>
+                                    <Link to={'/login'}>Đăng Nhập</Link>
                                 </li>
                                 <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
-                                    <a href="/services">Dịch vụ</a>
+                                    <Link to={''}>Đăng Ký</Link>
                                 </li>
-                                <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
-                                    <Link onClick={HandleLogout}>Đăng Xuất</Link>
-                                </li>
+                                { IsAuth ? (
+                                    <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
+                                        <Link onClick={HandleLogout}>Đăng Xuất</Link>
+                                    </li>
+                                ): (null)}
                             </ul>
 
                             {/* Mobile Button */}
@@ -65,7 +77,7 @@ const Header = () => {
                                 <svg className="w-8 h-8 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                                 </svg>
-                                <span className="font-bold text-xl">MyWebsite</span>
+                                <span className="font-bold text-xl">CMS Website</span>
                             </a>
                         </div>
 
@@ -73,14 +85,19 @@ const Header = () => {
                         <nav>
                             <ul className="space-y-2">
                                 <li className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <a href="/"> Trang chủ </a>
+                                    <Link>Trang Chủ</Link>
                                 </li>
                                 <li className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <a href="/"> Trang chủ </a>
+                                    <Link to={'/login'}>Đăng Nhập</Link>
                                 </li>
                                 <li className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
-                                    <a href="/"> Trang chủ </a>
+                                    <Link to={''}>Đăng Ký</Link>
                                 </li>
+                                { IsAuth ? (
+                                    <li className="flex items-center p-3 text-gray-700 hover:bg-gray-100 rounded-lg">
+                                        <Link onClick={HandleLogout}>Đăng Xuất</Link>
+                                    </li>
+                                ) : (null)}
                             </ul>
                         </nav>
                     </div>

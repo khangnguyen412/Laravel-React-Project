@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import DefaultApp from './pages/appdefault.jsx';
 import Template from './pages/pages.jsx';
-import UserPage from './pages/backend/users.jsx';
-import LoginPage from './pages/backend/login.jsx';
+import UserPage from './pages/dashboard/users.jsx';
+import LoginPage from './pages/dashboard/login.jsx';
 
 function App() {
   return (

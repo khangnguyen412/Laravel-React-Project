@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom"; // eslint-disable-line
 
-import Headers from "../../components/dashboard/header.jsx";
-import Login from "../../components/form/form-login.jsx";
+/**
+ *  Component
+ */
+import Headers from "../../components/user/header.jsx";
+import Login from "../../components/user/form/form-login.jsx";
 
 const LoginPage = () => {
     return (
