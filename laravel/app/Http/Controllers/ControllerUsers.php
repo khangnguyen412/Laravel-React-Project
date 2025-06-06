@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ModelsUsers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class ControllerUsers extends Auth
     public function index()
     {
         try {
-            $user_list = Users::all();
+            $user_list = ModelsUsers::all();
             return response()->json([
                 'status'    => 'Success',
                 'data'      => $user_list,

@@ -1,8 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import Sidebar from "../assets/js/sidebar";
+import { Login, Logout } from "../services/auth"; // eslint-disable-line
 
 const Header = () => {
+    const HandleLogout = async () => {
+        try{
+            await Logout()
+        }catch {
+            console.log('Lỗi')
+        }
+    };
     Sidebar();
     return (
         <React.Fragment>
@@ -32,7 +41,7 @@ const Header = () => {
                                     <a href="/services">Dịch vụ</a>
                                 </li>
                                 <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
-                                    <a href="{{ route('test-route-name') }}">Vào Userlist</a>
+                                    <Link onClick={HandleLogout}>Đăng Xuất</Link>
                                 </li>
                             </ul>
 

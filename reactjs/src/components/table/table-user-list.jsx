@@ -3,11 +3,16 @@ import React, { useEffect, useState } from "react";
 function CreateUser() {
     const [UserList, SetUserList] = useState([])
     useEffect(() => {
+        const token = localStorage.getItem("token");
         const GetUserApi = async () => {
             try {
-                const GetUserData = await fetch('http://localhost:8000/api/v1/user');
+                const GetUserData = await fetch('http://localhost:8000/api/v1/user', {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
                 const Data = await GetUserData.json();
-                if(!Data.data){
+                if (!Data.data) {
                     window.location.href = '/login'
                 }
                 SetUserList(Data.data || [])
@@ -17,7 +22,7 @@ function CreateUser() {
             }
         }
         GetUserApi()
-    });
+    }, []);
     return (
         <div className="container sm:container md:container lg:container xl:container 2xl:container mx-auto p-4">
             <div className="overflow-x-auto">

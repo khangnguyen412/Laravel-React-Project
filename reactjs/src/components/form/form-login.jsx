@@ -1,32 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import '../../assets/css/login-page.css';
 import Scrollable from "../../assets/js/scrollable";
+import { Login } from "../../services/auth";
 
-const Login = () => {
-    const [Email, SetEmail] = useState('')
-    const [Password, SetPassWord] = useState('')
-    useEffect(() =>{
-        const HandleLogin = async () => {
-            const Login = await fetch('http://localhost:8000/api/v1/login',{
-                method: 'POST',
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ Email, Password })
-            })
-            const Data = await Login.json();
-
-            console.log(Login)
-            if(!Login.ok){
-                alert('Đăng Nhập Thất Bại!');
-                window.location.href = '/users';
-                return false
-            }
-
-            localStorage.setItem('token', Data.token);
-            window.location.href = '/users';
+const LoginForm = () => {
+    const [email, SetEmail] = useState('')
+    const [password, SetPassWord] = useState('')
+    const HandleLogin = async () => {
+        try {
+            await Login(email, password);
+        } catch (e) {
+            alert('Đăng nhập thất bại');
         }
-    })
+    };
     Scrollable();
 
     return (
@@ -34,17 +22,17 @@ const Login = () => {
             <div className="bg-gray-100 flex items-center justify-center login-wrap">
                 <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
                     <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Đăng nhập</h2>
-                    <form action="#" method="POST" className="space-y-4">
+                    <div className="space-y-4">
                         {/* Email */}
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email hoặc tên đăng nhập</label>
-                            <input type="text" id="email" name="email" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <input type="text" id="email" name="email" value={email} onChange={(e) => SetEmail(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         {/* Password */}
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
-                            <input type="password" id="password" name="password" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <input type="password" id="password" name="password" value={password} onChange={(e) => SetPassWord(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                         </div>
 
                         {/* Remember me & Forgot password */}
@@ -57,13 +45,13 @@ const Login = () => {
                         </div>
 
                         {/* Submit Button */}
-                        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200" >
+                        <button onClick={HandleLogin} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200" >
                             Đăng nhập
                         </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </React.Fragment>
     )
 }
-export default Login
+export default LoginForm

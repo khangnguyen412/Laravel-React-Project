@@ -7,7 +7,8 @@ use App\Http\Controllers\ControllerAuth;
 use App\Http\Controllers\ControllerUsers;
 
 Route::post('/login', [ControllerAuth::class, 'login']);
+Route::middleware('auth.check')->post('/logout', [ControllerAuth::class, 'logout']);
 
-Route::middleware('check.auth')->group(['prefix' => '/user'], function(){
+Route::prefix('/user')->middleware('auth.check')->group(function(){
     Route::get('/', [ControllerUsers::class, 'index']);
 });

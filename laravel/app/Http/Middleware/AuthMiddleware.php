@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use App\Models\Users;
+use App\Models\ModelsUsers;
 
 class AuthMiddleware
 {
@@ -18,22 +18,22 @@ class AuthMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $token = $request->bearerToken();
-        if(!$token){
+        if (!$token) {
             return response()->json([
                 'error' => 'Không có token'
             ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
-        
-        $hash_token = hash('sha256', $token);
-        $user = Users::where('api_token', $hash_token)->first();
 
-        if(!$user){
+        $hash_token = hash('sha256', $token);
+        $user = ModelsUsers::where('api_token', $hash_token)->first();
+
+        if (!$user) {
             return response()->json([
-                'error' => 'Token ko hợp lệ'
+                'error' => 'Token ko hợp lệ',
             ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
-        $request->setUserResolver(fn () => $user);
+        $request->setUserResolver(fn() => $user);
         return $next($request);
     }
 }
