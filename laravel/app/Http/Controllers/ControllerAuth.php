@@ -84,7 +84,7 @@ class ControllerAuth extends Controller
             return response()->json([
                 'status'    => 200,
                 'token'     => $token,
-                'user'      => $user,
+                'profile'   => $user,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([
@@ -104,6 +104,26 @@ class ControllerAuth extends Controller
                 'message'   => 'Đã đăng xuất thành công'
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }catch(Exception $e){
+            return response()->json([
+                'status'    => 403,
+                'error'     => 'Lỗi: '. $e->getMessage(),
+            ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    public function profile(Request $request){
+        try{
+            $user = $request->user();
+            $user->save();
+            return response()->json([
+                'status'    => 200,
+                'profile'   => $user
+            ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        }catch(Exception $e){
+            return response()->json([
+                'status'    => 403,
+                'error'     => 'Lỗi: '. $e->getMessage(),
+            ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
 }

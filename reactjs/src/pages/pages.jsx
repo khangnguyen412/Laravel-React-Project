@@ -6,7 +6,7 @@ function Pages() {
         <React.Fragment>
             <ul>
                 <li>
-                    <Link to='/users'>UserPage</Link>
+                    <Link to='/admin/users'>UserPage</Link>
                 </li>
                 <li>
                     <Link to='/login'>Login</Link>

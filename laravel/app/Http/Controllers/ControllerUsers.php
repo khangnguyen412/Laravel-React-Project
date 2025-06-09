@@ -17,15 +17,15 @@ class ControllerUsers extends Auth
     public function index()
     {
         try {
-            $user_list = ModelsUsers::all();
+            $users_list = ModelsUsers::all();
             return response()->json([
-                'status'    => 'Success',
-                'data'      => $user_list,
+                'status'        => 'Success',
+                'users_list'     => $users_list,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([
-                'status' => 'Failed',
-                'data' => $e->getMessage(),
+                'status'    => 'Failed',
+                'message'   => $e->getMessage(),
             ], 404, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }

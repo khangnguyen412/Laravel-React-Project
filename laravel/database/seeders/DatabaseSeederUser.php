@@ -33,9 +33,9 @@ class DatabaseSeederUser extends Seeder
             [
                 'user_name'         => "khangnguyen",
                 'display_name'      => "Khang Nguyễn",
-                'email'             => "khang.nmq@gmail.com",
+                'email'             => "khangnguyen@gmail.com",
                 'email_verified_at' => now(),
-                'password'          => bcrypt('khang412'),
+                'password'          => bcrypt('khang123'),
                 'address'           => "Lạc Long Quân",
                 'phone'             => "0973626954",
                 'bio'               => "Learn, Keep Learning, Learn Forever",

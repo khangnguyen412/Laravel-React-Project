@@ -9,6 +9,7 @@ use App\Http\Controllers\ControllerUsers;
 Route::post('/login', [ControllerAuth::class, 'login']);
 Route::middleware('auth.check')->post('/logout', [ControllerAuth::class, 'logout']);
 
-Route::prefix('/user')->middleware('auth.check')->group(function(){
-    Route::get('/', [ControllerUsers::class, 'index']);
+Route::prefix('/admin')->middleware('auth.check')->group(function () {
+    Route::apiResource('/user', ControllerUsers::class);
+    Route::get('/profile', [ControllerAuth::class, 'profile']);
 });

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DefaultApp from './pages/appdefault.jsx';
 import Template from './pages/pages.jsx';
 import UserPage from './pages/dashboard/users.jsx';
-import LoginPage from './pages/dashboard/login.jsx';
+import LoginPage from './pages/user/login.jsx';
 
 function App() {
   return (
@@ -17,10 +17,10 @@ function App() {
           <Route path="/template" element={<Template></Template>}></Route>
         </Routes>
         <Routes>
-          <Route path="/users" element={<UserPage></UserPage>}></Route>
+          <Route path='/login' element={<LoginPage></LoginPage>}></Route>
         </Routes>
         <Routes>
-          <Route path='/login' element={<LoginPage></LoginPage>}></Route>
+          <Route path="/admin/users" element={<UserPage></UserPage>}></Route>
         </Routes>
       </Router>
     </React.Fragment>

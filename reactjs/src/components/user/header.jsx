@@ -1,7 +1,14 @@
 import React, { use, useEffect, useState } from "react"; // eslint-disable-line
 import { Link } from "react-router-dom";
 
-import Sidebar from "../../assets/js/sidebar";
+/**
+ *  Js
+ */
+import Sidebar from "../../assets/js/users/sidebar";
+
+/**
+ *  Service
+ */
 import { Login, Logout, CheckAuth } from "../../services/auth"; // eslint-disable-line
 
 const Header = () => {

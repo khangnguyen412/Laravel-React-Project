@@ -1,8 +1,15 @@
 import React from "react";
 
+/**
+ *  Component
+ */
 import Headers from "../../components/dashboard/header.jsx";
-import UsersList from "../../components/dashboard/table/table-user-list.jsx";
-import { CheckAuth } from "../../services/auth.js";
+import UsersList from "../../components/dashboard/users-list.jsx";
+
+/**
+ *  Service
+ */
+import { CheckAuth } from "../../services/auth";
 
 const UserPage = () => {
     CheckAuth()

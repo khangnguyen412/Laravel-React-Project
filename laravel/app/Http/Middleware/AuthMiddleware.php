@@ -17,14 +17,15 @@ class AuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->bearerToken();
-        if (!$token) {
+        $login_token = $request->header('X-Token');
+        if (!$login_token) {
             return response()->json([
                 'error' => 'Không có token'
             ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
-        $hash_token = hash('sha256', $token);
+        // $token = substr($login_token, 6); // Lấy token sau "Token "
+        $hash_token = hash('sha256', $login_token);
         $user = ModelsUsers::where('api_token', $hash_token)->first();
 
         if (!$user) {

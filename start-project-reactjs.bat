@@ -2,4 +2,4 @@
 cd "%USERPROFILE%\Desktop\Laravel React Project\reactjs"
 
 @REM Chạy dự án
-npm run dev -- --no-open
+npm run dev

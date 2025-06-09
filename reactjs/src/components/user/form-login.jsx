@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 /**
- *  CSS
+ *  Css
  */
-import '../../../assets/css/login-page.css';
+import '../../assets/css/login-page.css';
 
 /**
- *  JS
+ *  Js
  */
-import Scrollable from "../../../assets/js/scrollable";
+import Scrollable from "../../assets/js/users/scrollable";
 
 /**
  *  Service
  */
-import { Login } from "../../../services/auth";
+import { Login } from "../../services/auth";
 
 const LoginForm = () => {
     const [email, SetEmail] = useState('')

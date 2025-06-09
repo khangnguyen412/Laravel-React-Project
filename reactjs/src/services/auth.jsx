@@ -4,10 +4,9 @@ export const Logout = async () => {
     const LogoutStatus = await fetch(`${API_URL}/logout`, {
         method: "POST",
         headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
+            "X-Token": localStorage.getItem("token")
         }
     })
-    console.log(LogoutStatus)
     if (LogoutStatus.status === 200) {
         localStorage.removeItem("token");
         window.location.href = '/login';
@@ -24,15 +23,14 @@ export const Login = async (email, password) => {
         })
     })
     const Data = await Login.json();
-
-    console.log(Login)
     if (!Login.ok) {
         alert('Đăng Nhập Thất Bại!');
         return false
     }
-
     localStorage.setItem('token', Data.token);
-    window.location.href = '/users';
+    localStorage.setItem('profile', Data.user)
+    window.location.href = '/admin/users';
+
 }
 
 export const CheckAuth = async () => {
@@ -43,16 +41,32 @@ export const CheckAuth = async () => {
         }
         return false
     }
-
-    const Respone = await fetch(`${API_URL}/user`, {
+    const Respone = await fetch(`${API_URL}/admin/user`, {
         headers: {
-            "Authorization": `Bearer ${token}`
+            "X-Token": token
         }
     })
-
     if (!Respone.ok) {
         Logout()
         return false
     }
     return true
+}
+
+export const UserProfile = async () => {
+    if(!CheckAuth()){
+        return false
+    }
+    const token = localStorage.getItem('token');
+    const UserProfile = await fetch(`${API_URL}/admin/profile`,{
+        headers: {
+            "X-Token": token
+        }
+    })
+    if(!UserProfile){
+        console.log('Lỗi ko lấy được người dùng')
+        return false
+    }
+    const Data = await UserProfile.json()
+    return Data.profile
 }
