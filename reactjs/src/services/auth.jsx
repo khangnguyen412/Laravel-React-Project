@@ -9,35 +9,32 @@ export const Logout = async () => {
     })
     if (LogoutStatus.status === 200) {
         localStorage.removeItem("token");
-        window.location.href = '/login';
+        window.location.href = "/login";
     }
 }
 
 export const Login = async (email, password) => {
     const Login = await fetch(`${API_URL}/login`, {
-        method: 'POST',
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            email,
-            password
-        })
+        body: JSON.stringify({ email, password })
     })
     const Data = await Login.json();
     if (!Login.ok) {
-        alert('Đăng Nhập Thất Bại!');
+        alert("Login failed!");
         return false
     }
-    localStorage.setItem('token', Data.token);
-    localStorage.setItem('profile', Data.user)
-    window.location.href = '/admin/users';
+    localStorage.setItem("token", Data.token);
+    localStorage.setItem("profile", Data.user)
+    window.location.href = "/admin/users";
 
 }
 
 export const CheckAuth = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-        if (window.location.pathname !== '/login') {
-            window.location.href = '/login';
+        if (window.location.pathname !== "/login") {
+            window.location.href = "/login";
         }
         return false
     }
@@ -57,14 +54,14 @@ export const UserProfile = async () => {
     if(!CheckAuth()){
         return false
     }
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const UserProfile = await fetch(`${API_URL}/admin/profile`,{
         headers: {
             "X-Token": token
         }
     })
     if(!UserProfile){
-        console.log('Lỗi ko lấy được người dùng')
+        console.log("Coundn't take userprofil")
         return false
     }
     const Data = await UserProfile.json()

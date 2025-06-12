@@ -11,6 +11,9 @@ function Pages() {
                 <li>
                     <Link to='/login'>Login</Link>
                 </li>
+                <li>
+                    <Link to='/component'>Component</Link>
+                </li>
             </ul>
         </React.Fragment>
     );

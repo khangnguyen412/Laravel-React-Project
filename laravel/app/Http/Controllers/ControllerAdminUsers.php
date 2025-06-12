@@ -6,26 +6,27 @@ use App\Models\ModelsUsers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 use App\Models\Users;
 
-class ControllerUsers extends Auth
+class ControllerAdminUsers extends Auth
 {
     /**
-     * Display a listing of the resource.
+     *  Get User
      */
     public function index()
     {
         try {
             $users_list = ModelsUsers::all();
             return response()->json([
-                'status'        => 'Success',
-                'users_list'     => $users_list,
+                "status"        => "Success",
+                "users_list"    => $users_list,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([
-                'status'    => 'Failed',
-                'message'   => $e->getMessage(),
+                "status"    => "Failed",
+                "message"   => $e->getMessage(),
             ], 404, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
@@ -51,7 +52,30 @@ class ControllerUsers extends Auth
      */
     public function show(string $id)
     {
-        //
+        try {
+            if (!$id) {
+                return response()->json([
+                    "status"    => "Failed",
+                    "message"   => "Couldn't get userid",
+                ], 400, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            }
+            $users_with_id = ModelsUsers::where('id', $id)->first();
+            if (!$users_with_id) {
+                return response()->json([
+                    "status"    => "Failed",
+                    "message"   => "Couldn't get user",
+                ], 404, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            }
+            return response()->json([
+                "status"    => "Success",
+                "data"      => $users_with_id,
+            ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        } catch (Exception $e) {
+            return response()->json([
+                "status"    => "Failed",
+                "message"   => $e->getMessage(),
+            ], 404, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        }
     }
 
     /**

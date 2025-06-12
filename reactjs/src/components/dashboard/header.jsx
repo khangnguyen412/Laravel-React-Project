@@ -1,7 +1,9 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Button from '@mui/material/Button';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars, faCircleXmark, faArrowRightFromBracket, faUser } from '@fortawesome/free-solid-svg-icons'
 
 /**
  *  Component
@@ -13,7 +15,6 @@ import MobileMenuItem from "../../components/dashboard/mobile-menu-item"; // esl
  *  Service
  */
 import { Login, Logout, UserProfile } from "../../services/auth"; // eslint-disable-line
-import Avatar from "@mui/material/Avatar";
 
 const Header = () => {
     const HandleLogout = async () => {
@@ -55,16 +56,14 @@ const Header = () => {
                             {/* Primary Nav */}
                             <ul className="hidden md:flex items-center space-x-1">
                                 <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
-                                    <Link>Xem Trang Chủ</Link>
+                                    <Link>View Page</Link>
                                 </li>
                                 <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
-                                    <Link onClick={HandleLogout}>Đăng Xuất</Link>
+                                    <Link onClick={HandleLogout}>Logout</Link>
                                 </li>
                                 <li className="py-5 px-3 text-gray-700 hover:text-gray-900">
                                     <button className="menu-button p-2 bg-white rounded-lg shadow-lg" onClick={HandleTrigger}>
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                                        </svg>
+                                        <FontAwesomeIcon icon={faBars} style={{ color: "#2563eb", }} />
                                     </button>
                                 </li>
                             </ul>
@@ -72,9 +71,7 @@ const Header = () => {
                             {/* Mobile Button */}
                             <div className="md:hidden flex items-center">
                                 <button className="mobile-menu-button p-2 bg-white rounded-lg shadow-lg" onClick={HandleTrigger}>
-                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
+                                    <FontAwesomeIcon icon={faBars} style={{ color: "#2563eb", }} />
                                 </button>
                             </div>
                         </div>
@@ -96,9 +93,7 @@ const Header = () => {
                                 </div>
                                 <div className="flex basis-4/12 items-end justify-items-end justify-end">
                                     <button className="mobile-menu-button p-2 bg-white rounded-lg shadow-lg" onClick={HandleTrigger}>
-                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                                        </svg>
+                                        <FontAwesomeIcon icon={faCircleXmark} style={{ color: "#2563eb", }} />
                                     </button>
                                 </div>
                             </div>
@@ -107,8 +102,8 @@ const Header = () => {
                         <nav className="bg-white max-h-96 overflow-auto">
                             <div className="max-w-6xl mx-auto px-4">
                                 <ul className="space-y-2">
-                                    <MobileMenuItemDropDown name='Quản Trị' link='/admin/dashboard'></MobileMenuItemDropDown>
-                                    <MobileMenuItemDropDown name='Người Dùng' link='/admin/users'></MobileMenuItemDropDown>
+                                    <MobileMenuItemDropDown name='Dashboard' link='/admin/dashboard'></MobileMenuItemDropDown>
+                                    <MobileMenuItemDropDown name='Users' link='/admin/users'></MobileMenuItemDropDown>
                                     <MobileMenuItemDropDown name='Item' link='/'></MobileMenuItemDropDown>
                                     <MobileMenuItem name='Item' link='/'></MobileMenuItem>
                                 </ul>
@@ -121,16 +116,20 @@ const Header = () => {
                             <div className="flex justify-between space-x-2">
                                 {Profile ? (
                                     <React.Fragment>
-                                        <div className="px-4 py-2 rounded">
-                                            <Avatar>K</Avatar>
-                                        </div>
-                                        <div className="px-4 py-2 rounded flex items-center ">
-                                            {Profile.display_name}
+                                        <div className="flex items-center space-x-4">
+                                            {Profile.avatar !== '' ? (
+                                                <img src="https://i.pravatar.cc/100" alt="User" className="w-10 h-10 rounded-full object-cover" />
+                                            ) : (
+                                                <div className="w-8 h-8 border-b border-gray-600 bg-gray-200 rounded-full object-cover flex items-center justify-center">
+                                                    <FontAwesomeIcon icon={faUser} />
+                                                </div>
+                                            )}
+                                            <span className="font-medium">Welcome, {Profile.display_name}</span>
                                         </div>
                                     </React.Fragment>
                                 ) : (null)}
-                                <Button variant="text">
-                                    <LogoutIcon onClick={HandleLogout}></LogoutIcon>
+                                <Button variant="text" onClick={HandleLogout} >
+                                    <FontAwesomeIcon icon={faArrowRightFromBracket} style={{ color: "#2563eb", }} />
                                 </Button>
                             </div>
                         </div>

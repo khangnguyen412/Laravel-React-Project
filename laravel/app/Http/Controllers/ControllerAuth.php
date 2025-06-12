@@ -59,37 +59,37 @@ class ControllerAuth extends Controller
     {
         try {
             $valid = Validator::make($request->all(),[
-                'email' => 'required|email',
-                'password' => 'required'
+                "email"     => "required|email",
+                "password"  => "required"
             ]);
             if($valid->fails()){
                 return response()->json([
-                    'status' => 401,
-                    'error' => $valid
+                    "status"    => 401,
+                    "error"     => $valid
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
 
-            $user = ModelsUsers::where('email', $request->email)->first();
+            $user = ModelsUsers::where("email", $request->email)->first();
             if (!$user->email || !Hash::check($request->password, $user->password)) {
                 return response()->json([
-                    'status'    => 401,
-                    'error'     => 'Email hoặc mật khẩu sai'
+                    "status"    => 401,
+                    "error"     => "Invalid email or password"
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
 
             $token = Str::random(60);
-            $user->api_token = hash('sha256', $token);
+            $user->api_token = hash("sha256", $token);
             $user->save();
 
             return response()->json([
-                'status'    => 200,
-                'token'     => $token,
-                'profile'   => $user,
+                "status"    => 200,
+                "token"     => $token,
+                "profile"   => $user,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([
-                'status'    => 403,
-                'error'     => 'Lỗi: '. $e->getMessage(),
+                "status"    => 403,
+                "error"     => "Eror: ". $e->getMessage(),
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
@@ -100,13 +100,13 @@ class ControllerAuth extends Controller
             $user->api_token = null;
             $user->save();
             return response()->json([
-                'status'    => 200,
-                'message'   => 'Đã đăng xuất thành công'
+                "status"    => 200,
+                "message"   => "Logout Successfully"
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }catch(Exception $e){
             return response()->json([
-                'status'    => 403,
-                'error'     => 'Lỗi: '. $e->getMessage(),
+                "status"    => 403,
+                "error"     => "Error: ". $e->getMessage(),
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
@@ -116,13 +116,13 @@ class ControllerAuth extends Controller
             $user = $request->user();
             $user->save();
             return response()->json([
-                'status'    => 200,
-                'profile'   => $user
+                "status"   => 200,
+                "profile"   => $user
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }catch(Exception $e){
             return response()->json([
-                'status'    => 403,
-                'error'     => 'Lỗi: '. $e->getMessage(),
+                "status"    => 403,
+                "error"     => "Error". $e->getMessage(),
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }

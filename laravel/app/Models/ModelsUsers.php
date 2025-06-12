@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Profiles;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,16 +14,16 @@ class ModelsUsers extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    protected $table = 'Users';
+    protected $table = "Users";
     protected $fillable = [
-        'user_name',
-        'display_name',
-        'email',
-        'email_verified_at',
-        'password',
-        'address',
-        'phone',
-        'image',
+        "user_name",
+        "display_name",
+        "email",
+        "email_verified_at",
+        "password",
+        "address",
+        "phone",
+        "image",
     ];
     protected $hidden = [
         'password',
@@ -39,16 +40,17 @@ class ModelsUsers extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
+            'created_at'        => 'datetime:Y-m-d H:i:s',
+            'updated_at'        => 'datetime:Y-m-d H:i:s',
         ];
     }
 
-    /**
-     *  Kết nối quan hệ với bảng Profiles
-     *
-     * @return void
-     */
-    public function profiles (){
-        return $this->hasOne(Profiles::class, 'id', 'id');
+    public function getCreatedAtAttribute($value){
+        return Carbon::parse($value)->format('Y-m-d H:i:s');
+    }
+    
+    public function getUpdatedAtAttribute($value){
+        return Carbon::parse($value)->format('Y-m-d H:i:s');
     }
 }

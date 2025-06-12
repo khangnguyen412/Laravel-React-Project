@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
-import Button from '@mui/material/Button';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
+/* eslint-disable */
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
+
+/**
+ *  Component
+ */
+import Modal from '../../components/dashboard/users-modal-profile'
 
 /**
  *  Service
@@ -11,17 +16,6 @@ import { GetUserListAdmin } from '../../services/users';
 
 
 const UserList = () => {
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -200%)',
-        width: '80%',
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-    };
 
     const [UserList, SetUserList] = useState([])
     useEffect(() => {
@@ -33,8 +27,11 @@ const UserList = () => {
     }, []);
 
     const [IsOpen, SetOpen] = useState(false)
-    const HandleOpen = () => SetOpen(!IsOpen)
-    const HandleClose = () => SetOpen(!IsOpen)
+    const [UserId, SetUserId] = useState(null)
+    const HandleOpen = (id) => {
+        SetOpen(!IsOpen)
+        SetUserId(id)
+    }
 
     return (
         <React.Fragment>
@@ -48,7 +45,6 @@ const UserList = () => {
                                 <th scope="col" className="px-6 py-3">Phone</th>
                                 <th scope="col" className="px-6 py-3">Update</th>
                                 <th scope="col" className="px-6 py-3">Delect</th>
-                                <th scope="col" className="px-6 py-3">View</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,9 +56,9 @@ const UserList = () => {
                                 </tr>
                             ) : (
                                 UserList.map((item) => (
-                                    <tr className="bg-white border-b" key={item.id}>
+                                    <tr className="bg-white border-b" key={item.id} >
                                         <td className="px-6 py-4 font-medium text-gray-900">
-                                            {item.display_name}
+                                            <Link onClick={() => HandleOpen(item.id)}>{item.display_name}</Link>
                                         </td>
                                         <td className="px-6 py-4">
                                             {item.email}
@@ -71,28 +67,21 @@ const UserList = () => {
                                             {item.phone}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <Button variant="contained" color="info" data-id={item.id}>
-                                                Update
-                                            </Button>
+                                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded">
+                                                <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffffff", }} />
+                                            </button>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <Button variant="contained" color="error" data-id={item.id}>
-                                                Delete
-                                            </Button>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <Button color="primary" onClick={HandleOpen}>
-                                                <VisibilityOutlinedIcon></VisibilityOutlinedIcon>
-                                            </Button>
+                                            <button className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded">
+                                                <FontAwesomeIcon icon={faTrash} style={{ color: "#ffffff", }} />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
                             )}
                         </tbody>
                     </table>
-                    <Modal open={IsOpen} onClose={HandleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-                        <Box sx={style}></Box>
-                    </Modal>
+                    <Modal isOpen={IsOpen} onClose={HandleOpen} userID={UserId} ></Modal>
                 </div>
             </div>
         </React.Fragment>
