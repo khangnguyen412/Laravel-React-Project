@@ -12,4 +12,5 @@ Route::middleware('auth.check')->post('/logout', [ControllerAuth::class, 'logout
 Route::prefix('/admin')->middleware('auth.check')->group(function () {
     Route::apiResource('/user', ControllerAdminUsers::class);
     Route::get('/profile', [ControllerAuth::class, 'profile']);
+    Route::get('/update', [ControllerAuth::class, 'profile']);
 });

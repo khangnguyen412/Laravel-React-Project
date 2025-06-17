@@ -14,7 +14,7 @@ import MobileMenuItem from "../../components/dashboard/mobile-menu-item"; // esl
 /**
  *  Service
  */
-import { Login, Logout, UserProfile } from "../../services/auth"; // eslint-disable-line
+import { Login, Logout, UserProfile } from "../../services/services-auth"; // eslint-disable-line
 
 const Header = () => {
     const HandleLogout = async () => {

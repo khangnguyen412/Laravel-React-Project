@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"; // eslint-disable-line
 /**
  *  Component
  */
-import Login from "../../components/user/form-login.jsx";
+import Login from "../../components/user/form-login";
 
 const LoginPage = () => {
     return (

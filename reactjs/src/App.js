@@ -1,36 +1,20 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+/* eslint-disable */
+import React, { Suspense } from "react";
+import { createBrowserRouter, RouterProvider, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import DefaultApp from './pages/appdefault.jsx';
-import Template from './pages/pages.jsx';
-import UserPage from './pages/dashboard/users.jsx';
-import LoginPage from './pages/user/login.jsx';
-import Component from './pages/component.jsx';
+import { MainRoute } from './routes/route-main.jsx';
+import { AdminRoute } from './routes/route-admin.jsx';
+
+const routes = [
+  ...MainRoute,
+  ...AdminRoute,
+];
+const router = createBrowserRouter(routes);
 
 function App() {
   return (
     <React.Fragment>
-      <Router>
-        <Routes>
-          <Route index element={<DefaultApp></DefaultApp>} />
-        </Routes>
-
-        <Routes>
-          <Route path="/component" element={<Component></Component>}></Route>
-        </Routes>
-
-        <Routes>
-          <Route path="/template" element={<Template></Template>}></Route>
-        </Routes>
-
-        <Routes>
-          <Route path='/login' element={<LoginPage></LoginPage>}></Route>
-        </Routes>
-
-        <Routes>
-          <Route path="/admin/users" element={<UserPage></UserPage>}></Route>
-        </Routes>
-      </Router>
+      <RouterProvider router={router} />
     </React.Fragment>
   );
 }

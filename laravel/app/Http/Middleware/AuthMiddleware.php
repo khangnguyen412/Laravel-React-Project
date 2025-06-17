@@ -20,17 +20,16 @@ class AuthMiddleware
         $login_token = $request->header('X-Token');
         if (!$login_token) {
             return response()->json([
-                'error' => 'Không có token'
+                'error' => 'Token not found'
             ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
-
-        // $token = substr($login_token, 6); // Lấy token sau "Token "
+        
         $hash_token = hash('sha256', $login_token);
         $user = ModelsUsers::where('api_token', $hash_token)->first();
 
         if (!$user) {
             return response()->json([
-                'error' => 'Token ko hợp lệ',
+                'error' => 'Invalid token',
             ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 

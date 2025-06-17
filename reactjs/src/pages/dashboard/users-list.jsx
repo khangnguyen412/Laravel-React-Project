@@ -1,4 +1,6 @@
+/* eslint-disable */
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 /**
  *  Component
@@ -9,7 +11,7 @@ import UsersList from "../../components/dashboard/users-list.jsx";
 /**
  *  Service
  */
-import { CheckAuth } from "../../services/auth";
+import { CheckAuth } from "../../services/services-auth.jsx";
 
 const UserPage = () => {
     CheckAuth()

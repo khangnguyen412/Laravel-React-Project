@@ -58,18 +58,24 @@ class ControllerAuth extends Controller
     public function login(Request $request)
     {
         try {
-            $valid = Validator::make($request->all(),[
+            $valid = Validator::make($request->all(), [
                 "email"     => "required|email",
                 "password"  => "required"
             ]);
-            if($valid->fails()){
+            if ($valid->fails()) {
                 return response()->json([
                     "status"    => 401,
-                    "error"     => $valid
+                    "error"     => "Invalid email or password"
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
 
             $user = ModelsUsers::where("email", $request->email)->first();
+            if (!$user) {
+                return response()->json([
+                    "status"    => 401,
+                    "error"     => "User not found"
+                ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            }
             if (!$user->email || !Hash::check($request->password, $user->password)) {
                 return response()->json([
                     "status"    => 401,
@@ -89,13 +95,15 @@ class ControllerAuth extends Controller
         } catch (Exception $e) {
             return response()->json([
                 "status"    => 403,
-                "error"     => "Eror: ". $e->getMessage(),
+                "error"     => "Error: " . $e->getMessage(),
+                "req"       => $request,
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
 
-    public function logout(Request $request){
-        try{
+    public function logout(Request $request)
+    {
+        try {
             $user = $request->user();
             $user->api_token = null;
             $user->save();
@@ -103,26 +111,27 @@ class ControllerAuth extends Controller
                 "status"    => 200,
                 "message"   => "Logout Successfully"
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json([
                 "status"    => 403,
-                "error"     => "Error: ". $e->getMessage(),
+                "error"     => "Error: " . $e->getMessage(),
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
 
-    public function profile(Request $request){
-        try{
+    public function profile(Request $request)
+    {
+        try {
             $user = $request->user();
             $user->save();
             return response()->json([
                 "status"   => 200,
                 "profile"   => $user
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return response()->json([
                 "status"    => 403,
-                "error"     => "Error". $e->getMessage(),
+                "error"     => "Error" . $e->getMessage(),
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }

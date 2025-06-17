@@ -9,14 +9,19 @@ import { faCircleXmark, faPenToSquare, faSpinner, faUser } from '@fortawesome/fr
 import '../../assets/css/loading.css';
 
 /**
- *  Service
+ *  Component
+ */
+import Loading from '../../components/loading';
+
+/**
+ *  Hook
  */
 import { HandleDateTime } from '../../hooks/hook-daytime';
 
 /**
  *  Service
  */
-import { GetUserIDAdmin } from '../../services/users';
+import { GetUserIDAdmin } from '../../services/services-users';
 
 const UserProfileModal = ({ isOpen, onClose, userID }) => {
     const [IsLoading, SetLoading] = useState(null)
@@ -32,25 +37,22 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
 
     useEffect(() => {
         if (!isOpen || !userID) return;
-        SetLoading(true)
-        SetError(null)
-        GetUserIDAdmin(userID).then(res => {
-            if (!res) {
-                throw new Error('Không nhận được response')
+        SetLoading(true);
+        SetError(null);
+        (async() => {
+            try{
+                const response = await GetUserIDAdmin(userID)
+                if (response){
+                    GetUserData(response)
+                    SetCreateAt(HandleDateTime(response.created_at, 'FullDate'))
+                    SetUpdateAt(HandleDateTime(response.updated_at, 'FullDate'))
+                }
+            }catch(error){
+                SetError(error.message)
+            }finally{
+                SetLoading(false)
             }
-            return res
-        }).then(data => {
-            if (data) {
-                GetUserData(data)
-                SetCreateAt(HandleDateTime(data.created_at, 'FullDate'))
-                SetUpdateAt(HandleDateTime(data.updated_at, 'FullDate'))
-            }
-        }).catch(e => {
-            SetError(e.message)
-            console.log('lỗi: ', e.message)
-        }).finally(() => {
-            SetLoading(false)
-        })
+        })();
     }, [isOpen, userID])
 
     if (!isOpen) return null;
@@ -61,12 +63,7 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
                     <button onClick={onClose} className="absolute top-4 right-8 w-8 h-8 text-gray-500 hover:text-gray-700" >
                         <FontAwesomeIcon icon={faCircleXmark} size="xl" style={{ color: "#2563eb" }} />
                     </button>
-                    {IsLoading && (
-                        <div className="flex flex-col">
-                            <FontAwesomeIcon icon={faSpinner} className="loading-icon" />
-                        </div>
-                    )}
-                    {HaveError && (<span>Lỗi: {HaveError}</span>)}
+                    <Loading IsLoading={IsLoading} Error={HaveError}></Loading>
                     {UserData && (
                         <React.Fragment>
                             <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
@@ -77,7 +74,6 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
                                         <FontAwesomeIcon icon={faUser} className="w-12 h-12" />
                                     </div>
                                 )}
-                                {/* <img src="https://i.pravatar.cc/200" alt="Avatar" className="w-32 h-32 rounded-full object-cover border-4 border-blue-500" /> */}
                                 <div>
                                     <h1 className="text-2xl font-bold">{UserData.display_name}</h1>
                                     <p className="text-gray-600">Updating (ID: {UserData.role_id}) • Register Date: {CreateAt}</p>
