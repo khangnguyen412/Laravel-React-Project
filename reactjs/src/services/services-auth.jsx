@@ -1,6 +1,10 @@
 /* eslint-disable */
 import { API_URL } from '../Config';
 
+const IsEmail = (input) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
+};
+
 export const Logout = async () => {
     const response = await fetch(`${API_URL}/logout`, {
         method: "POST",
@@ -16,11 +20,17 @@ export const Logout = async () => {
     window.location.href = "/login";
 }
 
-export const Login = async (email, password) => {
+export const Login = async (username, password) => {
+    if(IsEmail(username)) {
+        const email = username
+        var get_data = JSON.stringify({ email, password })
+    }else {
+        var get_data = JSON.stringify({ username, password })
+    }
     const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
+        body: get_data
     })
     if (!response) throw new Error("Coundn't take response");
     const data = await response.json();

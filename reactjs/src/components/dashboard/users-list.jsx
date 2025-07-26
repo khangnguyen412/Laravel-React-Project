@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare, faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 /**
  *  Component
@@ -52,13 +52,6 @@ const UserList = () => {
                 <div className="overflow-x-auto">
                     {/* Desktop - Dạng bảng */}
                     <div className="hidden lg:block rounded-lg">
-                        <div className="grid grid-cols-5 bg-gray-100 p-3 text-left font-semibold border-b border-gray-300">
-                            <div>Name</div>
-                            <div>Email</div>
-                            <div>Phone</div>
-                            <div>Update</div>
-                            <div>Delect</div>
-                        </div>
                         <Loading IsLoading={IsLoading} Error={HaveError}></Loading>
                         {UserList ? (
                             <div className="space-y-2">

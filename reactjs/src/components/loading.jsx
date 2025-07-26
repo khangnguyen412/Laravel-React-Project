@@ -1,7 +1,10 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+
+/**
+ *  Css
+ */
+import "../assets/css/loading.scss";
 
 const Loading = ({ IsLoading, Error, Type }) => {
     if (IsLoading) {
@@ -9,7 +12,13 @@ const Loading = ({ IsLoading, Error, Type }) => {
             <React.Fragment>
                 {IsLoading && (
                     <div className="flex flex-col">
-                        <FontAwesomeIcon icon={faSpinner} className="loading-icon" />
+                        <div className="wrap-loader--background">
+                            <div className="loader">
+                                <div className="inner one"></div>
+                                <div className="inner two"></div>
+                                <div className="inner three"></div>
+                            </div>
+                        </div>
                     </div>
                 )}
             </React.Fragment>

@@ -10,10 +10,16 @@ function Pages() {
                     <Link to='/component'>Component</Link>
                 </li>
                 <li>
-                    <Link to='/admin/users'>UserPage</Link>
+                    <Link to='/admin/users'>Users Page</Link>
+                </li>
+                <li>
+                    <Link to='/admin/user/edit'>Users Profile</Link>
                 </li>
                 <li>
                     <Link to='/login'>Login</Link>
+                </li>
+                <li>
+                    <Link to='/payment-test'>Payment</Link>
                 </li>
             </ul>
         </React.Fragment>

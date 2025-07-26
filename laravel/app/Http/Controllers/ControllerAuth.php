@@ -59,27 +59,32 @@ class ControllerAuth extends Controller
     {
         try {
             $valid = Validator::make($request->all(), [
-                "email"     => "required|email",
-                "password"  => "required"
+                "email"    => "nullable|email",
+                "username" => "nullable|string",
+                "password" => "required"
             ]);
-            if ($valid->fails()) {
+            if ($valid->fails() || (empty($request->email) && empty($request->username))) {
                 return response()->json([
-                    "status"    => 401,
-                    "error"     => "Invalid email or password"
+                    "status" => 401,
+                    "error"  => "Invalid email or password"
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
 
-            $user = ModelsUsers::where("email", $request->email)->first();
+            if ($request->username) {
+                $user = ModelsUsers::where("user_name", $request->username)->first();
+            } else {
+                $user = ModelsUsers::where("email", $request->email)->first();
+            }
             if (!$user) {
                 return response()->json([
-                    "status"    => 401,
-                    "error"     => "User not found"
+                    "status" => 401,
+                    "error"  => "User not found"
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
             if (!$user->email || !Hash::check($request->password, $user->password)) {
                 return response()->json([
-                    "status"    => 401,
-                    "error"     => "Invalid email or password"
+                    "status" => 401,
+                    "error"  => "Invalid email or password"
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
 
@@ -88,15 +93,15 @@ class ControllerAuth extends Controller
             $user->save();
 
             return response()->json([
-                "status"    => 200,
-                "token"     => $token,
-                "profile"   => $user,
+                "status"  => 200,
+                "token"   => $token,
+                "profile" => $user,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([
-                "status"    => 403,
-                "error"     => "Error: " . $e->getMessage(),
-                "req"       => $request,
+                "status" => 403,
+                "error"  => "Error: " . $e->getMessage(),
+                "req"    => $request,
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
@@ -108,13 +113,13 @@ class ControllerAuth extends Controller
             $user->api_token = null;
             $user->save();
             return response()->json([
-                "status"    => 200,
-                "message"   => "Logout Successfully"
+                "status"  => 200,
+                "message" => "Logout Successfully"
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([
-                "status"    => 403,
-                "error"     => "Error: " . $e->getMessage(),
+                "status" => 403,
+                "error"  => "Error: " . $e->getMessage(),
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }
@@ -125,13 +130,13 @@ class ControllerAuth extends Controller
             $user = $request->user();
             $user->save();
             return response()->json([
-                "status"   => 200,
-                "profile"   => $user
+                "status"  => 200,
+                "profile" => $user
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([
-                "status"    => 403,
-                "error"     => "Error" . $e->getMessage(),
+                "status" => 403,
+                "error"  => "Error" . $e->getMessage(),
             ], 403, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
     }

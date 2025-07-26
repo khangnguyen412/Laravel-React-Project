@@ -6,7 +6,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 /**
  *  Css
 */
-import "../../assets/css/style.css";
+import "../../assets/css/style.scss";
 
 /**
  *  Component
@@ -19,7 +19,7 @@ import Loading from '../../components/loading'
 import { Login } from "../../services/services-auth";
 
 const LoginForm = () => {
-    const [email, SetEmail] = useState('')
+    const [username, SetUsername] = useState('')
     const [password, SetPassWord] = useState('')
     const [IsLoading, SetLoading] = useState(null)
     const [HaveError, SetError] = useState(null)
@@ -28,7 +28,7 @@ const LoginForm = () => {
         SetLoading(true)
         SetError('')
         try {
-            const response = await Login(email, password)
+            const response = await Login(username, password)
             if (response && response.status === 200) {
                 localStorage.setItem("token", response.token);
                 localStorage.setItem("profile", JSON.stringify(response.user));
@@ -63,7 +63,7 @@ const LoginForm = () => {
                         </div>
                         <div className="flex flex-col w-full mt-4">
                             <p className="font-bold c-primary-color">
-                                This is CMS System was developed by Q.Khang. Source was published on My GitHub. Click <Link to="https://github.com/khangnguyen412/Laravel-React-Project" className="mr-1 font-bold c-primary-color"><GitHubIcon></GitHubIcon></Link>to view 
+                                This is CMS System was developed by Q.Khang. Source was published on My GitHub. Click <Link to="https://github.com/khangnguyen412/Laravel-React-Project" className="mr-1 font-bold c-primary-color"><GitHubIcon></GitHubIcon></Link>to view
                             </p>
                         </div>
                     </div>
@@ -71,8 +71,8 @@ const LoginForm = () => {
                         <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Sign In</h2>
                         <form onSubmit={HandleLogin} className="space-y-4">
                             <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Username or Email</label>
-                                <input type="text" id="email" name="email" value={email} onChange={(e) => SetEmail(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">Username or Email</label>
+                                <input type="text" id="username" name="username" value={username} onChange={(e) => SetUsername(e.target.value)} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
                             </div>
                             <div>
                                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>

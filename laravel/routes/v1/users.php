@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ControllerAuth;
 use App\Http\Controllers\ControllerAdminUsers;
+use App\Http\Controllers\ControllerPayment;
 
 Route::post('/login', [ControllerAuth::class, 'login']);
 Route::middleware('auth.check')->post('/logout', [ControllerAuth::class, 'logout']);
@@ -14,3 +15,5 @@ Route::prefix('/admin')->middleware('auth.check')->group(function () {
     Route::get('/profile', [ControllerAuth::class, 'profile']);
     Route::get('/update', [ControllerAuth::class, 'profile']);
 });
+
+Route::post('/stripe-checkout', [ControllerPayment::class, 'StripePaymentAPI']);
