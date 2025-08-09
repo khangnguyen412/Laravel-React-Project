@@ -18,7 +18,7 @@ class ControllerAdminUsers extends Auth
     public function index()
     {
         try {
-            $users_list = ModelsUsers::all();
+            $users_list = ModelsUsers::with('role')->get();
             return response()->json([
                 "status"        => "Success",
                 "users_list"    => $users_list,
@@ -59,7 +59,7 @@ class ControllerAdminUsers extends Auth
                     "message"   => "Couldn't get userid",
                 ], 400, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
-            $users_with_id = ModelsUsers::where('id', $id)->first();
+            $users_with_id = ModelsUsers::with('role')->find($id);
             if (!$users_with_id) {
                 return response()->json([
                     "status"    => "Failed",

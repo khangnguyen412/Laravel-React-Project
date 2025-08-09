@@ -24,6 +24,7 @@ class ModelsUsers extends Authenticatable
         "address",
         "phone",
         "image",
+        "role_id",
     ];
     protected $hidden = [
         'password',
@@ -47,10 +48,14 @@ class ModelsUsers extends Authenticatable
     }
 
     public function getCreatedAtAttribute($value){
-        return Carbon::parse($value)->format('Y-m-d H:i:s');
+        return Carbon::parse($value)->format('Y-m-d');
     }
     
     public function getUpdatedAtAttribute($value){
-        return Carbon::parse($value)->format('Y-m-d H:i:s');
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function role(){
+        return $this->belongsTo(ModelsRoles::class,"role_id","id");
     }
 }

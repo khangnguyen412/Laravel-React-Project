@@ -22,6 +22,7 @@ import { HandleDateTime } from '../../hooks/hook-daytime';
  *  Service
  */
 import { GetUserIDAdmin } from '../../services/services-users';
+import { Link } from "react-router-dom";
 
 const UserProfileModal = ({ isOpen, onClose, userID }) => {
     const [IsLoading, SetLoading] = useState(null)
@@ -34,6 +35,10 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
     useEffect(() => {
         if (!isOpen) GetUserData(null)
     }, [isOpen])
+
+    useEffect(() => {
+        console.log(UserData)
+    }, [UserData])
 
     useEffect(() => {
         if (!isOpen || !userID) return;
@@ -74,7 +79,7 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
                             )}
                             <div>
                                 <h1 className="text-2xl font-bold">{UserData.display_name}</h1>
-                                <p className="text-gray-600">Updating (ID: {UserData.role_id}) • Register Date: {CreateAt}</p>
+                                <p className="text-gray-600">{UserData.role.name} • Register Date: {CreateAt}</p>
                             </div>
                         </div>
                         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -84,7 +89,7 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
                                     <li><span className="font-medium">Email:</span> {UserData.email}</li>
                                     <li><span className="font-medium">Number Phone:</span> {UserData.phone}</li>
                                     <li><span className="font-medium">Address:</span> {UserData.address}</li>
-                                    <li><span className="font-medium">Role:</span> Updating (ID: {UserData.role_id})</li>
+                                    <li><span className="font-medium">Role:</span> {UserData.role.name}</li>
                                     <li><span className="font-medium">Update At:</span> {UpdateAt}</li>
                                 </ul>
                                 <ul className="space-y-2 mt-2">
@@ -100,9 +105,9 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
                             </div>
                         </div>
                         <div className="mt-8 flex justify-end space-x-4">
-                            <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" >
+                            <Link to={`/admin/user/${userID}/edit`} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition" >
                                 <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffffff", }} />
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

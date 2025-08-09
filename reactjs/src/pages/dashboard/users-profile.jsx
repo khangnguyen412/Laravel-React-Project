@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 /**
@@ -29,6 +29,10 @@ const UserPage = () => {
         }
     };
 
+    useEffect(() => {
+        setActiveTab('infomation');
+    }, []);
+
     const user = {
         name: 'Nguyen Duc',
         email: 'nguyenduc@example.com',
@@ -56,7 +60,7 @@ const UserPage = () => {
                     {/* Tab tùy chọn */}
                     <div className="mt-8 border-t pt-4">
                         <div className="flex space-x-4">
-                            <button className={`py-2 px-4 font-medium hover:text-blue-500 border-b-2 ${(activeTab === 'infomation') ? 'text-blue-500 border-blue-500 ' : 'text-gray-600 hover:text-blue-500'}`} onClick={() => setActiveTab('infomation')}>Thông tin chung</button>
+                            <button className={`py-2 px-4 font-medium hover:text-blue-500 border-b-2 text-blue-500 border-blue-500${(activeTab === 'infomation') ? 'text-blue-500 border-blue-500 ' : 'text-gray-600 hover:text-blue-500'}`} onClick={() => setActiveTab('infomation')}>Thông tin chung</button>
                             <button className={`py-2 px-4 font-medium hover:text-blue-500 border-b-2 ${(activeTab === 'password') ? 'text-blue-500 border-blue-500 ' : 'text-gray-600 hover:text-blue-500'}`} onClick={() => setActiveTab('password')}>Mật khẩu</button>
                         </div>
                         {activeTab === 'infomation' && (

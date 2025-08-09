@@ -55,20 +55,27 @@ const UserList = () => {
                         <Loading IsLoading={IsLoading} Error={HaveError}></Loading>
                         {UserList ? (
                             <div className="space-y-2">
+                                <div className="grid grid-cols-5 p-3 border-b border-gray-200 hover:bg-gray-50" >
+                                    <div>Name</div>
+                                    <div>Email</div>
+                                    <div>Phone</div>
+                                    <div>Edit</div>
+                                    <div>Delete</div>
+                                </div>
                                 {UserList.map((item) => (
                                     <div key={item.id} className="grid grid-cols-5 p-3 border-b border-gray-200 hover:bg-gray-50" >
                                         <div><Link onClick={() => HandleOpen(item.id)}>{item.display_name}</Link></div>
                                         <div>{item.email}</div>
                                         <div>{item.phone}</div>
                                         <div>
-                                            <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded">
+                                            <Link to={`/admin/user/${item.id}/edit`} className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded">
                                                 <FontAwesomeIcon icon={faPenToSquare} style={{ color: "#ffffff", }} />
-                                            </button>
+                                            </Link>
                                         </div>
                                         <div>
-                                            <button className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded">
+                                            <l className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded">
                                                 <FontAwesomeIcon icon={faTrash} style={{ color: "#ffffff", }} />
-                                            </button>
+                                            </l>
                                         </div>
                                     </div>
                                 ))}
