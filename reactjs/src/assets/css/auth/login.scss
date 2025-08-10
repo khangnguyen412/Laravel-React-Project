@@ -1,0 +1,28 @@
+.login-page {
+    background-color: white;
+    height: 100vh;
+
+    .ant-pro-form-login-page-notice-activity {
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px;
+        color: rgba(0, 0, 0, 0.88);
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(4px);
+    }
+
+    .ant-pro-form-login-page-container {
+        .login-form-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+    }
+}
+
+@media (max-width: 768px) {
+    .login-page {
+        height: unset;
+    }
+}

@@ -1,6 +1,10 @@
-.c-primary-color{
-    color: #2563eb;
+$primary-color: #2563eb;
+$second-color: #0000;
+
+.c-primary-color {
+    color: $primary-color;
 }
-.c-second-color{
-    color: #0000;
+
+.c-second-color {
+    color: $second-color;
 }

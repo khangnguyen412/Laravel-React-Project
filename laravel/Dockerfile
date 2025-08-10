@@ -26,7 +26,4 @@ RUN curl -sS https://getcomposer.org/installer  | php -- --install-dir=/usr/loca
 RUN composer install
 RUN composer dump-autoload --optimize
 
-# Đảm bảo quyền truy cập cho thư mục storage và bootstrap/cache
-# RUN chmod -R 777 storage bootstrap/cache
-
 CMD ["php-fpm"]

@@ -1,4 +1,4 @@
-name: laravel-reactjs-project
+name: cms-project
 
 services:
     # === Laravel Backend ===
@@ -11,10 +11,16 @@ services:
             - ./laravel:/var/www/html
             - ./php/php.ini:/usr/local/etc/php/php.ini
         restart: always
-        depends_on:
-            - mysql
         networks:
             - laravel
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 1G
+                reservations:
+                    cpus: '0.5'
+                    memory: 512M
 
     # === Server Config ===
     web:
@@ -30,6 +36,14 @@ services:
             - app
         networks:
             - laravel
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 1G
+                reservations:
+                    cpus: '0.5'
+                    memory: 512M
 
     # === ReactJS Frontend ===
     react:
@@ -44,21 +58,38 @@ services:
         restart: always
         networks:
             - laravel
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 1G
+                reservations:
+                    cpus: '0.5'
+                    memory: 512M
 
     # === SQl ===
+    # comment nếu đã có mysql bên ngoài
     mysql:
-        image: mysql:8.0
+        image: mysql:latest
         container_name: Laravel-React-Mysql
         environment:
-            MYSQL_DATABASE: laravel_react_db # tên data đây là database mặc định khi tạo csdl
-            MYSQL_ROOT_PASSWORD: khang412 # password gốc
+            MYSQL_DATABASE: laravel_react_db
+            MYSQL_ROOT_PASSWORD: khang412
         volumes:
             - ./mysql:/var/lib/mysql # xóa hết trong ./mysql trước khi build lại
         ports:
-            - 3312:3306
+            - 3307:3306
         restart: always
         networks:
             - laravel
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 1G
+                reservations:
+                    cpus: '0.5'
+                    memory: 512M
 
 networks:
     laravel:

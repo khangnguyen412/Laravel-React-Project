@@ -14,7 +14,7 @@ class ModelsUsers extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-    protected $table = "Users";
+    protected $table = "users";
     protected $fillable = [
         "user_name",
         "display_name",
