@@ -20,7 +20,7 @@ import "../../assets/css/auth/login.scss";
 /**
  *  Component
  */
-import Loading from '../loading'
+import Loading from '../../components/loading'
 
 /**
  *  Service
