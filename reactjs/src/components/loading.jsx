@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
  */
 import "../assets/css/loading.scss";
 
-const Loading = ({ IsLoading, Error, Type }) => {
+export const Loading = ({ IsLoading }) => {
     if (IsLoading) {
         return (
             <React.Fragment>
@@ -24,13 +24,5 @@ const Loading = ({ IsLoading, Error, Type }) => {
             </React.Fragment>
         )
     }
-    if (Error) {
-        return (
-            <React.Fragment>
-                {Error && (<span className="text-red-500 text-center mt-4">{Error}</span>)}
-            </React.Fragment>
-        )
-    }
     return null;
 }
-export default Loading

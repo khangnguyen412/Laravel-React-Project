@@ -21,11 +21,11 @@ export const Logout = async () => {
 }
 
 export const Login = async (username, password) => {
-    if(IsEmail(username)) {
-        const email = username
-        var get_data = JSON.stringify({ email, password })
-    }else {
-        var get_data = JSON.stringify({ username, password })
+    let get_data;
+    if (IsEmail(username)) {
+        get_data = JSON.stringify({ email: username, password })
+    } else {
+        get_data = JSON.stringify({ username, password })
     }
     const response = await fetch(`${API_URL}/login`, {
         method: "POST",

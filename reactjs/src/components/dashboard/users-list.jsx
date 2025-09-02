@@ -8,7 +8,7 @@ import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
  *  Component
  */
 import Modal from '../../components/dashboard/users-modal-profile'
-import Loading from '../../components/loading'
+import { Loading } from '../../components/loading'
 
 /**
  *  Service
@@ -52,7 +52,7 @@ const UserList = () => {
                 <div className="overflow-x-auto">
                     {/* Desktop - Dạng bảng */}
                     <div className="hidden lg:block rounded-lg">
-                        <Loading IsLoading={IsLoading} Error={HaveError}></Loading>
+                        <Loading IsLoading={IsLoading}></Loading>
                         {UserList ? (
                             <div className="space-y-2">
                                 <div className="grid grid-cols-5 p-3 border-b border-gray-200 hover:bg-gray-50" >
@@ -92,7 +92,7 @@ const UserList = () => {
                         <div className="grid grid-cols-1 bg-gray-100 p-3 text-left font-semibold rounded-lg">
                             <div>User List</div>
                         </div>
-                        <Loading IsLoading={IsLoading} Error={HaveError}></Loading>
+                        <Loading IsLoading={IsLoading}></Loading>
                         {UserList ? (
                             <React.Fragment>
                                 {UserList.map((item) => (

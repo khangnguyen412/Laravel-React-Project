@@ -11,7 +11,7 @@ import '../../assets/css/loading.scss';
 /**
  *  Component
  */
-import Loading from '../../components/loading';
+import { Loading } from '../../components/loading';
 
 /**
  *  Hook
@@ -112,7 +112,7 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
                     </div>
                 </div>
             ) : (
-                <Loading IsLoading={IsLoading} Error={HaveError}></Loading>
+                <Loading IsLoading={IsLoading}></Loading>
             )}
         </React.Fragment>
     );
