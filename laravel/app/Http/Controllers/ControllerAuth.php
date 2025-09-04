@@ -127,8 +127,7 @@ class ControllerAuth extends Controller
     public function profile(Request $request)
     {
         try {
-            $user = $request->user();
-            $user->save();
+            $user = $request->user(); // Call user() form setUserResolver in middleware AuthMiddleware
             return response()->json([
                 "status"  => 200,
                 "profile" => $user

@@ -33,6 +33,9 @@ class AuthMiddleware
             ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         }
 
+        /**
+         * Overide the setUserResolver function
+         */
         $request->setUserResolver(fn() => $user);
         return $next($request);
     }

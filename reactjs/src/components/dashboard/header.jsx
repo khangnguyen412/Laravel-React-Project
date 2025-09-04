@@ -21,7 +21,7 @@ import { UserProfile } from "../../services/services-auth";
  * Redux
  */
 
-import { LogoutThunk } from '../../redux/features/auth';
+import { LogoutThunk, GetProfileThunk } from '../../redux/features/auth';
 
 
 const Header = () => {
@@ -31,7 +31,7 @@ const Header = () => {
     const HandleLogout = async () => {
         try {
             await dispatch(LogoutThunk())
-            navigate("/login", {replace: true})
+            navigate("/login", { replace: true })
         } catch (e) {
             console.log('Lỗi: ', e)
         }
@@ -39,10 +39,14 @@ const Header = () => {
 
     const [Profile, SetProfile] = useState(null)
     useEffect(() => {
-        UserProfile().then(response => {
-            SetProfile(response)
-        })
-    }, [])
+        dispatch(GetProfileThunk()).unwrap()
+            .then((data) => {;
+                SetProfile(data.profile);
+            })
+            .catch((err) => {
+                console.error("Lỗi:", err);
+            });
+    }, [dispatch])
 
     const [IsOpen, SetIsOpen] = useState(false)
     const HandleTrigger = () => {

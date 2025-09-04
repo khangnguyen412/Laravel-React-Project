@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 /**
  * Services
 */
-import { Login, Logout, UserProfile } from "../../services/services-auth";
+import { Login, Logout, UserProfile, CheckAuth } from "../../services/services-auth";
 
 export const LoginThunk = createAsyncThunk(
     'auth/login',
@@ -14,30 +14,46 @@ export const LoginThunk = createAsyncThunk(
             if (response?.status === 200) return response;
             return rejectWithValue(response?.error || "Login Failed");
         } catch (error) {
-            return rejectWithValue(error.message|| "Login Failed");
+            return rejectWithValue(error.message || "Login Failed");
         }
     }
 )
 
 export const LogoutThunk = createAsyncThunk(
     'auth/logout',
-    async(_, {rejectWithValue}) => {
-        try{
+    async (_, { rejectWithValue }) => {
+        try {
             const response = await Logout();
             return response;
-        }catch(err){
+        } catch (err) {
             rejectWithValue(err.message || "Logout Failed")
         }
     }
 )
 
+export const CheckAuthThunk = createAsyncThunk(
+    'auth/check',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await CheckAuth();
+            if (!response?.ok) {
+                Logout();
+            }
+            return response;
+        } catch (err) {
+            rejectWithValue(err.message || "Check Auth Failed")
+        }
+    }
+)
+
+
 export const GetProfileThunk = createAsyncThunk(
     'auth/profile',
-    async(_, {rejectWithValue}) => {
-        try{
+    async (_, { rejectWithValue }) => {
+        try {
             const response = await UserProfile();
             return response;
-        }catch(err){
+        } catch (err) {
             rejectWithValue(err.message || "Get Profile Failed")
         }
     }
@@ -62,6 +78,13 @@ const LoginSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(CheckAuthThunk.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(GetProfileThunk.fulfilled, (state, action) => {
+                state.loading = false;
+                state.profile = action.payload ?? null;
+            })
             .addCase(LogoutThunk.fulfilled, (state) => {
                 state.profile = null;
                 state.token = null;

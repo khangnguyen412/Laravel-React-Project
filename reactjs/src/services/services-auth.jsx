@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { API_URL } from '../Config';
+import axios from 'axios';
 
 const IsEmail = (input) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
@@ -41,32 +42,29 @@ export const Login = async (username, password) => {
 export const CheckAuth = async () => {
     const token = localStorage.getItem("token");
     if (!token || token === 'undefined') {
-        if (window.location.pathname !== "/login") {
-            window.location.href = "/login";
-        }
-        return false;
+        return { ok: false, reason: "NO_TOKEN" };
     }
-    const response = await fetch(`${API_URL}/admin/user`, {
+    const response = await fetch(`${API_URL}/admin/profile`, {
         headers: {
             "X-Token": token
         }
     })
-    if (!response.ok) Logout();
-    return true;
+    if (!response.ok) return { ok: false, reason: "INVALID_TOKEN" };;
+    return { ok: true };
 }
 
 export const UserProfile = async () => {
     if (!CheckAuth()) return false;
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_URL}/admin/profile`, {
+    const response = await axios.get(`${API_URL}/admin/profile`, {
         headers: {
             "X-Token": token
-        }
+        },
     });
     if (!response) {
         console.log("Coundn't take userprofile");
         return false;
     }
-    const data = await response.json();
-    return data.profile;
+    const data = await response.data;
+    return data;
 }
