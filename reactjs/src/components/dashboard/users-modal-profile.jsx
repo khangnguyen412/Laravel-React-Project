@@ -37,10 +37,6 @@ const UserProfileModal = ({ isOpen, onClose, userID }) => {
     }, [isOpen])
 
     useEffect(() => {
-        console.log(UserData)
-    }, [UserData])
-
-    useEffect(() => {
         if (!isOpen || !userID) return;
         SetLoading(true);
         SetError(null);

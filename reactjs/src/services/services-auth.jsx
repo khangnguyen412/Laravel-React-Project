@@ -16,8 +16,9 @@ export const Logout = async () => {
     const data = await response.json();
     if (data.status === 200) {
         localStorage.removeItem("token");
+        localStorage.removeItem("profile");
     }
-    window.location.href = "/login";
+    return data;
 }
 
 export const Login = async (username, password) => {

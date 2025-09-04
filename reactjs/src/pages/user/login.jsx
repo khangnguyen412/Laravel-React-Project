@@ -54,7 +54,7 @@ const LoginPage = () => {
     }
     const LoginFormProps = {
         backgroundImageUrl: BackgroundImage,
-        backgroundVideoUrl: "",
+        backgroundVideoUrl: "https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr",
         logo: "",
         title: "Welcome to CMS System",
         subTitle: "Sign In",

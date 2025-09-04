@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
 import Button from '@mui/material/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faCircleXmark, faArrowRightFromBracket, faUser } from '@fortawesome/free-solid-svg-icons'
@@ -8,20 +9,31 @@ import { faBars, faCircleXmark, faArrowRightFromBracket, faUser } from '@fortawe
 /**
  *  Component
  */
-import MobileMenuItemDropDown from "../../components/dashboard/mobile-menu-item-dropdown"; // eslint-disable-line
-import MobileMenuItem from "../../components/dashboard/mobile-menu-item"; // eslint-disable-line
+import MobileMenuItemDropDown from "../../components/dashboard/mobile-menu-item-dropdown";
+import MobileMenuItem from "../../components/dashboard/mobile-menu-item";
 
 /**
  *  Service
  */
-import { Login, Logout, UserProfile } from "../../services/services-auth"; // eslint-disable-line
+import { UserProfile } from "../../services/services-auth";
+
+/**
+ * Redux
+ */
+
+import { LogoutThunk } from '../../redux/features/auth';
+
 
 const Header = () => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const HandleLogout = async () => {
         try {
-            await Logout()
+            await dispatch(LogoutThunk())
+            navigate("/login", {replace: true})
         } catch (e) {
-            console.log('Lỗi:' + e)
+            console.log('Lỗi: ', e)
         }
     };
 
