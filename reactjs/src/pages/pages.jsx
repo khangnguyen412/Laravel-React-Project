@@ -13,6 +13,9 @@ function Pages() {
                     <Link to='/admin/users'>Users Page</Link>
                 </li>
                 <li>
+                    <Link to='/admin/users-new'>Users New</Link>
+                </li>
+                <li>
                     <Link to='/admin/user/edit'>Users Profile</Link>
                 </li>
                 <li>

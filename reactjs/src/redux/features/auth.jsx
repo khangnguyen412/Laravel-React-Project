@@ -37,7 +37,7 @@ export const CheckAuthThunk = createAsyncThunk(
         try {
             const response = await CheckAuth();
             if (!response?.ok) {
-                Logout();
+                await Logout();
             }
             return response;
         } catch (err) {
@@ -66,6 +66,8 @@ const LoginSlice = createSlice({
         token: null,
         loading: false,
         error: null,
+        authenticated: null,
+        checked: false,
     },
     reducers: {
         logout: (state) => {
@@ -78,8 +80,9 @@ const LoginSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(CheckAuthThunk.pending, (state) => {
-                state.loading = true;
+            .addCase(CheckAuthThunk.fulfilled, (state, action) => {
+                state.checked = true;
+                state.authenticated = action.payload?.ok ?? false;
             })
             .addCase(GetProfileThunk.fulfilled, (state, action) => {
                 state.loading = false;

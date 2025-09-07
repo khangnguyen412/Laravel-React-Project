@@ -7,8 +7,8 @@ import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons'
 /**
  *  Component
  */
-import Modal from '../../components/dashboard/users-modal-profile'
-import { Loading } from '../../components/loading'
+import Modal from './users-modal-profile'
+import { Loading } from '../loading'
 
 /**
  *  Service
@@ -73,9 +73,9 @@ const UserList = () => {
                                             </Link>
                                         </div>
                                         <div>
-                                            <l className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded">
+                                            <Link className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded">
                                                 <FontAwesomeIcon icon={faTrash} style={{ color: "#ffffff", }} />
-                                            </l>
+                                            </Link>
                                         </div>
                                     </div>
                                 ))}

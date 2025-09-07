@@ -6,15 +6,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
  *  Component
  */
 import Headers from "../../components/dashboard/header.jsx";
-import UsersList from "../../components/dashboard/users-list.jsx";
-
-/**
- *  Service
- */
-import { CheckAuth } from "../../services/services-auth.jsx";
 
 const UserPage = () => {
-    // CheckAuth()
     const [isEditing, setIsEditing] = useState(false);
     const [activeTab, setActiveTab] = useState(false);
     const [preview, setPreview] = useState(null);

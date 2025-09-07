@@ -7,60 +7,61 @@ const IsEmail = (input) => {
 };
 
 export const Logout = async () => {
-    const response = await fetch(`${API_URL}/logout`, {
-        method: "POST",
-        headers: {
-            "X-Token": localStorage.getItem("token")
+    try{
+        const response = await axios.post(`${API_URL}/logout`, {}, { headers: { "X-Token": localStorage.getItem("token") }});
+        console.log(response.data)
+        if (response.data.status === 200) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("profile");
         }
-    });
-    if (!response) throw new Error("Coundn't take response");
-    const data = await response.json();
-    if (data.status === 200) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("profile");
+        return response.data;
+    }catch (error) {
+        if (error.response) {
+            throw new Error(error.response.data.message || "Logout failed");
+        }
+        throw new Error(error.message || "Network error");
     }
-    return data;
 }
 
 export const Login = async (username, password) => {
-    let get_data;
-    if (IsEmail(username)) {
-        get_data = JSON.stringify({ email: username, password })
-    } else {
-        get_data = JSON.stringify({ username, password })
+    try {
+        let payload;
+        if (IsEmail(username)) {
+            payload = { email: username, password }
+        } else {
+            payload = { username, password }
+        }
+        const response = await axios.post(`${API_URL}/login`, payload, { headers: { "Content-Type": "application/json" } })
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(error.response.data.message || "Login failed");
+        }
+        throw new Error(error.message || "Network error");
     }
-    const response = await fetch(`${API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: get_data
-    })
-    if (!response) throw new Error("Coundn't take response");
-    const data = await response.json();
-    return data;
 }
 
 export const CheckAuth = async () => {
-    const token = localStorage.getItem("token");
-    if (!token || token === 'undefined') {
-        return { ok: false, reason: "NO_TOKEN" };
-    }
-    const response = await fetch(`${API_URL}/admin/profile`, {
-        headers: {
-            "X-Token": token
+    try{
+        const token = localStorage.getItem("token");
+        if (!token || token === 'undefined') {
+            return { ok: false, reason: "NO_TOKEN" };
         }
-    })
-    if (!response.ok) return { ok: false, reason: "INVALID_TOKEN" };;
-    return { ok: true };
+        const response = await axios.get(`${API_URL}/admin/profile`, {headers: {"X-Token": token}})
+        if (response.status != 200) return { ok: false, reason: "INVALID_TOKEN" };
+        return { ok: true };
+    }catch (error) {
+        if (error.response) {
+            throw new Error(error.response.data.message || "Unauthorized");
+        }
+        throw new Error(error.message || "Network error");
+    }
 }
 
 export const UserProfile = async () => {
     if (!CheckAuth()) return false;
     const token = localStorage.getItem("token");
-    const response = await axios.get(`${API_URL}/admin/profile`, {
-        headers: {
-            "X-Token": token
-        },
-    });
+    const response = await axios.get(`${API_URL}/admin/profile`, {headers: { "X-Token": token },});
     if (!response) {
         console.log("Coundn't take userprofile");
         return false;
