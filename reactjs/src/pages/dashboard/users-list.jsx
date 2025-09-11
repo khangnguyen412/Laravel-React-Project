@@ -5,15 +5,16 @@ import { Link } from 'react-router-dom';
 /**
  * Ant Design
  */
-import { Breadcrumb, Layout, theme, Grid, Space, Table, Tag, Card, Modal, Button } from 'antd';
-
+import { Breadcrumb, Layout, theme, Grid, Space, Table, Tag, Card } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
 /**
  * Component
 */
 import SideBar from "../../components/dashboard/side-bar.jsx";
+import UserProfileModal from "../../components/dashboard/users-modal-profile.jsx";
 import HeaderLayout from "../../components/dashboard/header.jsx";
+import FooterLayout from "../../components/dashboard/footer.jsx";
 import { Loading } from '../../components/loading'
 
 
@@ -23,7 +24,7 @@ import { Loading } from '../../components/loading'
 import { GetUserListAdmin } from '../../services/services-users';
 
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 
 const UserList = () => {
     const { token: { colorBgContainer, borderRadiusLG }, } = theme.useToken();
@@ -56,17 +57,16 @@ const UserList = () => {
         })();
     }, []);
 
-    const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const [UserId, SetUserId] = useState(null)
 
-    const showModal = () => {
+    const showModal = (id) => {
+        SetUserId(id)
         setOpen(true);
     };
 
     const handleOk = () => {
-        setLoading(true);
         setTimeout(() => {
-            setLoading(false);
             setOpen(false);
         }, 3000);
     };
@@ -80,13 +80,13 @@ const UserList = () => {
             title: 'Display Name',
             dataIndex: 'display_name',
             key: 'display_name',
-            render: text => <Link to={``}>{text}</Link>,
+            render: (text, record) => <Link onClick={() => showModal(record.key)}>{text}</Link>,
         },
         {
             title: 'Username',
             dataIndex: 'username',
             key: 'username',
-            render: text => <Link to={``} onClick={showModal}>{text}</Link>,
+            render: (text, record) => <Link onClick={() => showModal(record.key)}>{text}</Link>,
         },
         {
             title: 'Email',
@@ -97,7 +97,7 @@ const UserList = () => {
             title: 'Address',
             dataIndex: 'address',
             key: 'address',
-            render: text => <Link to={``}>{text}</Link>,
+            render: text => <span>{text}</span>,
         },
         {
             title: 'Role',
@@ -119,8 +119,8 @@ const UserList = () => {
             responsive: ['md'],
             render: (_, record) => (
                 <Space size="middle">
-                    <Link to={`/`}><EditOutlined key="edit" /></Link>
-                    <Link to={`/`}><DeleteOutlined key="delete" /></Link>
+                    <Link to={`/admin/user/${record.key}/edit`}><EditOutlined key="edit" /></Link>
+                    <Link to={`/admin/user/${record.key}/delete`}><DeleteOutlined key="delete" /></Link>
                 </Space>
             ),
         },
@@ -128,65 +128,45 @@ const UserList = () => {
 
     return (
         <React.Fragment>
+            <Loading IsLoading={IsLoading}></Loading>
             <Layout height="auto">
                 <HeaderLayout></HeaderLayout>
-                <Loading IsLoading={IsLoading}></Loading>
                 <Layout style={{ minHeight: '100vh', marginTop: 64 }}>
                     <SideBar></SideBar>
                     <Layout>
                         <Content style={{ margin: '0 16px' }}>
-                            <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'User' }, { title: 'Bill' }]} />
+                            <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'User' }, { title: 'List' }]} />
                             {screens.lg ? (
-                                <div style={{ padding: 24, minHeight: 360, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
-                                    <Table columns={columns} dataSource={UserList} pagination={false} loading={false} scroll={true} />
-                                </div>
+                                <React.Fragment>
+                                    <div style={{ padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
+                                        <Table columns={columns} dataSource={UserList} pagination={false} loading={false} scroll={true} />
+                                    </div>
+                                </React.Fragment>
                             ) : (
                                 <React.Fragment>
-                                    <div style={{ marginBottom: 24, padding: 24, minHeight: 360, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
-                                        {
-                                            UserList.map(item => (
-                                                <Card key={item.key} style={{ marginBottom: 8 }} actions={[
-                                                    <EyeOutlined key="view" onClick={showModal} />,
-                                                    <Link to={'/'}><EditOutlined key="edit" /></Link>,
-                                                    <Link to={'/'}><DeleteOutlined key="delete" /></Link>,
-                                                ]}>
-                                                    <p><b>Tên:</b> {item.display_name}</p>
-                                                    <p><b>Username:</b> {item.username}</p>
-                                                    <p><b>Email:</b> {item.email}</p>
-                                                    <p><b>Address:</b> {item.address}</p>
-                                                    <p><b>Role:</b> {item.role.name}</p>
-                                                </Card>
-                                            ))
-                                        }
+                                    <div style={{ marginBottom: 24, padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
+                                        {UserList.map(item => (
+                                            <Card key={item.key} style={{ marginBottom: 8 }} actions={[
+                                                <EyeOutlined key="view" onClick={() => showModal(item.key)} />,
+                                                <Link to={`/admin/user/${item.key}/edit`}><EditOutlined key="edit" /></Link>,
+                                                <Link to={`/admin/user/${item.key}/delete`}><DeleteOutlined key="delete" /></Link>,
+                                            ]}>
+                                                <p><b>Tên:</b> {item.display_name}</p>
+                                                <p><b>Username:</b> {item.username}</p>
+                                                <p><b>Email:</b> {item.email}</p>
+                                                <p><b>Address:</b> {item.address}</p>
+                                                <p><b>Role:</b> {item.role.name}</p>
+                                            </Card>
+                                        ))}
                                     </div>
                                 </React.Fragment>
                             )}
                         </Content>
-                        <Footer style={{ textAlign: 'center' }}>
-                            Created by Khang.MNQ ©{new Date().getFullYear()}
-                        </Footer>
+                        <FooterLayout></FooterLayout>
                     </Layout>
                 </Layout>
             </Layout>
-            <Modal open={open} title="Title" onOk={handleOk} onCancel={handleCancel}
-                footer={[
-                    <Button key="back" onClick={handleCancel}>
-                        X
-                    </Button>,
-                    <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-                        <EditOutlined key="edit" />
-                    </Button>,
-                    <Button key="submit" type="primary" color="danger" loading={loading} onClick={handleOk}>
-                        <DeleteOutlined key="delete" />
-                    </Button>,
-                ]}
-            >
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-            </Modal>
+            <UserProfileModal isOpen={open} onOk={handleOk} onCancel={handleCancel} userID={UserId}></UserProfileModal>
         </React.Fragment>
     );
 };
