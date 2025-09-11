@@ -4,17 +4,25 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 /**
  * Services
 */
-import { Login, Logout, UserProfile, CheckAuth } from "../../services/services-auth";
+import { Login, Logout, UserProfile, CheckAuth } from "../../services/servicesAuth";
+
+const IsEmail = (input) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
+};
 
 export const LoginThunk = createAsyncThunk(
     'auth/login',
     async ({ username, password }, { rejectWithValue }) => {
         try {
-            const response = await Login(username, password);
-            if (response?.status === 200) return response;
-            return rejectWithValue(response?.error || "Login Failed");
+            let payload = IsEmail(username) ? { email: username, password } : { username, password };
+            const response = await Login(payload);
+            if (response?.status === 200) {
+                return response;
+            } else {
+                return rejectWithValue(response?.error || "Login Failed");
+            }
         } catch (error) {
-            return rejectWithValue(error.message || "Login Failed");
+            return rejectWithValue(error?.error || "Login Failed");
         }
     }
 )
@@ -23,10 +31,17 @@ export const LogoutThunk = createAsyncThunk(
     'auth/logout',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await Logout();
+            const token = localStorage.getItem("token")
+            const response = await Logout(token);
+            if (response?.status === 200) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("profile");
+            } else {
+                return rejectWithValue(response.message || "Logout Failed");
+            }
             return response;
         } catch (err) {
-            rejectWithValue(err.message || "Logout Failed")
+            return rejectWithValue(err.message || "Logout Failed");
         }
     }
 )
@@ -35,9 +50,15 @@ export const CheckAuthThunk = createAsyncThunk(
     'auth/check',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await CheckAuth();
-            if (!response?.ok) {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.error("Token not found")
+                return;
+            }
+            const response = await CheckAuth(token);
+            if (response?.status !== 200) {
                 await Logout();
+                return rejectWithValue("Token invalid");
             }
             return response;
         } catch (err) {
@@ -51,7 +72,14 @@ export const GetProfileThunk = createAsyncThunk(
     'auth/profile',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await UserProfile();
+            const token = localStorage.getItem("token");
+            if (!token) {
+                return rejectWithValue("Coundn't take userprofile");
+            }
+            const response = await UserProfile(token);
+            if (response?.status !== 200) {
+                return rejectWithValue("Coundn't take userprofile");
+            }
             return response;
         } catch (err) {
             rejectWithValue(err.message || "Get Profile Failed")
@@ -82,7 +110,7 @@ const LoginSlice = createSlice({
         builder
             .addCase(CheckAuthThunk.fulfilled, (state, action) => {
                 state.checked = true;
-                state.authenticated = action.payload?.ok ?? false;
+                state.authenticated = action.payload?.status === 200 ?? false;
             })
             .addCase(GetProfileThunk.fulfilled, (state, action) => {
                 state.loading = false;

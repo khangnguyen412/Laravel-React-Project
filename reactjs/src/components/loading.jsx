@@ -11,7 +11,7 @@ export const Loading = ({ IsLoading }) => {
         return (
             <React.Fragment>
                 {IsLoading && (
-                    <div className="flex flex-col">
+                    <div className="flex-loading flex-col">
                         <div className="wrap-loader--background">
                             <div className="loader">
                                 <div className="inner one"></div>

@@ -1,11 +1,10 @@
 /* eslint-disable */
 import React, { Suspense, lazy } from "react";
 
-const AppDefault = lazy(() => import('../pages/appdefault'));
-const Login = lazy(() => import('../pages/user/login'));
-const LoginDefault = lazy(() => import('../pages/user/login-default.jsx'));
-
-const Payment = lazy(() => import('../pages/user/payment-test'));
+const AppDefault = lazy(() => import('../pages/AppDefault'));
+const Login = lazy(() => import('../pages/user/Login'));
+const LoginDefault = lazy(() => import('../pages/user/LoginDefault'));
+const PaymentTest = lazy(() => import('../pages/user/PaymentTest'));
 
 export const MainRoute = [
     {
@@ -29,7 +28,7 @@ export const MainRoute = [
     {
         path: '/payment-test',
         element: (
-            <Suspense fallback={<p>Đang tải...</p>}><Payment></Payment></Suspense>
+            <Suspense fallback={<p>Đang tải...</p>}><PaymentTest></PaymentTest></Suspense>
         )
     },
 ]

@@ -4,8 +4,8 @@ import { createBrowserRouter, RouterProvider, BrowserRouter as Router, Routes, R
 import { store } from './redux/store.jsx';
 import { Provider } from 'react-redux';
 
-import { MainRoute } from './routes/route-main.jsx';
-import { AdminRoute } from './routes/route-admin.jsx';
+import { MainRoute } from './routes/routeMain.jsx';
+import { AdminRoute } from './routes/routeAdmin.jsx';
 
 const routes = [
   ...MainRoute,

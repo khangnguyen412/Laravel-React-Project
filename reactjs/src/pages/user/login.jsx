@@ -41,7 +41,7 @@ const LoginPage = () => {
         if (authToken && profile) {
             localStorage.setItem("token", authToken);
             localStorage.setItem("profile", JSON.stringify(profile));
-            navigate("/admin/users");
+            navigate("/admin");
         }
     }, [authToken, profile, navigate])
 
@@ -61,8 +61,8 @@ const LoginPage = () => {
         containerStyle: ContainerStyle,
         activityConfig: {
             title: 'CMS System',
-            subTitle: (<Description></Description>),
-            action: (<ButtonViewSource></ButtonViewSource>),
+            subTitle: <Description></Description>,
+            action: <ButtonViewSource></ButtonViewSource>,
         },
         submitter: {
             searchConfig: {
@@ -78,7 +78,7 @@ const LoginPage = () => {
                 <div className="login-page" id="login-page">
                     <LoginFormPage {...LoginFormProps} onFinish={OnFinish}>
                         <React.Fragment>
-                            <ProFormText name="username" fieldProps={{ size: 'large', prefix: (<UserOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Username or Email'} rules={[{ required: true, message: 'Please input your username or email!', },]} />
+                            <ProFormText name="username" fieldProps={{ size: 'large', autoFocus: true, prefix: (<UserOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Username or Email'} rules={[{ required: true, message: 'Please input your username or email!', },]} />
                             <ProFormText.Password name="password" fieldProps={{ size: 'large', prefix: (<LockOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Password'} rules={[{ required: true, message: 'Please input your password!', },]} />
                         </React.Fragment>
                         <div style={{ marginBlockEnd: 24, }} >

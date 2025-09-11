@@ -8,7 +8,7 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 /**
  *  Services
  */
-import { Payment } from "../../services/services-payment";
+import { Payment } from "../../services/servicesPayment";
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
 

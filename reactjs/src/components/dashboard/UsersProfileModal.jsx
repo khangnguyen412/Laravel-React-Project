@@ -15,17 +15,17 @@ import '../../assets/css/loading.scss';
 /**
  * Component
  */
-import { Loading } from '../../components/loading';
+import { Loading } from '../loading';
 
 /**
  * Hook
  */
-import { HandleDateTime } from '../../hooks/hook-daytime';
+import { HandleDateTime } from '../../hooks/dayTime';
 
 /**
  * Service
  */
-import { GetUserIDAdmin } from '../../services/services-users';
+import { GetUserIDAdmin } from '../../services/servicesUsers';
 
 const CloseBtn = ({ onCancel }) => {
     return (
@@ -55,10 +55,10 @@ const UserProfileModal = ({ isOpen, onOk, onCancel, loading, userID }) => {
     const [CreateAt, SetCreateAt] = useState(null)
     const [UpdateAt, SetUpdateAt] = useState(null)
 
-    const footer = [ 
+    const footer = [
         <CloseBtn key="close" onCancel={onCancel} />,
         <EditBtn key="edit" onOk={onOk} loading={loading} />,
-        <DeleteBtn key="delete" onOk={onOk} loading={loading}/>,
+        <DeleteBtn key="delete" onOk={onOk} loading={loading} />,
     ]
 
     useEffect(() => {
@@ -88,7 +88,7 @@ const UserProfileModal = ({ isOpen, onOk, onCancel, loading, userID }) => {
         <React.Fragment>
             {(UserData) ? (
                 <React.Fragment>
-                    <Modal open={isOpen} title="Infomations" onOk={onOk} onCancel={onCancel}footer={footer}>
+                    <Modal open={isOpen} title="Infomations" onOk={onOk} onCancel={onCancel} footer={footer} width={1000}>
                         <div>
                             <h1 className="text-2xl font-bold">{UserData.display_name}</h1>
                             <p className="text-gray-600">{UserData.role.name} • Register Date: {CreateAt}</p>

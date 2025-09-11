@@ -25,7 +25,7 @@ const HeaderLayout = () => {
 
     const HandleLogout = async () => {
         try {
-            await dispatch(LogoutThunk()).unwrap()
+            const res = await dispatch(LogoutThunk()).unwrap()
             navigate("/login", { replace: true })
         } catch (e) {
             console.log('Lỗi: ', e)
@@ -33,17 +33,16 @@ const HeaderLayout = () => {
     };
 
     const items1 = [
-        {
-            key: "1",
-            label: <Link href="/home">Trang chủ</Link>,
-        },
+        // {
+        //     key: "1",
+        //     label: <Link href="/home">Trang chủ</Link>,
+        // },
         {
             key: "3",
             label: <span>Welcome, {Profile?.user_name}</span>,
             icon: <UserOutlined />,
             children: [
-                { label: 'Option 1', key: 'setting:1' },
-                { label: 'Option 2', key: 'setting:2' },
+                { label: <Link to={"/admin/user-profile"}>Profile</Link>, key: 'setting:1'},
                 { label: 'Logout', key: 'setting:3', onClick: HandleLogout },
             ],
         },

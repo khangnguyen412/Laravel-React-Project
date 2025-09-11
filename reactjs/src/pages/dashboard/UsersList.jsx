@@ -5,23 +5,22 @@ import { Link } from 'react-router-dom';
 /**
  * Ant Design
  */
-import { Breadcrumb, Layout, theme, Grid, Space, Table, Tag, Card } from 'antd';
+import { Breadcrumb, Layout, theme, Grid, Space, Table, Tag, Card, Row, Col, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
 /**
  * Component
 */
-import SideBar from "../../components/dashboard/side-bar.jsx";
-import UserProfileModal from "../../components/dashboard/users-modal-profile.jsx";
-import HeaderLayout from "../../components/dashboard/header.jsx";
-import FooterLayout from "../../components/dashboard/footer.jsx";
-import { Loading } from '../../components/loading'
-
+import SideBar from "../../components/dashboard/SideBar.jsx";
+import UserProfileModal from "../../components/dashboard/UsersProfileModal.jsx";
+import HeaderLayout from "../../components/dashboard/Header.jsx";
+import FooterLayout from "../../components/dashboard/Footer.jsx";
+import { Loading } from '../../components/loading.jsx'
 
 /**
  *  Service
  */
-import { GetUserListAdmin } from '../../services/services-users';
+import { GetUserListAdmin } from '../../services/servicesUsers.jsx';
 
 
 const { Content } = Layout;
@@ -130,37 +129,38 @@ const UserList = () => {
         <React.Fragment>
             <Loading IsLoading={IsLoading}></Loading>
             <Layout height="auto">
+
                 <HeaderLayout></HeaderLayout>
                 <Layout style={{ minHeight: '100vh', marginTop: 64 }}>
-                    <SideBar></SideBar>
+                    <SideBar activeKey={'users-list'} activeOpenKey={['users']}></SideBar>
                     <Layout>
                         <Content style={{ margin: '0 16px' }}>
                             <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'User' }, { title: 'List' }]} />
-                            {screens.lg ? (
-                                <React.Fragment>
-                                    <div style={{ padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
-                                        <Table columns={columns} dataSource={UserList} pagination={false} loading={false} scroll={true} />
-                                    </div>
-                                </React.Fragment>
-                            ) : (
-                                <React.Fragment>
-                                    <div style={{ marginBottom: 24, padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
-                                        {UserList.map(item => (
-                                            <Card key={item.key} style={{ marginBottom: 8 }} actions={[
-                                                <EyeOutlined key="view" onClick={() => showModal(item.key)} />,
-                                                <Link to={`/admin/user/${item.key}/edit`}><EditOutlined key="edit" /></Link>,
-                                                <Link to={`/admin/user/${item.key}/delete`}><DeleteOutlined key="delete" /></Link>,
-                                            ]}>
-                                                <p><b>Tên:</b> {item.display_name}</p>
-                                                <p><b>Username:</b> {item.username}</p>
-                                                <p><b>Email:</b> {item.email}</p>
-                                                <p><b>Address:</b> {item.address}</p>
-                                                <p><b>Role:</b> {item.role.name}</p>
-                                            </Card>
-                                        ))}
-                                    </div>
-                                </React.Fragment>
-                            )}
+                            <Row>
+                                <Col span={24} style={{ marginBottom: 24, padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
+                                    {screens.lg ? (
+                                        <React.Fragment>
+                                            <Table columns={columns} dataSource={UserList} pagination={false} loading={false} scroll={true} />
+                                        </React.Fragment>
+                                    ) : (
+                                        <React.Fragment>
+                                            {UserList.map(item => (
+                                                <Card key={item.key} style={{ marginBottom: 8 }} actions={[
+                                                    <EyeOutlined key="view" onClick={() => showModal(item.key)} />,
+                                                    <Link to={`/admin/user/${item.key}/edit`}><EditOutlined key="edit" /></Link>,
+                                                    <Link to={`/admin/user/${item.key}/delete`}><DeleteOutlined key="delete" /></Link>,
+                                                ]}>
+                                                    <p><b>Tên:</b> {item.display_name}</p>
+                                                    <p><b>Username:</b> {item.username}</p>
+                                                    <p><b>Email:</b> {item.email}</p>
+                                                    <p><b>Address:</b> {item.address}</p>
+                                                    <p><b>Role:</b> {item.role.name}</p>
+                                                </Card>
+                                            ))}
+                                        </React.Fragment>
+                                    )}
+                                </Col>
+                            </Row>
                         </Content>
                         <FooterLayout></FooterLayout>
                     </Layout>
