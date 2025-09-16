@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { postRequest, getRequest } from './axios';
 import { API_URL } from "../Config";
 
 export const GetUserListAdmin = async () => {
@@ -13,6 +14,14 @@ export const GetUserListAdmin = async () => {
         return response;
     } catch (e) {
         console.log("Error: ", e);
+    }
+}
+
+export const GetUserListAdminThunk = async () => {
+    try {
+        return await getRequest('/admin/user', {headers: {"X-Token": localStorage.getItem("token")}});
+    } catch (error) {
+        throw error
     }
 }
 

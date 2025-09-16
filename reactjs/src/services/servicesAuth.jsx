@@ -1,40 +1,34 @@
 /* eslint-disable */
-import axios from 'axios';
-import { API_URL } from '../Config';
-import { postRequest } from './servicesAxios';
+import { postRequest, getRequest } from './axios';
 
 export const Logout = async (token) => {
     try {
-        const response = await postRequest('logout', {}, { "X-Token": token });
-        return response.data;
+        return await postRequest('/logout', {}, { "X-Token": token });
     } catch (error) {
-        throw error.response?.data || error;
+        throw error;
     }
 }
 
 export const Login = async (payload) => {
     try {
-        const response = await postRequest('login', payload, { "Content-Type": "application/json" });
-        return response.data;
+        return await postRequest('/login', payload, { "Content-Type": "application/json" });
     } catch (error) {
-        throw error.response?.data || error;
+        throw error;
     }
 }
 
 export const CheckAuth = async (token) => {
     try {
-        const response = await axios.get(`${API_URL}/admin/profile`, { headers: { "X-Token": token } })
-        return response.data;
+        return await getRequest('/admin/profile', { "X-Token": token })
     } catch (error) {
-        throw error.response?.data || error;
+        throw error;
     }
 }
 
 export const UserProfile = async (token) => {
     try {
-        const response = await axios.get(`${API_URL}/admin/profile`, { headers: { "X-Token": token }, });
-        return response.data;
+        return await getRequest('/admin/profile', { "X-Token": token })
     } catch (error) {
-        throw error.response?.data || error;
+        throw error;
     }
 }

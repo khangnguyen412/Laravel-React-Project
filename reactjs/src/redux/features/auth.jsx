@@ -17,7 +17,7 @@ export const LoginThunk = createAsyncThunk(
             let payload = IsEmail(username) ? { email: username, password } : { username, password };
             const response = await Login(payload);
             if (response?.status === 200) {
-                return response;
+                return { data: response.data, token: response.token , profile: response.profile};
             } else {
                 return rejectWithValue(response?.error || "Login Failed");
             }
@@ -60,7 +60,7 @@ export const CheckAuthThunk = createAsyncThunk(
                 await Logout();
                 return rejectWithValue("Token invalid");
             }
-            return response;
+            return { status: response.status, profile: response.profile };
         } catch (err) {
             rejectWithValue(err.message || "Check Auth Failed")
         }
@@ -80,7 +80,8 @@ export const GetProfileThunk = createAsyncThunk(
             if (response?.status !== 200) {
                 return rejectWithValue("Coundn't take userprofile");
             }
-            return response;
+            console.log("res: ", response)
+            return { status: response.status, profile: response.profile };
         } catch (err) {
             rejectWithValue(err.message || "Get Profile Failed")
         }
@@ -114,7 +115,7 @@ const LoginSlice = createSlice({
             })
             .addCase(GetProfileThunk.fulfilled, (state, action) => {
                 state.loading = false;
-                state.profile = action.payload ?? null;
+                state.profile = action.payload?.profile ?? null;
             })
             .addCase(LogoutThunk.fulfilled, (state) => {
                 state.profile = null;
@@ -126,7 +127,7 @@ const LoginSlice = createSlice({
             })
             .addCase(LoginThunk.fulfilled, (state, action) => {
                 state.loading = false;
-                state.profile = action.payload.profile ?? null;
+                state.profile = action.payload?.profile ?? null;
                 state.token = action.payload.token ?? null;
             })
             .addCase(LoginThunk.rejected, (state, action) => {
