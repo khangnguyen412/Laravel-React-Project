@@ -7,7 +7,7 @@ const Template = lazy(() => import('../pages/Pages'))
 const Component = lazy(() => import('../pages/Component'))
 const AdminDashboard = lazy(() => import('../pages/dashboard/AdminDashboard'))
 const Users = lazy(() => import('../pages/dashboard/UsersList'))
-const UsersProfile = lazy(() => import('../pages/dashboard/UsersProfile'))
+const UsersCreate = lazy(() => import('../pages/dashboard/UsersCreate'))
 
 export const AdminRoute = [
     {
@@ -43,11 +43,11 @@ export const AdminRoute = [
         )
     },
     {
-        path: '/admin/user/edit',
+        path: '/admin/users-creation',
         element: (
             <Suspense>
                 <ProtectedAdmin>
-                    <UsersProfile></UsersProfile>
+                    <UsersCreate></UsersCreate>
                 </ProtectedAdmin>
             </Suspense>
         )

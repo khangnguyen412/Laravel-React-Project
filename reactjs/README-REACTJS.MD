@@ -33,3 +33,11 @@ npm set audit false
     "test": "react-scripts --openssl-legacy-provider test",
     "eject": "react-scripts --openssl-legacy-provider eject"
   },
+```
+
+## Chuẩn tên file cho dự án
+- Tên file component, page, layout: PascalCase (NavBar.jsx, HomePage.jsx) 
+- Tên file thường (utils, hooks, helper) thường là camelCase (useAuth.js, api.js, config.js)
+- Tên file style dùng camelCase hoặc theo tên component kèm.scss (NavBar.module.scss, HomePage.module.scss)
+- Tên file constants / config thường viết UPPER_CASE để phân biệt.
+- Tên thư mục: thường là camelCase (components, pages, layouts)

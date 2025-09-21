@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { Button, theme } from 'antd';
 
 /**
- *  Css
+ * Style
 */
 import "../../assets/css/style.scss";
 import "../../assets/css/auth/login.scss";
@@ -17,7 +17,7 @@ import "../../assets/css/auth/login.scss";
 /**
  *  Component
  */
-import { Error } from '../../components/error'
+import { Error } from '../Error'
 
 export const ForgotPassBtn = ({ error }) => {
 

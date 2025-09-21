@@ -1,6 +1,10 @@
 .flex-loading{
-    position: fixed;
-    z-index: 999999;
+
+    &.flex-col-fixed{
+        position: fixed;
+        z-index: 999999;
+    }
+
     .wrap-loader--background{
         width: 100vw;
         height: 100vh;
@@ -52,6 +56,8 @@
         animation: rotate-three 1s linear infinite;
         border-top: 3px solid #2cccff;
 }
+
+
 
 }
 

@@ -10,7 +10,7 @@ import { LoginFormPage, ProFormCaptcha, ProFormCheckbox, ProFormText, } from '@a
 import { Button, Divider, Space, Tabs, message, theme } from 'antd';
 
 /**
- *  Css
+ * Style
 */
 import "../../assets/css/style.scss";
 import "../../assets/css/auth/login.scss";
@@ -18,7 +18,6 @@ import "../../assets/css/auth/login.scss";
 /**
  * Custom Css
  */
-
 const IconStyles = {
     color: 'rgba(0, 0, 0, 0.2)',
     fontSize: '18px',

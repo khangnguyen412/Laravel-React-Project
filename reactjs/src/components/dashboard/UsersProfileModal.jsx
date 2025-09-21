@@ -8,24 +8,25 @@ import { Modal, Button } from 'antd';
 import { EditOutlined, DeleteOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 /**
- * Loading
+ * Redux
+ */
+import { useDispatch } from 'react-redux';
+import { GetUserIDAdminThunk } from '../../redux/features/user';
+
+/**
+ * Style
  */
 import '../../assets/css/loading.scss';
 
 /**
  * Component
  */
-import { Loading } from '../loading';
+import { Loading } from '../Loading';
 
 /**
  * Hook
  */
 import { HandleDateTime } from '../../hooks/dayTime';
-
-/**
- * Service
- */
-import { GetUserIDAdmin } from '../../services/servicesUsers';
 
 const CloseBtn = ({ onCancel }) => {
     return (
@@ -50,6 +51,7 @@ const DeleteBtn = ({ onOk, loading }) => {
 }
 
 const UserProfileModal = ({ isOpen, onOk, onCancel, loading, userID }) => {
+    const dispatch = useDispatch();
     const [IsLoading, SetLoading] = useState(null)
     const [UserData, GetUserData] = useState(null)
     const [CreateAt, SetCreateAt] = useState(null)
@@ -63,17 +65,17 @@ const UserProfileModal = ({ isOpen, onOk, onCancel, loading, userID }) => {
 
     useEffect(() => {
         if (!isOpen || !userID) return;
-        SetLoading(true);
         (async () => {
             try {
-                const response = await GetUserIDAdmin(userID)
-                if (response) {
-                    GetUserData(response)
-                    SetCreateAt(HandleDateTime(response.created_at, 'FullDate'))
-                    SetUpdateAt(HandleDateTime(response.updated_at, 'FullDate'))
+                SetLoading(true);
+                const response = await dispatch(GetUserIDAdminThunk(userID)).unwrap();
+                if (response.data) {
+                    GetUserData(response.data)
+                    SetCreateAt(HandleDateTime(response.data.created_at, 'FullDate'))
+                    SetUpdateAt(HandleDateTime(response.data.updated_at, 'FullDate'))
                 }
             } catch (error) {
-                SetError(error.message)
+                console.log("Lỗi:", error.message);
             } finally {
                 SetLoading(false)
             }
@@ -86,8 +88,9 @@ const UserProfileModal = ({ isOpen, onOk, onCancel, loading, userID }) => {
 
     return (
         <React.Fragment>
-            {(UserData) ? (
+            {UserData && (
                 <React.Fragment>
+                    <Loading IsLoading={IsLoading} FlexLoading={true}></Loading>
                     <Modal open={isOpen} title="Infomations" onOk={onOk} onCancel={onCancel} footer={footer} width={1000}>
                         <div>
                             <h1 className="text-2xl font-bold">{UserData.display_name}</h1>
@@ -102,8 +105,6 @@ const UserProfileModal = ({ isOpen, onOk, onCancel, loading, userID }) => {
                         </ul>
                     </Modal>
                 </React.Fragment>
-            ) : (
-                <Loading IsLoading={IsLoading}></Loading>
             )}
         </React.Fragment>
     );

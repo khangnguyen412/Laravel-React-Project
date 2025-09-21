@@ -80,7 +80,6 @@ export const GetProfileThunk = createAsyncThunk(
             if (response?.status !== 200) {
                 return rejectWithValue("Coundn't take userprofile");
             }
-            console.log("res: ", response)
             return { status: response.status, profile: response.profile };
         } catch (err) {
             rejectWithValue(err.message || "Get Profile Failed")
@@ -88,7 +87,7 @@ export const GetProfileThunk = createAsyncThunk(
     }
 )
 
-const LoginSlice = createSlice({
+const AuthSlice = createSlice({
     name: 'auth',
     initialState: {
         profile: null,
@@ -112,6 +111,9 @@ const LoginSlice = createSlice({
             .addCase(CheckAuthThunk.fulfilled, (state, action) => {
                 state.checked = true;
                 state.authenticated = action.payload?.status === 200 ?? false;
+            })
+            .addCase(GetProfileThunk.pending, (state) => {
+                state.loading = true;
             })
             .addCase(GetProfileThunk.fulfilled, (state, action) => {
                 state.loading = false;
@@ -137,5 +139,5 @@ const LoginSlice = createSlice({
     },
 });
 
-export const { logout } = LoginSlice.actions;
-export default LoginSlice.reducer;
+export const { logout } = AuthSlice.actions;
+export default AuthSlice.reducer;

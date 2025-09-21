@@ -99,28 +99,25 @@ class ControllerPayment extends Controller
 
     public function StripePaymentAPI()
     {
-        // Giả sử bạn chọn sản phẩm có id = 1
-        $productId = 1;
-        $amount = 1000; // 10 USD x 100 = 1000 cents
-        $currency = 'usd';
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . config('services.stripe_payment.secret_key'),
-            'Content-Type' => 'application/x-www-form-urlencoded'
-        ])->asForm()->post('https://api.stripe.com/v1/payment_intents',  [
-            'amount' => $amount,
-            'currency' => $currency,
-            'payment_method_types[]' => 'card',
-        ]);
-        if ($response->successful()) {
+        try {
+            $stripe = new \Stripe\StripeClient(config('services.stripe_payment.secret_key'));
+
+            $paymentIntent = $stripe->paymentIntents->create([
+                'amount' => 1000,
+                'currency' => 'usd',
+                'payment_method_types' => ['card'],
+            ]);
+
             return response()->json([
                 'status' => 'success',
-                'intent' => $response->json()
-            ]);
+                'clientSecret' => $paymentIntent->client_secret,
+            ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => 'failed',
+                'error' => $th->getMessage(),
+            ], 400);
         }
-        return response()->json([
-            'status' => 'failed',
-            'error' => $response->json()
-        ], 400);
     }
 
     /**
@@ -144,84 +141,90 @@ class ControllerPayment extends Controller
         /**
          *  Smock data
          */
-        $product = OBJECT;
+        // $product = OBJECT;
+        
         /** 
          *  1. Người dùng chọn sản phẩm
          */
-        session()->push('cart', ['id' => '', 'name' => '', 'price' => '', 'quantity' => 1]);
+        // session()->push('cart', ['id' => '', 'name' => '', 'price' => '', 'quantity' => 1]);
+        
         /**
          *  2. Cho vào giỏ hàng
          */
-        $cart = session()->get('cart', []);
-        $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
+        // $cart = session()->get('cart', []);
+        // $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
+        
         /**
          *  3. Chọn phương thức thanh toán
          *  - Người dùng chọn hình thức thanh toán: thẻ, ví điện tử,...
          *  - Trong trường hợp này: Stripe Checkout hoặc PaymentIntent
          */
+
         /**
          *  4. Kiểm tra tồn kho trước khi thanh toán
          */
-        foreach ($cart as $item) {
-            $product = $product::find($item['id']);
-            if ($product && $product->stock < $item['quantity']) {
-                return redirect()->back()->with('error', 'Sản phẩm ' . $product->name . ' hết hàng');
-            }
-        }
+        // foreach ($cart as $item) {
+        //     $product = $product::find($item['id']);
+        //     if ($product && $product->stock < $item['quantity']) {
+        //         return redirect()->back()->with('error', 'Sản phẩm ' . $product->name . ' hết hàng');
+        //     }
+        // }
+        
         /**
          *  5. Gửi Stripe tạo PaymentIntent hoặc Checkout Session
          */
-        Stripe::setApiKey(config('services.stripe_payment.secret_key'));
-        $lineItems = collect($cart)->map(function ($item) {
-            return [
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => ['name' => $item['name']],
-                    'unit_amount' => $item['price'] * 100, // từ $10 → 1000 cents
-                ],
-                'quantity' => $item['quantity'],
-            ];
-        })->toArray();
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => $lineItems,
-            'mode' => 'payment',
-            'success_url' => route('checkout.success'),
-            'cancel_url' => route('checkout.cancel'),
-        ]);
-        return view('payment.checkout', [
-            'session_id' => $session->id,
-            'publishable_key' => config('services.stripe.key')
-        ]);
+        // Stripe::setApiKey(config('services.stripe_payment.secret_key'));
+        // $lineItems = collect($cart)->map(function ($item) {
+        //     return [
+        //         'price_data' => [
+        //             'currency' => 'usd',
+        //             'product_data' => ['name' => $item['name']],
+        //             'unit_amount' => $item['price'] * 100, // từ $10 → 1000 cents
+        //         ],
+        //         'quantity' => $item['quantity'],
+        //     ];
+        // })->toArray();
+        // $session = Session::create([
+        //     'payment_method_types' => ['card'],
+        //     'line_items' => $lineItems,
+        //     'mode' => 'payment',
+        //     'success_url' => route('checkout.success'),
+        //     'cancel_url' => route('checkout.cancel'),
+        // ]);
+        // return view('payment.checkout', [
+        //     'session_id' => $session->id,
+        //     'publishable_key' => config('services.stripe.key')
+        // ]);
+        
         /**
          *  6. Frontend nhận client_secret và confirm thanh toán (laravel/resources/views/payment.blade.php)
          *  7. Stripe trả về trạng thái thanh toán
          *  8. Cập nhật DB sau khi thanh toán thành công
          */
-        function ($request) {
-            $order = OBJECT;
-            $product = OBJECT;
-            $payload = json_decode($request->getContent(), true);
-            if ($payload['type'] === 'checkout.session.completed') {
-                $session = $payload['data']['object'];
-                $paymentIntentId = $session['payment_intent'];
-                // Lấy thông tin payment intent
-                $paymentIntent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
-                if ($paymentIntent->status === 'succeeded') {
-                    // Lưu order vào database
-                    $order::create([
-                        'user_id' => auth()->id(),
-                        'total' => $session['amount_total'] / 100,
-                        'status' => 'paid'
-                    ]);
-                    // Giảm tồn kho
-                    foreach (session('cart') as $item) {
-                        $product::find($item['id'])->decrement('stock', $item['quantity']);
-                    }
-                    session()->forget('cart');
-                }
-            }
-            return response()->json(['status' => 'ok']);
-        };
+        // function ($request) {
+        //     $order = OBJECT;
+        //     $product = OBJECT;
+        //     $payload = json_decode($request->getContent(), true);
+        //     if ($payload['type'] === 'checkout.session.completed') {
+        //         $session = $payload['data']['object'];
+        //         $paymentIntentId = $session['payment_intent'];
+        //         // Lấy thông tin payment intent
+        //         $paymentIntent = \Stripe\PaymentIntent::retrieve($paymentIntentId);
+        //         if ($paymentIntent->status === 'succeeded') {
+        //             // Lưu order vào database
+        //             $order::create([
+        //                 'user_id' => auth()->id(),
+        //                 'total' => $session['amount_total'] / 100,
+        //                 'status' => 'paid'
+        //             ]);
+        //             // Giảm tồn kho
+        //             foreach (session('cart') as $item) {
+        //                 $product::find($item['id'])->decrement('stock', $item['quantity']);
+        //             }
+        //             session()->forget('cart');
+        //         }
+        //     }
+        //     return response()->json(['status' => 'ok']);
+        // };
     }
 }

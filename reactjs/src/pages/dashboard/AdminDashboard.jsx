@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { GetProfileThunk } from '../../redux/features/auth';
 
 import dayjs from 'dayjs';
@@ -8,7 +8,13 @@ import dayjs from 'dayjs';
 /**
  * Ant Design
  */
-import { Breadcrumb, Layout, Row, Col, Calendar, theme, Alert, Typography } from 'antd';
+import { Breadcrumb, Layout, Row, Col, Calendar, theme, Alert, Typography, Avatar, Button, } from 'antd';
+import { UserOutlined, EditOutlined } from '@ant-design/icons';
+
+/**
+ * Style
+ */
+import './../../assets/css/button.scss';
 
 /**
  * Components
@@ -16,14 +22,13 @@ import { Breadcrumb, Layout, Row, Col, Calendar, theme, Alert, Typography } from
 import SideBar from "../../components/dashboard/SideBar.jsx";
 import HeaderLayout from "../../components/dashboard/Header.jsx";
 import FooterLayout from "../../components/dashboard/Footer.jsx";
-import { Loading } from '../../components/loading.jsx'
+import { Loading } from '../../components/Loading.jsx'
 
 const onPanelChange = (value, mode) => {
     console.log(value.format('YYYY-MM-DD'), mode);
 };
 const { Content } = Layout;
 const { Title, Text } = Typography;
-
 
 const AdminDashboard = () => {
     const { token } = theme.useToken();
@@ -37,34 +42,28 @@ const AdminDashboard = () => {
         setSelectedValue(newValue);
     };
 
-    const wrapperStyle = {
-        width: 300,
-        border: `1px solid ${token.colorBorderSecondary}`,
-        borderRadius: token.borderRadiusLG,
-    };
-
     const dispatch = useDispatch();
     const [profile, SetProfile] = useState({});
+    const { loading } = useSelector((state) => state.auth);
     useEffect(() => {
         dispatch(GetProfileThunk()).unwrap()
             .then((response) => {
-                console.log(response.profile);
                 SetProfile(response.profile);
             })
             .catch((err) => {
                 console.error("Lỗi:", err);
-            });
+            })
     }, [dispatch])
 
     return (
         <React.Fragment>
-            <Loading IsLoading={false} />
+            <Loading IsLoading={loading} FlexLoading={true} />
             <HeaderLayout></HeaderLayout>
             <Layout style={{ minHeight: '100vh', marginTop: 64 }}>
                 <SideBar activeKey={'dashboard'}></SideBar>
                 <Layout>
                     <Content style={{ margin: '0 16px' }}>
-                        <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'User' }, { title: 'List' }]} />
+                        <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'Admin' }, { title: 'Dashboard' }]} />
                         <Row>
                             <Col md={24} lg={12} style={{ padding: 10 }}>
                                 <div style={{ height: "100%", marginBottom: 24, padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
@@ -78,25 +77,35 @@ const AdminDashboard = () => {
                                     {profile && (
                                         <React.Fragment>
                                             <Row>
-                                                <Col span={24}>
-                                                    <Text strong>Name:</Text>  <Text>{profile.display_name}</Text>
+                                                <Col span={24} style={{ textAlign: 'center' }}>
+                                                    <Avatar size={150} icon={<UserOutlined />}></Avatar>
                                                 </Col>
                                                 <Col span={24}>
-                                                    <Text strong>Email:</Text>  <Text>{profile.email}</Text>
+                                                    <Text strong>Name: </Text>
+                                                    <Text>{profile?.display_name ?? "N/A"}</Text>
                                                 </Col>
                                                 <Col span={24}>
-                                                    <Text strong>Phone:</Text>  <Text>{profile.phone}</Text>
+                                                    <Text strong>Email: </Text>
+                                                    <Text>{profile?.email ?? "N/A"}</Text>
                                                 </Col>
                                                 <Col span={24}>
-                                                    <Text strong>Address:</Text>  <Text>{profile.address}</Text>
+                                                    <Text strong>Phone: </Text>
+                                                    <Text>{profile?.phone ?? "N/A"}</Text>
                                                 </Col>
                                                 <Col span={24}>
-                                                    <Text strong>Role:</Text>  <Text>{profile.role}</Text>
+                                                    <Text strong>Address: </Text>
+                                                    <Text>{profile?.address ?? "N/A"}</Text>
                                                 </Col>
+                                                <Col span={24}>
+                                                    <Text strong>Role: </Text>
+                                                    <Text>{profile.role?.name ?? "N/A"}</Text>
+                                                </Col>
+                                            </Row>
+                                            <Row id="edit-profile-btn">
+                                                <Button type="primary" size="large" icon={<EditOutlined />} className="linear-gradient-btn">Edit Profile</Button>
                                             </Row>
                                         </React.Fragment>
                                     )}
-
                                 </div>
                             </Col>
                         </Row>

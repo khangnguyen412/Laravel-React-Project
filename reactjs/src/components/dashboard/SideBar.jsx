@@ -16,7 +16,7 @@ const items = [
     getItem(<Link to="/admin">Admin Board</Link>, 'dashboard', <PieChartOutlined />),
     getItem('Page', 'page', <FileOutlined />),
     getItem('Blog', 'blog', <CopyOutlined />, [getItem('Blog List', 'blog-list'), getItem('Category', 'blog-category'),]),
-    getItem('Users', 'users', <UserOutlined />, [getItem(<Link to={'/admin/users'}>User List</Link>, 'users-list'), getItem('Profile', 'user-profile'),]),
+    getItem('Users', 'users', <UserOutlined />, [getItem(<Link to={'/admin/users'}>User List</Link>, 'users-list'), getItem(<Link to={'/admin/users-creation'}>User Creation</Link>, 'users-creation'), getItem('Profile', 'users-profile'),]),
     getItem('Product', 'product', <ProductOutlined />, [getItem('Product List', 'product-list'), getItem('Category', 'product-category'),]),
     getItem('Logout', 'logout', <LogoutOutlined />),
 ];

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 /**
  * Ant Design
@@ -15,38 +16,39 @@ import SideBar from "../../components/dashboard/SideBar.jsx";
 import UserProfileModal from "../../components/dashboard/UsersProfileModal.jsx";
 import HeaderLayout from "../../components/dashboard/Header.jsx";
 import FooterLayout from "../../components/dashboard/Footer.jsx";
-import { Loading } from '../../components/loading.jsx'
+import { Loading } from '../../components/Loading.jsx'
 
 /**
- *  Service
+ * Redux
  */
-import { GetUserListAdmin } from '../../services/servicesUsers.jsx';
+import { GetUserListAdminThunk } from '../../redux/features/user';
 
 
 const { Content } = Layout;
 
 const UserList = () => {
     const { token: { colorBgContainer, borderRadiusLG }, } = theme.useToken();
-    const [IsLoading, SetLoading] = useState(null)
-    const [UserList, SetUserList] = useState([])
     const { useBreakpoint } = Grid;
     const screens = useBreakpoint();
+    const dispatch = useDispatch();
+    const [IsLoading, SetLoading] = useState(null)
+    const [UserList, SetUserList] = useState([])
+    const userAdminList = useSelector(state => state.user.userAdminList)
 
     useEffect(() => {
-        SetLoading(true);
         (async () => {
             try {
-                const response = await GetUserListAdmin()
-                if (response.users_list) {
-                    const data = response.users_list.map(item => ({
+                SetLoading(true);
+                const response = await dispatch(GetUserListAdminThunk()).unwrap();
+                if (response.data) {
+                    SetUserList(response.data.map(item => ({
                         key: String(item.id),
                         display_name: item.display_name,
                         username: item.user_name,
                         address: item.address,
                         email: item.email,
                         role: item.role,
-                    }));
-                    SetUserList(data || [])
+                    })) || [])
                 }
             } catch (error) {
                 console.log(error)
@@ -127,7 +129,7 @@ const UserList = () => {
 
     return (
         <React.Fragment>
-            <Loading IsLoading={IsLoading}></Loading>
+            <Loading IsLoading={IsLoading} FlexLoading={true}></Loading>
             <Layout height="auto">
 
                 <HeaderLayout></HeaderLayout>
@@ -135,7 +137,7 @@ const UserList = () => {
                     <SideBar activeKey={'users-list'} activeOpenKey={['users']}></SideBar>
                     <Layout>
                         <Content style={{ margin: '0 16px' }}>
-                            <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'User' }, { title: 'List' }]} />
+                            <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'User' }, { title: 'User List' }]} />
                             <Row>
                                 <Col span={24} style={{ marginBottom: 24, padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
                                     {screens.lg ? (

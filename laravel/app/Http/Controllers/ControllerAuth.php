@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\ModelsUsers;
 
@@ -70,32 +71,40 @@ class ControllerAuth extends Controller
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
 
-            if ($request->username) {
-                $user = ModelsUsers::where("user_name", $request->username)->first();
+            $credentials = $request->only("password");
+            if ($request->filled("username")){
+                $credentials["user_name"] = $request->username;
             } else {
-                $user = ModelsUsers::where("email", $request->email)->first();
+                $credentials["email"] = $request->email;
             }
+
+            $user = ModelsUsers::where("email", $request->email)->orWhere("user_name", $request->username)->first();
             if (!$user) {
                 return response()->json([
                     "status" => 401,
-                    "error"  => "User not found"
+                    "error"  => "Username not found"
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
-            if (!$user->email || !Hash::check($request->password, $user->password)) {
+
+            if (!Hash::check($request->password, $user->password)) {
                 return response()->json([
                     "status" => 401,
-                    "error"  => "Invalid email or password"
+                    "error"  => "Invalid password"
                 ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
             }
 
-            $token = Str::random(60);
-            $user->api_token = hash("sha256", $token);
-            $user->save();
+            if(!$token = auth()->attempt($credentials)){
+                return response()->json([
+                    "status" => 401,
+                    "error" => "Invalid credentials"
+                ], 401, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            }
 
+            $profile = ModelsUsers::with("role")->find(auth()->user()->id);
             return response()->json([
                 "status"  => 200,
                 "token"   => $token,
-                "profile" => $user,
+                "profile" => $profile,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([
@@ -106,12 +115,10 @@ class ControllerAuth extends Controller
         }
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
         try {
-            $user = $request->user();
-            $user->api_token = null;
-            $user->save();
+            auth()->logout();
             return response()->json([
                 "status"  => 200,
                 "message" => "Logout Successfully"
@@ -127,10 +134,10 @@ class ControllerAuth extends Controller
     public function profile(Request $request)
     {
         try {
-            $user = $request->user(); // Call user() form setUserResolver in middleware AuthMiddleware
+            $profile = ModelsUsers::with("role")->find($request->user()->id); // Call user() form setUserResolver in middleware AuthMiddleware
             return response()->json([
                 "status"  => 200,
-                "profile" => $user
+                "profile" => $profile
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (Exception $e) {
             return response()->json([

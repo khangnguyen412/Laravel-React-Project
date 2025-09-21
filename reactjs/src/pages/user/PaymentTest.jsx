@@ -1,36 +1,16 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
-import { Link } from "react-router-dom";
+
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 /**
  *  Services
  */
-import { Payment } from "../../services/servicesPayment";
+import { useDispatch } from 'react-redux';
+import { GetClientSecretThunk } from '../../redux/features/payment';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
-
-
-const PaymentForm = () => {
-    const [clientSecret, setClientSecret] = useState(null);
-
-    useEffect(() => {
-        (async () => setClientSecret(await Payment()))();
-    }, []);
-
-    return (
-        <div>
-            {/* Hiển thị Stripe Elements */}
-            {clientSecret && (
-                <Elements stripe={stripePromise}>
-                    <CheckoutForm clientSecret={clientSecret} />
-                </Elements>
-            )}
-        </div>
-    );
-};
 
 const CheckoutForm = ({ clientSecret }) => {
     const stripe = useStripe();
@@ -64,8 +44,31 @@ const CheckoutForm = ({ clientSecret }) => {
     );
 }
 
+const PaymentForm = () => {
+    const dispatch = useDispatch();
+    const [clientSecret, setClientSecret] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            dispatch(GetClientSecretThunk());
+            const response = await dispatch(GetClientSecretThunk()).unwrap();
+            setClientSecret(response)
+        })();
+    }, []);
+
+    return (
+        <div>
+            {/* Hiển thị Stripe Elements */}
+            {clientSecret && (
+                <Elements stripe={stripePromise}>
+                    <CheckoutForm clientSecret={clientSecret} />
+                </Elements>
+            )}
+        </div>
+    );
+};
+
 const PaymentPage = () => {
-    console.log(process.env.REACT_APP_STRIPE_KEY)
     return (
         <React.Fragment>
             <main>

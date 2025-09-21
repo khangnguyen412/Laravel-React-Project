@@ -2,16 +2,16 @@
 import React, { useEffect, useState } from "react";
 
 /**
- *  Css
+ * Style
  */
 import "../assets/css/loading.scss";
 
-export const Loading = ({ IsLoading }) => {
+export const Loading = ({ IsLoading, FlexLoading  }) => {
     if (IsLoading) {
         return (
             <React.Fragment>
                 {IsLoading && (
-                    <div className="flex-loading flex-col">
+                    <div className={FlexLoading ? "flex-loading flex-col flex-col-fixed" : "flex-loading flex-col"}>
                         <div className="wrap-loader--background">
                             <div className="loader">
                                 <div className="inner one"></div>

@@ -13,8 +13,8 @@ import { theme } from 'antd';
 /**
  *  Component
  */
-import { Description, ButtonViewSource, ForgotPassBtn } from "../../components/user/form-login";
-import { Loading } from '../../components/loading'
+import { Description, ButtonViewSource, ForgotPassBtn } from "../../components/user/FormLogin";
+import { Loading } from '../../components/Loading'
 
 /**
  * Image
@@ -22,9 +22,43 @@ import { Loading } from '../../components/loading'
 import BackgroundImage from "../../assets/images/login-background.png";
 
 /**
+ * Style
+ */
+import './../../assets/css/auth/login.scss';
+
+/**
  * Redux
  */
 import { LoginThunk } from "../../redux/features/auth";
+
+/**
+ *  Login Form Props
+ */
+const LoginFormProps = {
+    backgroundImageUrl: BackgroundImage,
+    backgroundVideoUrl: "https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr",
+    logo: "",
+    title: "Welcome to CMS System",
+    subTitle: "Sign In",
+    activityConfig: {
+        title: 'CMS System',
+        subTitle: <Description></Description>,
+        action: <ButtonViewSource></ButtonViewSource>,
+    },
+    submitter: {
+        searchConfig: {
+            submitText: 'Login',
+        },
+    },
+}
+
+/**
+ *  Login Form Field Props
+ */
+const FieldProps = {
+    size: 'large',
+    autoFocus: true,
+}
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -45,41 +79,14 @@ const LoginPage = () => {
         }
     }, [authToken, profile, navigate])
 
-    /**
-     *  Login Form Props
-     */
-    const ContainerStyle = {
-        backgroundColor: 'rgba(0, 0, 0,0.65)',
-        backdropFilter: 'blur(4px)',
-    }
-    const LoginFormProps = {
-        backgroundImageUrl: BackgroundImage,
-        backgroundVideoUrl: "https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr",
-        logo: "",
-        title: "Welcome to CMS System",
-        subTitle: "Sign In",
-        containerStyle: ContainerStyle,
-        activityConfig: {
-            title: 'CMS System',
-            subTitle: <Description></Description>,
-            action: <ButtonViewSource></ButtonViewSource>,
-        },
-        submitter: {
-            searchConfig: {
-                submitText: 'Login',
-            },
-        },
-        actions: (<ForgotPassBtn error={error}></ForgotPassBtn>)
-    }
-
     return (
         <React.Fragment>
             <main>
                 <div className="login-page" id="login-page">
-                    <LoginFormPage {...LoginFormProps} onFinish={OnFinish}>
+                    <LoginFormPage {...LoginFormProps} onFinish={OnFinish} actions={<ForgotPassBtn error={error}></ForgotPassBtn>}>
                         <React.Fragment>
-                            <ProFormText name="username" fieldProps={{ size: 'large', autoFocus: true, prefix: (<UserOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Username or Email'} rules={[{ required: true, message: 'Please input your username or email!', },]} />
-                            <ProFormText.Password name="password" fieldProps={{ size: 'large', prefix: (<LockOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Password'} rules={[{ required: true, message: 'Please input your password!', },]} />
+                            <ProFormText name="username" fieldProps={{ ...FieldProps, prefix: (<UserOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Username or Email'} rules={[{ required: true, message: 'Please input your username or email!', },]} />
+                            <ProFormText.Password name="password" fieldProps={{ ...FieldProps, prefix: (<LockOutlined style={{ color: token.colorText, }} className={'prefixIcon'} />), }} placeholder={'Password'} rules={[{ required: true, message: 'Please input your password!', },]} />
                         </React.Fragment>
                         <div style={{ marginBlockEnd: 24, }} >
                             <ProFormCheckbox noStyle name="autoLogin">
@@ -87,8 +94,8 @@ const LoginPage = () => {
                             </ProFormCheckbox>
                         </div>
                     </LoginFormPage>
-                    <Loading IsLoading={loading}></Loading>
                 </div>
+                <Loading IsLoading={loading} FlexLoading={false}></Loading>
             </main>
         </React.Fragment>
     )

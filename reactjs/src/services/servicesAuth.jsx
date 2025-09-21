@@ -3,7 +3,7 @@ import { postRequest, getRequest } from './axios';
 
 export const Logout = async (token) => {
     try {
-        return await postRequest('/logout', {}, { "X-Token": token });
+        return await postRequest('/logout', {}, { "Authorization": `Bearer ${token}` });
     } catch (error) {
         throw error;
     }
@@ -19,7 +19,7 @@ export const Login = async (payload) => {
 
 export const CheckAuth = async (token) => {
     try {
-        return await getRequest('/admin/profile', { "X-Token": token })
+        return await getRequest('/admin/profile', { "Authorization": `Bearer ${token}` })
     } catch (error) {
         throw error;
     }
@@ -27,7 +27,7 @@ export const CheckAuth = async (token) => {
 
 export const UserProfile = async (token) => {
     try {
-        return await getRequest('/admin/profile', { "X-Token": token })
+        return await getRequest('/admin/profile', { "Authorization": `Bearer ${token}` })
     } catch (error) {
         throw error;
     }
