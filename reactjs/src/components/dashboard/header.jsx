@@ -6,8 +6,8 @@ import { useDispatch } from 'react-redux';
 /**
  * Ant Design
  */
-import { Layout, Menu} from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Layout, Menu, Button, Drawer, Grid } from 'antd';
+import { UserOutlined, MenuOutlined } from '@ant-design/icons';
 
 /**
  * Redux
@@ -24,6 +24,9 @@ const { Header } = Layout;
 const HeaderLayout = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { useBreakpoint } = Grid;
+    const breakpoints = useBreakpoint();
+    const [open, setOpen] = useState(false);
     const [Profile, SetProfile] = useState(null)
 
     const HandleLogout = async () => {
@@ -35,19 +38,43 @@ const HeaderLayout = () => {
         }
     };
 
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
+
+
     const items = [
         {
             key: "1",
-            label: <Link href="/home">Trang chủ</Link>,
+            label: <Link href="/home">Home</Link>,
         },
         {
             key: "3",
             label: <span>Welcome, {Profile?.user_name}</span>,
             icon: <UserOutlined />,
             children: [
-                { label: <Link to={"/admin/user-profile"}>Profile</Link>, key: 'setting:1'},
+                { label: <Link to={"/admin/user-profile"}>Profile</Link>, key: 'setting:1' },
                 { label: 'Logout', key: 'setting:3', onClick: HandleLogout },
             ],
+        },
+    ];
+    const itemsMenu = [
+        {
+            key: "1",
+            label: <Link href="/home">Home</Link>,
+        },
+        {
+            key: "2",
+            label: <Link href={"/admin/user-profile"} >Profile</Link>,
+        },
+        {
+            key: "3",
+            onClick: HandleLogout,
+            label: <Link href="/Logout">Logout</Link>,
         },
     ];
 
@@ -70,8 +97,19 @@ const HeaderLayout = () => {
                     </svg>
                     <span className="font-bold text-xl text-white">CMS Dashboard</span>
                 </div>
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items} className="header-menu"/>
+                {breakpoints.xs? (
+                    <Button color="default" variant="outlined" onClick={showDrawer}>
+                        <MenuOutlined />
+                    </Button>
+                ) : (
+                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items} className="header-menu" />
+                )}
             </Header>
+            {breakpoints.xs && (
+                <Drawer title={`Welcome, ${Profile?.user_name}`} closable={{ 'aria-label': 'Close Button' }} onClose={onClose} open={open} >
+                    <Menu theme="light" mode="inline" defaultSelectedKeys={['2']} items={itemsMenu} className="header-menu" />
+                </Drawer>
+            )}
         </React.Fragment>
     )
 }
