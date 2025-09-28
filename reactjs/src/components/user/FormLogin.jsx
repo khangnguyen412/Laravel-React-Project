@@ -12,7 +12,7 @@ import { Button, theme } from 'antd';
  * Style
 */
 import "../../assets/css/style.scss";
-import "../../assets/css/auth/login.scss";
+import "../../assets/css/page/login.scss";
 
 /**
  *  Component

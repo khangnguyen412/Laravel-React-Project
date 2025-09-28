@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { GetProfileThunk } from '../../redux/features/auth';
+import { GetProfileThunk } from '../../redux/features/auth.jsx';
 
 import dayjs from 'dayjs';
 
@@ -14,7 +14,9 @@ import { UserOutlined, EditOutlined } from '@ant-design/icons';
 /**
  * Style
  */
+import './../../assets/css/style.scss';
 import './../../assets/css/button.scss';
+import './../../assets/css/page/dashboard.scss'
 
 /**
  * Components
@@ -31,10 +33,6 @@ const { Content } = Layout;
 const { Title, Text } = Typography;
 
 const AdminDashboard = () => {
-    const { token } = theme.useToken();
-    const { token: { colorBgContainer, borderRadiusLG }, } = theme.useToken();
-
-
     const [value, setValue] = useState(() => dayjs());
     const [selectedValue, setSelectedValue] = useState(() => dayjs());
     const onSelect = newValue => {
@@ -59,21 +57,21 @@ const AdminDashboard = () => {
         <React.Fragment>
             <Loading IsLoading={loading} FlexLoading={true} />
             <HeaderLayout></HeaderLayout>
-            <Layout style={{ minHeight: '100vh', marginTop: 64 }}>
+            <Layout className="layout-wrapper">
                 <SideBar activeKey={'dashboard'}></SideBar>
                 <Layout>
-                    <Content style={{ margin: '0 16px' }}>
-                        <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'Admin' }, { title: 'Dashboard' }]} />
-                        <Row>
-                            <Col md={24} lg={12} style={{ padding: 10 }}>
-                                <div style={{ height: "100%", marginBottom: 24, padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
+                    <Content className="layout-wrapper--margin">
+                        <Breadcrumb className="container-wrapper" items={[{ title: 'Admin' }, { title: 'Dashboard' }]} />
+                        <Row className="dashboard-container">
+                            <Col md={24} lg={12} className="dashboard-col">
+                                <div className="dashboard-col-wrapper">
                                     <Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />
                                     <Calendar value={value} fullscreen={false} onSelect={onSelect} onPanelChange={onPanelChange} />
                                 </div>
                             </Col>
-                            <Col md={24} lg={12} style={{ padding: 10 }}>
-                                <div style={{ height: "100%", marginBottom: 24, padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
-                                    <Title level={2} style={{ fontSize: 18 }}>User Infomation</Title>
+                            <Col md={24} lg={12} className="dashboard-col">
+                                <div className="dashboard-col-wrapper">
+                                    <Title level={2} className="container-title">User Infomation</Title>
                                     {profile && (
                                         <React.Fragment>
                                             <Row>

@@ -5,7 +5,7 @@ import { ProtectedAdmin } from "./ProtectedRoute/protectedRoute";
 
 const Template = lazy(() => import('../pages/Pages'))
 const Component = lazy(() => import('../pages/Component'))
-const AdminDashboard = lazy(() => import('../pages/dashboard/AdminDashboard'))
+const AdminDashboard = lazy(() => import('../pages/dashboard/Dashboard'))
 const Users = lazy(() => import('../pages/dashboard/UsersList'))
 const UsersCreate = lazy(() => import('../pages/dashboard/UsersCreate'))
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 /**
  * Ant Design
@@ -23,17 +23,31 @@ import { Loading } from '../../components/Loading.jsx'
  */
 import { GetUserListAdminThunk } from '../../redux/features/user';
 
+/**
+ * Config
+ */
+import { columns } from '../../config/columnTable';
+
+/**
+ * Style
+ */
+import "../../assets/css/style.scss";
+import "../../assets/css/page/userList.scss";
 
 const { Content } = Layout;
 
+const CardAction = (item, showModal) => [
+    <EyeOutlined key="view" onClick={() => showModal(item.key)} />,
+    <Link to={`/admin/user/${item.key}/edit`}><EditOutlined key="edit" /></Link>,
+    <Link to={`/admin/user/${item.key}/delete`}><DeleteOutlined key="delete" /></Link>,
+]
+
 const UserList = () => {
-    const { token: { colorBgContainer, borderRadiusLG }, } = theme.useToken();
     const { useBreakpoint } = Grid;
     const screens = useBreakpoint();
     const dispatch = useDispatch();
     const [IsLoading, SetLoading] = useState(null)
     const [UserList, SetUserList] = useState([])
-    const userAdminList = useSelector(state => state.user.userAdminList)
 
     useEffect(() => {
         (async () => {
@@ -76,82 +90,26 @@ const UserList = () => {
         setOpen(false);
     };
 
-    const columns = [
-        {
-            title: 'Display Name',
-            dataIndex: 'display_name',
-            key: 'display_name',
-            render: (text, record) => <Link onClick={() => showModal(record.key)}>{text}</Link>,
-        },
-        {
-            title: 'Username',
-            dataIndex: 'username',
-            key: 'username',
-            render: (text, record) => <Link onClick={() => showModal(record.key)}>{text}</Link>,
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
-            render: text => <span>{text}</span>,
-        },
-        {
-            title: 'Role',
-            dataIndex: 'role',
-            key: 'role',
-            render: (role) => {
-                let color;
-                if (role.id === 1) { color = 'volcano'; }
-                else if (role.id === 2) { color = 'blue'; }
-                else if (role.id === 3) { color = 'green'; }
-                return (
-                    <Tag color={color} key={role.id}> {role.name} </Tag>
-                )
-            },
-        },
-        {
-            title: 'Action',
-            key: 'action',
-            responsive: ['md'],
-            render: (_, record) => (
-                <Space size="middle">
-                    <Link to={`/admin/user/${record.key}/edit`}><EditOutlined key="edit" /></Link>
-                    <Link to={`/admin/user/${record.key}/delete`}><DeleteOutlined key="delete" /></Link>
-                </Space>
-            ),
-        },
-    ];
-
     return (
         <React.Fragment>
             <Loading IsLoading={IsLoading} FlexLoading={true}></Loading>
             <Layout height="auto">
-
                 <HeaderLayout></HeaderLayout>
-                <Layout style={{ minHeight: '100vh', marginTop: 64 }}>
+                <Layout className='layout-wrapper' >
                     <SideBar activeKey={'users-list'} activeOpenKey={['users']}></SideBar>
                     <Layout>
-                        <Content style={{ margin: '0 16px' }}>
-                            <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'User' }, { title: 'User List' }]} />
-                            <Row>
-                                <Col span={24} style={{ marginBottom: 24, padding: 24, background: colorBgContainer, borderRadius: borderRadiusLG, overflowX: 'auto' }}>
+                        <Content className='layout-wrapper--margin userlist-container' >
+                            <Breadcrumb className='container-wrapper userlist-breadcrumb' items={[{ title: 'User' }, { title: 'User List' }]} />
+                            <Row className='container-wrapper userlist-table'>
+                                <Col className='userlist-table-col' span={24}>
                                     {screens.lg ? (
                                         <React.Fragment>
-                                            <Table columns={columns} dataSource={UserList} pagination={false} loading={false} scroll={true} />
+                                            <Table columns={columns(showModal)} dataSource={UserList} pagination={false} loading={false} scroll={true} />
                                         </React.Fragment>
                                     ) : (
                                         <React.Fragment>
                                             {UserList.map(item => (
-                                                <Card key={item.key} style={{ marginBottom: 8 }} actions={[
-                                                    <EyeOutlined key="view" onClick={() => showModal(item.key)} />,
-                                                    <Link to={`/admin/user/${item.key}/edit`}><EditOutlined key="edit" /></Link>,
-                                                    <Link to={`/admin/user/${item.key}/delete`}><DeleteOutlined key="delete" /></Link>,
-                                                ]}>
+                                                <Card key={item.key} style={{ marginBottom: 8 }} actions={CardAction(item, showModal)}>
                                                     <p><b>Tên:</b> {item.display_name}</p>
                                                     <p><b>Username:</b> {item.username}</p>
                                                     <p><b>Email:</b> {item.email}</p>

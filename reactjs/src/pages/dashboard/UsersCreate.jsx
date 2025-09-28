@@ -8,6 +8,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Breadcrumb, Layout, Row, Col, Calendar, theme, Alert, Typography, Avatar, Button, Form, Input, Select } from 'antd';
 
 /**
+ * Style
+ */
+import './../../assets/css/style.scss';
+import './../../assets/css/page/userCreation.scss';
+
+/**
  *  Component
  */
 import HeadersLayout from "../../components/dashboard/Header.jsx";
@@ -27,14 +33,17 @@ const UserPage = () => {
     return (
         <React.Fragment>
             <HeadersLayout></HeadersLayout>
-            <Layout style={{ minHeight: '100vh', marginTop: 64 }}>
+            <Layout className="layout-wrapper">
                 <SideBar activeKey={'users-creation'} activeOpenKey={['users']}></SideBar>
                 <Layout>
-                    <Content style={{ margin: '0 16px' }}>
-                        <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'User' }, { title: 'User Creation' }]} />
-                        <Row>
-                            <Col md={24} lg={12} style={{ padding: 10 }}>
-                                <Typography.Title level={2}>User Create</Typography.Title>
+                    <Content className="container-wrapper">
+                        <Breadcrumb className="layout-wrapper--margin" items={[{ title: 'User' }, { title: 'User Creation' }]} />
+                        <Row className="userCreation-container">
+                            <Col md={24} lg={24} className="userCreation-col">
+                                <div className="userCreation-col-content">
+                                    <Typography.Title level={2} className="container-title">User Create</Typography.Title>
+                                </div>
+                                
                             </Col>
                         </Row>
                     </Content>

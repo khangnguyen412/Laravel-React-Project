@@ -24,7 +24,7 @@ import BackgroundImage from "../../assets/images/login-background.png";
 /**
  * Style
  */
-import './../../assets/css/auth/login.scss';
+import './../../assets/css/page/login.scss';
 
 /**
  * Redux

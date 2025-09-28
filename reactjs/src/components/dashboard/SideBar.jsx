@@ -1,37 +1,48 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+/**
+ * Redux
+ */
+import { useDispatch } from 'react-redux';
+import { LogoutThunk } from '../../redux/features/auth';
 
 /**
  * Ant Design
  */
 import { Layout, Menu, Grid } from 'antd';
-import { FileOutlined, PieChartOutlined, ProductOutlined, CopyOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 
+/**
+ * Config
+ */
+import { menuItemsSidebar } from '../../config/menuItem';
 
-function getItem(label, key, icon, children) {
-    return { key, icon, children, label, };
-}
-const items = [
-    getItem(<Link to="/admin">Admin Board</Link>, 'dashboard', <PieChartOutlined />),
-    getItem('Page', 'page', <FileOutlined />),
-    getItem('Blog', 'blog', <CopyOutlined />, [getItem('Blog List', 'blog-list'), getItem('Category', 'blog-category'),]),
-    getItem('Users', 'users', <UserOutlined />, [getItem(<Link to={'/admin/users'}>User List</Link>, 'users-list'), getItem(<Link to={'/admin/users-creation'}>User Creation</Link>, 'users-creation'), getItem('Profile', 'users-profile'),]),
-    getItem('Product', 'product', <ProductOutlined />, [getItem('Product List', 'product-list'), getItem('Category', 'product-category'),]),
-    getItem('Logout', 'logout', <LogoutOutlined />),
-];
+const { Sider } = Layout;
 
 const SideBar = ({ activeKey, activeOpenKey }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { useBreakpoint } = Grid;
-    const { Sider } = Layout;
     const screens = useBreakpoint();
     const [collapsed, setCollapsed] = useState(false);
+    
+    const HandleLogout = async () => {
+        try {
+            const res = await dispatch(LogoutThunk()).unwrap()
+            navigate("/login", { replace: true })
+        } catch (e) {
+            console.log('Lỗi: ', e)
+        }
+    };
+    
+    const menuItems = menuItemsSidebar(HandleLogout);
 
     return (
         <React.Fragment>
             <Sider theme='light' collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)} collapsedWidth={!screens.md ? 0 : 80} style={!screens.md && { height: "100%", position: "fixed", left: 0, top: 64, zIndex: 999, }}>
                 <div className="demo-logo-vertical" />
-                <Menu theme="light" defaultSelectedKeys={[activeKey]} defaultOpenKeys={activeOpenKey} mode="inline" items={items} />
+                <Menu theme="light" defaultSelectedKeys={[activeKey]} defaultOpenKeys={activeOpenKey} mode="inline" items={menuItems} />
             </Sider>
         </React.Fragment>
     )

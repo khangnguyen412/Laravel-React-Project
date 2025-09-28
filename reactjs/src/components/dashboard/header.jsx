@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
+import { menuItems, menuItemsMobile } from '../../config/menuItem';
 
 /**
  * Ant Design
@@ -28,7 +29,7 @@ const HeaderLayout = () => {
     const breakpoints = useBreakpoint();
     const [open, setOpen] = useState(false);
     const [Profile, SetProfile] = useState(null)
-
+    
     const HandleLogout = async () => {
         try {
             const res = await dispatch(LogoutThunk()).unwrap()
@@ -37,7 +38,7 @@ const HeaderLayout = () => {
             console.log('Lỗi: ', e)
         }
     };
-
+    
     const showDrawer = () => {
         setOpen(true);
     };
@@ -45,38 +46,6 @@ const HeaderLayout = () => {
     const onClose = () => {
         setOpen(false);
     };
-
-
-    const items = [
-        {
-            key: "1",
-            label: <Link href="/home">Home</Link>,
-        },
-        {
-            key: "3",
-            label: <span>Welcome, {Profile?.user_name}</span>,
-            icon: <UserOutlined />,
-            children: [
-                { label: <Link to={"/admin/user-profile"}>Profile</Link>, key: 'setting:1' },
-                { label: 'Logout', key: 'setting:3', onClick: HandleLogout },
-            ],
-        },
-    ];
-    const itemsMenu = [
-        {
-            key: "1",
-            label: <Link href="/home">Home</Link>,
-        },
-        {
-            key: "2",
-            label: <Link href={"/admin/user-profile"} >Profile</Link>,
-        },
-        {
-            key: "3",
-            onClick: HandleLogout,
-            label: <Link href="/Logout">Logout</Link>,
-        },
-    ];
 
     useEffect(() => {
         dispatch(GetProfileThunk()).unwrap()
@@ -97,17 +66,17 @@ const HeaderLayout = () => {
                     </svg>
                     <span className="font-bold text-xl text-white">CMS Dashboard</span>
                 </div>
-                {breakpoints.xs? (
+                {breakpoints.xs ? (
                     <Button color="default" variant="outlined" onClick={showDrawer}>
                         <MenuOutlined />
                     </Button>
                 ) : (
-                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={items} className="header-menu" />
+                    <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={menuItems(Profile, HandleLogout)} className="header-menu" />
                 )}
             </Header>
             {breakpoints.xs && (
                 <Drawer title={`Welcome, ${Profile?.user_name}`} closable={{ 'aria-label': 'Close Button' }} onClose={onClose} open={open} >
-                    <Menu theme="light" mode="inline" defaultSelectedKeys={['2']} items={itemsMenu} className="header-menu" />
+                    <Menu theme="light" mode="inline" defaultSelectedKeys={['2']} items={menuItemsMobile(HandleLogout)} className="header-menu" />
                 </Drawer>
             )}
         </React.Fragment>

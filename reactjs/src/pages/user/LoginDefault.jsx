@@ -13,7 +13,7 @@ import { Button, Divider, Space, Tabs, message, theme } from 'antd';
  * Style
 */
 import "../../assets/css/style.scss";
-import "../../assets/css/auth/login.scss";
+import "../../assets/css/page/login.scss";
 
 /**
  * Custom Css

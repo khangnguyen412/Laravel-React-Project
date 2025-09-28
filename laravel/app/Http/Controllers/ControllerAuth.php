@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\AuthenticationException;
+
 
 use App\Models\ModelsUsers;
 
@@ -94,6 +96,7 @@ class ControllerAuth extends Controller
             }
 
             if(!$token = auth()->attempt($credentials)){
+                // throw new AuthenticationException("Invalid credentials");
                 return response()->json([
                     "status" => 401,
                     "error" => "Invalid credentials"
