@@ -1,0 +1,98 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My Laravel API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "{host}",
+            "description": "API Server",
+            "variables": {
+                "host": {
+                    "default": "http://localhost:8000"
+                }
+            }
+        }
+    ],
+    "paths": {
+        "/api/v1/user": {
+            "get": {
+                "tags": [
+                    "ModelsUsers"
+                ],
+                "summary": "Danh sách users",
+                "description": "Get User",
+                "operationId": "cdf3af2ec4c478ef2ebcea68c7607e05",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ModelsUsers"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ModelsUsers": {
+                "required": [
+                    "id",
+                    "name",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Nguyen Van A"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "a@example.com"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "ModelsUsers",
+            "description": "ModelsUsers"
+        }
+    ]
+}

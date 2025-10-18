@@ -29,16 +29,16 @@ const HeaderLayout = () => {
     const breakpoints = useBreakpoint();
     const [open, setOpen] = useState(false);
     const [Profile, SetProfile] = useState(null)
-    
+
     const HandleLogout = async () => {
         try {
-            const res = await dispatch(LogoutThunk()).unwrap()
+            await dispatch(LogoutThunk()).unwrap()
             navigate("/login", { replace: true })
         } catch (e) {
             console.log('Lỗi: ', e)
         }
     };
-    
+
     const showDrawer = () => {
         setOpen(true);
     };

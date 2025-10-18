@@ -4,6 +4,16 @@ import { createBrowserRouter, RouterProvider, BrowserRouter as Router, Routes, R
 import { store } from './redux/store.jsx';
 import { Provider } from 'react-redux';
 
+/**
+ * Ant Design
+ */
+import { ConfigProvider } from 'antd';
+
+/**
+ * Language
+ */
+import en_US from 'antd/lib/locale/en_US';
+
 import { MainRoute } from './routes/routeMain.jsx';
 import { AdminRoute } from './routes/routeAdmin.jsx';
 
@@ -16,9 +26,11 @@ const router = createBrowserRouter(routes);
 function App() {
   return (
     <React.Fragment>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
+      <ConfigProvider locale={en_US}>
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </ConfigProvider>
     </React.Fragment>
   );
 }

@@ -12,15 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('meta_data', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
             $table->id();
-            $table->morphs('model');
-            $table->string('meta_key')->index();
-            $table->text('meta_value')->nullable();
-            $table->string('field_id')->unique();
-            $table->string('field_type');
             $table->timestamps();
-            $table->foreignId('parent_id')->constrained('meta_data')->onDelete('cascade');
         });
     }
 

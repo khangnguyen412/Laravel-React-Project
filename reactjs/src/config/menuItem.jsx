@@ -45,16 +45,19 @@ export const menuItemsSidebar = (HandleLogout) => [
         key: "dashboard",
         label: <Link to="/admin">Admin Board</Link>,
         icon: <PieChartOutlined />,
+        access: ['Admin', 'Manager'],
     },
     {
         key: "page",
         label: <Link to="">Page</Link>,
         icon: <FileOutlined />,
+        access: ['Admin', 'Manager'],
     },
     {
         key: "blog",
         label: <Link to="">Blog</Link>,
         icon: <CopyOutlined />,
+        access: ['Admin', 'Manager'],
         children: [
             { 
                 key: 'blog-list', 
@@ -70,14 +73,22 @@ export const menuItemsSidebar = (HandleLogout) => [
         key: "users",
         label: <Link to="">Users</Link>,
         icon: <UserOutlined />,
+        access: ['Admin', 'Manager'],
         children: [
             { 
                 key: 'users-list', 
                 label: <Link to={'/admin/users'}>User List</Link>, 
+                access: ['Admin'],
             },
             { 
-                key: 'users-creation', 
-                label: <Link to={'/admin/users-creation'}>User Creation</Link>, 
+                key: 'users-role', 
+                label: <Link to={'/admin/users-role'}>User Role</Link>, 
+                access: ['Admin'],
+            },
+            {
+                key: 'users-permission', 
+                label: <Link to={'/admin/users-permission'}>User Permission</Link>, 
+                access: ['Admin'],
             },
             { 
                 key: 'users-profile', 
@@ -89,6 +100,7 @@ export const menuItemsSidebar = (HandleLogout) => [
         key: "product",
         label: <Link to="">Product</Link>,
         icon: <ProductOutlined />,
+        access: ['Admin', 'Manager'],
         children: [
             { 
                 key: 'product-list', 

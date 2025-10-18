@@ -21,10 +21,7 @@ import './../../assets/css/page/dashboard.scss'
 /**
  * Components
  */
-import SideBar from "../../components/dashboard/SideBar.jsx";
-import HeaderLayout from "../../components/dashboard/Header.jsx";
-import FooterLayout from "../../components/dashboard/Footer.jsx";
-import { Loading } from '../../components/Loading.jsx'
+import AdminLayout from "../../components/dashboard/AdminLayout.jsx";
 
 const onPanelChange = (value, mode) => {
     console.log(value.format('YYYY-MM-DD'), mode);
@@ -55,62 +52,57 @@ const AdminDashboard = () => {
 
     return (
         <React.Fragment>
-            <Loading IsLoading={loading} FlexLoading={true} />
-            <HeaderLayout></HeaderLayout>
-            <Layout className="layout-wrapper">
-                <SideBar activeKey={'dashboard'}></SideBar>
-                <Layout>
-                    <Content className="layout-wrapper--margin">
-                        <Breadcrumb className="container-wrapper" items={[{ title: 'Admin' }, { title: 'Dashboard' }]} />
-                        <Row className="dashboard-container">
-                            <Col md={24} lg={12} className="dashboard-col">
-                                <div className="dashboard-col-wrapper">
-                                    <Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />
-                                    <Calendar value={value} fullscreen={false} onSelect={onSelect} onPanelChange={onPanelChange} />
-                                </div>
-                            </Col>
-                            <Col md={24} lg={12} className="dashboard-col">
-                                <div className="dashboard-col-wrapper">
-                                    <Title level={2} className="container-title">User Infomation</Title>
-                                    {profile && (
-                                        <React.Fragment>
-                                            <Row>
-                                                <Col span={24} style={{ textAlign: 'center' }}>
-                                                    <Avatar size={150} icon={<UserOutlined />}></Avatar>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Text strong>Name: </Text>
-                                                    <Text>{profile?.display_name ?? "N/A"}</Text>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Text strong>Email: </Text>
-                                                    <Text>{profile?.email ?? "N/A"}</Text>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Text strong>Phone: </Text>
-                                                    <Text>{profile?.phone ?? "N/A"}</Text>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Text strong>Address: </Text>
-                                                    <Text>{profile?.address ?? "N/A"}</Text>
-                                                </Col>
-                                                <Col span={24}>
-                                                    <Text strong>Role: </Text>
-                                                    <Text>{profile.role?.name ?? "N/A"}</Text>
-                                                </Col>
-                                            </Row>
-                                            <Row id="edit-profile-btn">
-                                                <Button type="primary" size="large" icon={<EditOutlined />} className="linear-gradient-btn">Edit Profile</Button>
-                                            </Row>
-                                        </React.Fragment>
-                                    )}
-                                </div>
-                            </Col>
-                        </Row>
-                    </Content>
-                    <FooterLayout></FooterLayout>
-                </Layout>
-            </Layout>
+            <AdminLayout SideBarActiveKey={'dashboard'}>
+                <Content className="layout-wrapper--margin">
+                    <Breadcrumb className="container-wrapper" items={[{ title: 'Admin' }, { title: 'Dashboard' }]} />
+                    <Row className="dashboard-container">
+                        <Col md={24} lg={12} className="dashboard-col">
+                            <div className="dashboard-col-wrapper">
+                                <Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />
+                                <Calendar value={value} fullscreen={false} onSelect={onSelect} onPanelChange={onPanelChange} />
+                            </div>
+                        </Col>
+                        <Col md={24} lg={12} className="dashboard-col">
+                            <div className="dashboard-col-wrapper">
+                                <Title level={2} className="container-title">User Infomation</Title>
+                                {profile && (
+                                    <React.Fragment>
+                                        <Row>
+                                            <Col span={24} style={{ textAlign: 'center' }}>
+                                                <Avatar size={150} icon={<UserOutlined />}></Avatar>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>Name: </Text>
+                                                <Text>{profile?.display_name ?? "N/A"}</Text>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>Email: </Text>
+                                                <Text>{profile?.email ?? "N/A"}</Text>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>Phone: </Text>
+                                                <Text>{profile?.phone ?? "N/A"}</Text>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>Address: </Text>
+                                                <Text>{profile?.address ?? "N/A"}</Text>
+                                            </Col>
+                                            <Col span={24}>
+                                                <Text strong>Role: </Text>
+                                                <Text>{profile.role?.name ?? "N/A"}</Text>
+                                            </Col>
+                                        </Row>
+                                        <Row id="edit-profile-btn">
+                                            <Button type="primary" size="large" icon={<EditOutlined />} className="linear-gradient-btn">Edit Profile</Button>
+                                        </Row>
+                                    </React.Fragment>
+                                )}
+                            </div>
+                        </Col>
+                    </Row>
+                </Content>
+            </AdminLayout>
+
         </React.Fragment>
     )
 }

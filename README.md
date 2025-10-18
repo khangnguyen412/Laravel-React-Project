@@ -51,6 +51,20 @@ hp artisan migrate:fresh
 php artisan db:seed
 ```
 
+### Install swagger
+- Install swagger:
+```
+composer require l5-swagger
+```
+- Publish swagger:
+```
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+```
+- Access swagger:
+```
+http://localhost:8000/api/documentation
+```
+
 ## Project structure 
 ```
 Laravel-React-Project/

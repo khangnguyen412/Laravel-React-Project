@@ -4,32 +4,33 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         /**
-         *  - Bảng products
+         *  - Bảng posts
          *  - Các mối liên hệ:
-         *      users (1-n)
-         *      product_taxonomy(1-n)
+         *      laravelweb_users (1-n)
+         *      laravelweb_categories (n-n)
+         *      laravelweb_tags (n-n)
          */
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->string('slug')->unique()->index();
-            $table->text('description')->nullable();
-            $table->decimal('price', 8, 2);
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->longText('body');
+            $table->string('canonical_url')->nullable();
             $table->string('image')->nullable();
             $table->foreignID('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
-
-        
     }
 
     /**
@@ -37,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('posts');
     }
 };

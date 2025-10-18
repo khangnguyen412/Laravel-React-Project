@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\ValidationException;
+
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 
@@ -113,10 +114,7 @@ class ControllerPayment extends Controller
                 'clientSecret' => $paymentIntent->client_secret,
             ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         } catch (\Throwable $th) {
-            return response()->json([
-                'status' => 'failed',
-                'error' => $th->getMessage(),
-            ], 400);
+            throw new ValidationException($th->getMessage());
         }
     }
 

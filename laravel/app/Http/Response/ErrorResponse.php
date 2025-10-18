@@ -1,9 +1,9 @@
 <?php
-namespace App\Service\Response;
+namespace App\Http\Response;
 
 class ErrorResponse
 {
-    public static function getErrorResponse($code = 500, $errorsCode = "SERVER_ERROR", $message, $data = null)
+    public static function getErrorResponse($code = 500, $errorsCode = "SERVER_ERROR", $message, $data = [])
     {
         return response()->json([
             'errorCode'    => $errorsCode,

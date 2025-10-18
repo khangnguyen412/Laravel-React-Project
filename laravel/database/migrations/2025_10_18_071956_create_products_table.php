@@ -12,25 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         /**
-         *  - Bảng posts
+         *  - Bảng products
          *  - Các mối liên hệ:
-         *      laravelweb_users (1-n)
-         *      laravelweb_categories (n-n)
-         *      laravelweb_tags (n-n)
+         *      users (1-n)
+         *      product_taxonomy(1-n)
          */
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('title');
+            $table->string('name');
             $table->string('slug')->unique()->index();
-            $table->string('meta_title')->nullable();
-            $table->text('meta_description')->nullable();
-            $table->longText('body');
-            $table->string('canonical_url')->nullable();
+            $table->text('description')->nullable();
+            $table->decimal('price', 8, 2);
             $table->string('image')->nullable();
             $table->foreignID('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -39,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('products');
     }
 };
