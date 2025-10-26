@@ -86,7 +86,7 @@ const UserList = () => {
             search: true,
             formItemProps: { label: searchConfig.display_name.label },
             fieldProps: { placeholder: searchConfig.display_name.placeholder },
-            render: (text, record) => <Button onClick={() => showModal(record.key)} type="text">{text}</Button>,
+            render: (text, record) => <Typography.Text>{text}</Typography.Text>,
         },
         {
             title: 'Username',
@@ -95,7 +95,7 @@ const UserList = () => {
             search: true,
             formItemProps: { label: searchConfig.username.label },
             fieldProps: { placeholder: searchConfig.username.placeholder },
-            render: (text, record) => <Button onClick={() => showModal(record.key)} type="text" >{text}</Button>,
+            render: (text, record) => <Typography.Text>{text}</Typography.Text>,
         },
         {
             title: 'Email',
@@ -134,6 +134,7 @@ const UserList = () => {
             search: false,
             render: (_, record) => (
                 <Space size="middle">
+                    <Button onClick={() => showModal(record.id)} icon={<EyeOutlined />} key="view" color="info" variant="outlined" />
                     <Button to={{/* /admin/user/${record.key}/edit */ }} icon={<EditOutlined />} key="edit" color="primary" variant="outlined" />
                     <Button to={{/* /admin/user/${record.key}/delete */ }} icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" />
                 </Space>
@@ -165,8 +166,8 @@ const UserList = () => {
         request: async (params, sort, filter) => {
             const response = await getUserListAdmin();
             return {
-                data: response.data || [],
-                total: response.total || 0,
+                data: response?.data || [],
+                total: response?.total || 0,
                 success: true,
             }
         }
@@ -238,9 +239,9 @@ const UserList = () => {
         ],
         request: async (params) => {
             const response = await getUserListAdmin();
-            console.log(response.data)
+            console.log(response?.data || 123);
             return {
-                data: response.data || [],
+                data: response?.data || [],
                 success: true,
             }
         }

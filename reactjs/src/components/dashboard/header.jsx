@@ -13,7 +13,7 @@ import { UserOutlined, MenuOutlined } from '@ant-design/icons';
 /**
  * Redux
  */
-import { LogoutThunk, GetProfileThunk } from '../../redux/features/auth';
+import { LogoutThunk } from '../../redux/features/auth';
 
 /**
  * Style
@@ -23,9 +23,9 @@ import './../../assets/css/layout/header.scss';
 const { Header } = Layout;
 
 const HeaderLayout = () => {
-    const dispatch = useDispatch()
     const navigate = useNavigate()
     const { useBreakpoint } = Grid;
+    const dispatch = useDispatch();
     const breakpoints = useBreakpoint();
     const [open, setOpen] = useState(false);
     const [Profile, SetProfile] = useState(null)
@@ -48,14 +48,8 @@ const HeaderLayout = () => {
     };
 
     useEffect(() => {
-        dispatch(GetProfileThunk()).unwrap()
-            .then((response) => {
-                SetProfile(response.profile);
-            })
-            .catch((err) => {
-                console.error("Lỗi:", err);
-            });
-    }, [dispatch])
+        SetProfile(JSON.parse(localStorage.getItem("profile")));
+    }, [])
 
     return (
         <React.Fragment>

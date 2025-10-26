@@ -1,7 +1,5 @@
 /* eslint-disable */
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { GetProfileThunk } from '../../redux/features/auth.jsx';
 
 import dayjs from 'dayjs';
 
@@ -37,18 +35,10 @@ const AdminDashboard = () => {
         setSelectedValue(newValue);
     };
 
-    const dispatch = useDispatch();
     const [profile, SetProfile] = useState({});
-    const { loading } = useSelector((state) => state.auth);
     useEffect(() => {
-        dispatch(GetProfileThunk()).unwrap()
-            .then((response) => {
-                SetProfile(response.profile);
-            })
-            .catch((err) => {
-                console.error("Lỗi:", err);
-            })
-    }, [dispatch])
+        SetProfile(JSON.parse(localStorage.getItem("profile")));
+    }, [])
 
     return (
         <React.Fragment>

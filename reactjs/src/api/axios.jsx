@@ -5,7 +5,10 @@ import { API_URL } from '../Config';
 // Tạo instance riêng
 const API = axios.create({
     baseURL: API_URL,
-    headers: { "Content-Type": "application/json" },
+    headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    },
 });
 
 // Interceptor cho instance riêng
@@ -16,8 +19,13 @@ const API = axios.create({
  * return response.data;
  */
 API.interceptors.response.use(
-    (response) => response.data, // chỉ trả về data
-    (error) => Promise.reject(error.response?.data || { message: error.message })
+    (response) => {
+        return response.data
+    },
+    (error) => {
+        if (error.response?.status === 401) {}
+        return Promise.reject(error.response?.data || {errorMessage: "Error"});
+    }  
 );
 
 export const postRequest = (endpoint, payload = {}, headers = {}) => {

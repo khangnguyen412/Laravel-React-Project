@@ -6,59 +6,64 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\AuthenticationException;
-
+use OpenApi\Attributes as OA;
 
 use App\Models\ModelsUsers;
 use App\Http\Requests\AuthRequest;
 use App\Http\Response\ApiResponse;
 
-class ControllerAuth extends Controller
-{
+#[OA\Tag(name: 'Auth', description: 'Operations about authentication')]
+class ControllerAuth extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index() {
         //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
+    public function show(string $id) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
+    public function update(Request $request, string $id) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
+    public function destroy(string $id) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function login(AuthRequest $request)
-    {
+    #[OA\Post(
+        path: '/api/v1/admin/login',
+        tags: ['Auth'],
+        summary: 'Login user',
+        description: 'Login user',
+        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/UserLogin'),
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/UserLogin'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
+        ]
+    )]
+    public function login(AuthRequest $request) {
         $request->validated();
 
         $credentials = $request->only("password");
@@ -85,8 +90,20 @@ class ControllerAuth extends Controller
         return ApiResponse::sendResponse(["token" => $token, "profile" => $profile], 200);
     }
 
-    public function logout()
-    {
+    /**
+     * Logout user.
+     */
+    #[OA\Post(
+        path: '/api/v1/admin/logout',
+        tags: ['Auth'],
+        summary: 'Logout user',
+        description: 'Logout user',
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/UserLogout'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
+        ]
+    )]
+    public function logout() {
         try {
             auth()->logout();
             return ApiResponse::sendResponse(["message" => "Logout Successfully"], 200);
@@ -95,8 +112,20 @@ class ControllerAuth extends Controller
         }
     }
 
-    public function profile(Request $request)
-    {
+    /**
+     * Display the specified resource.
+     */
+    #[OA\Get(
+        path: '/api/v1/admin/profile',
+        tags: ['Auth'],
+        summary: 'Get user profile',
+        description: 'Get user profile',
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/GetUserProfile'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
+        ]
+    )]
+    public function profile(Request $request) {
         try {
             $profile = ModelsUsers::with("role")->find($request->user()->id); // Call user() form setUserResolver in middleware AuthMiddleware
             return ApiResponse::sendResponse(["profile" => $profile], 200);

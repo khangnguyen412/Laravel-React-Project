@@ -1,23 +1,28 @@
 /* eslint-disable */
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { CheckAuthThunk } from "../../redux/features/auth";
 
+/**
+ * Component
+ */
+import { Loading } from "../../components/Loading";
 
 export const ProtectedAdmin = ({ children }) => {
     const dispatch = useDispatch()
-    const { checked, authenticated } = useSelector((state) => state.auth)
+    const { status } = useSelector((state) => state.auth)
 
     useEffect(() => {
         dispatch(CheckAuthThunk())
     }, [dispatch])
 
-    if (!checked) {
-        return <div>Đang xác thực...</div>;
+    console.log(status);
+    if (status === 'loading' || status === 'idle') {
+        return <Loading IsLoading={true} />;
     }
 
-    if (!authenticated) {
+    if (status === 'unauthorized') {
         return <Navigate to="/login" replace />
     }
 

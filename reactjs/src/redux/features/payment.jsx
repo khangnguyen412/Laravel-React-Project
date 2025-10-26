@@ -8,8 +8,8 @@ export const GetClientSecretThunk = createAsyncThunk(
         try {
             const response = await Payment();
             return { clientSecret: response.clientSecret };
-        } catch (err) {
-            rejectWithValue(err.message || "Get Client Secret Failed")
+        } catch (error) {
+            return rejectWithValue(error.message || "Get Client Secret Failed")
         }
     }
 )

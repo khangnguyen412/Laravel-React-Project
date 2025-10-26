@@ -65,7 +65,7 @@ const LoginPage = () => {
     const dispatch = useDispatch();
 
     const { token } = theme.useToken();
-    const { profile, token: authToken, loading, error, } = useSelector((state) => state.auth);
+    const { profile, token: authToken, loading, error } = useSelector((state) => state.auth);
 
     const OnFinish = async (values) => {
         dispatch(LoginThunk(values));

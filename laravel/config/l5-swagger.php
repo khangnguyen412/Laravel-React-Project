@@ -11,16 +11,16 @@ return [
                 /*
                  * Route for accessing api documentation interface
                  */
-                'api' => 'swagger/documentation',
+                'api'  => 'swagger/documentation', // Không được trung với các route khác
                 'docs' => 'docs',
             ],
             'paths'  => [
                 'docs'                   => 'storage/api-docs',
-                
+
                 /*
                  * Edit to include full URL in ui for assets
                  */
-                'use_absolute_path' => true, // để UI build URL tương đối ổn định
+                'use_absolute_path'      => true, // để UI build URL tương đối ổn định
 
                 /*
                  * Edit to set path where swagger ui assets should be stored
@@ -46,7 +46,9 @@ return [
                  * Absolute paths to directory containing the swagger annotations are stored.
                  */
                 'annotations'            => [
-                    base_path('app'),
+                    base_path('app/OpenApi'),
+                    base_path('app/Http/Controllers'),
+                    base_path('routes'),
                 ],
             ],
         ],

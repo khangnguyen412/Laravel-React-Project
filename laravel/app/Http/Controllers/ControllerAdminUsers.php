@@ -11,31 +11,23 @@ use OpenApi\Attributes as OA;
 use App\Models\ModelsUsers;
 use App\Http\Response\ApiResponse;
 
+#[OA\Tag(name: 'Users', description: 'User management')]
+class ControllerAdminUsers extends Auth {
 
-class ControllerAdminUsers extends Auth
-{
     /**
      *  Get User
      */
     #[OA\Get(
-        path: "/api/v1/user",
-        summary: "Danh sách users",
-        security: [["bearerAuth" => []]],
-        tags: ["ModelsUsers"],
+        path: '/api/v1/admin/user',
+        summary: 'Get user list',
+        security: [['bearerAuth' => []]],
+        tags: ['Users'],
         responses: [
-            new OA\Response(
-                response: 200,
-                description: "OK",
-                content: new OA\JsonContent(
-                    type: "array",
-                    items: new OA\Items(ref: "#/components/schemas/ModelsUsers")
-                )
-            ),
-            new OA\Response(response: 401, description: "Unauthorized")
+            new OA\Response(response: 200, ref: '#/components/responses/GetUsersList'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
         ]
     )]
-    public function index()
-    {
+    public function index() {
         try {
             $users_list = ModelsUsers::with('role')->get();
             return ApiResponse::sendResponse(["users_list" => $users_list], 200);
@@ -47,24 +39,35 @@ class ControllerAdminUsers extends Auth
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
+    #[OA\Get(
+        path: '/api/v1/admin/user/{id}',
+        summary: 'Get user by id',
+        security: [['bearerAuth' => []]],
+        tags: ['Users'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', description: 'User ID', required: true, schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/GetUserById'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+        ]
+    )]
+    public function show(string $id) {
         if (!$id) {
             throw new NotFoundHttpException("Couldn't get userid");
         }
@@ -78,24 +81,21 @@ class ControllerAdminUsers extends Auth
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
+    public function edit(string $id) {
         //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
+    public function update(Request $request, string $id) {
         //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
+    public function destroy(string $id) {
         //
     }
 }

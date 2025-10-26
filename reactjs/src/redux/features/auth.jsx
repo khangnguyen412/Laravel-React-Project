@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 /**
  * Services
  */
-import { Login, Logout, UserProfile, CheckAuth } from "../../services/servicesAuth";
+import { Login, Logout, CheckAuth } from "../../services/servicesAuth";
 
 /**
  * Models
@@ -33,8 +33,8 @@ export const LogoutThunk = createAsyncThunk(
             localStorage.removeItem("token");
             localStorage.removeItem("profile");
             return response;
-        } catch (err) {
-            return rejectWithValue(err.errorMessage || "Logout Failed");
+        } catch (error) {
+            return rejectWithValue(error?.errorMessage || "Logout Failed");
         }
     }
 )
@@ -50,25 +50,8 @@ export const CheckAuthThunk = createAsyncThunk(
             }
             const response = await CheckAuth(token);
             return { authenticated: response?.profile !== null };
-        } catch (err) {
-            rejectWithValue(err.errorMessage || "Check Auth Failed")
-        }
-    }
-)
-
-
-export const GetProfileThunk = createAsyncThunk(
-    'auth/profile',
-    async (_, { rejectWithValue }) => {
-        try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                return rejectWithValue("Coundn't take token");
-            }
-            const response = await UserProfile(token);
-            return { profile: response.profile };
-        } catch (err) {
-            rejectWithValue(err.errorMessage || "Get Profile Failed")
+        } catch (error) {
+            return rejectWithValue(error?.errorMessage || "Check Auth Failed")
         }
     }
 )
@@ -80,8 +63,7 @@ const AuthSlice = createSlice({
         token: null,
         loading: false,
         error: null,
-        authenticated: null,
-        checked: false,
+        status: 'idle',
     },
     reducers: {
         logout: (state) => {
@@ -94,16 +76,14 @@ const AuthSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(CheckAuthThunk.pending, (state) => {
+                state.status = 'loading';
+            })
             .addCase(CheckAuthThunk.fulfilled, (state, action) => {
-                state.checked = true;
-                state.authenticated = action.payload?.profile !== null ?? false;
+                state.status = action?.payload === undefined ? 'unauthorized' : (action?.payload?.authenticated ?? 'authorized');
             })
-            .addCase(GetProfileThunk.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(GetProfileThunk.fulfilled, (state, action) => {
-                state.loading = false;
-                state.profile = action.payload?.profile ?? null;
+            .addCase(CheckAuthThunk.rejected, (state, action) => {
+                state.status = 'unauthorized';
             })
             .addCase(LogoutThunk.fulfilled, (state) => {
                 state.profile = null;

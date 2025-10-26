@@ -12,32 +12,29 @@ export const AdminRoute = [
     {
         path: '/template',
         element: (
-            <Suspense fallback={<p>Đang tải...</p>}><Template></Template></Suspense>
+            <Template />
         )
     },
     {
         path: '/component',
         element: (
-            <Suspense fallback={<p>Đang tải...</p>}><Component></Component></Suspense>
+            <Component />
         )
     },
     {
         path: '/admin',
         element: (
-            <Suspense>
-                <AdminDashboard></AdminDashboard>
-                {/* <ProtectedAdmin></ProtectedAdmin> */}
-            </Suspense>
+            <ProtectedAdmin>
+                <AdminDashboard />
+            </ProtectedAdmin>
         )
     },
     {
         path: '/admin/users',
         element: (
-            <Suspense>
-                <ProtectedAdmin>
-                    <Users></Users>
-                </ProtectedAdmin>
-            </Suspense>
+            <ProtectedAdmin>
+                <Users />
+            </ProtectedAdmin>
         )
     },
     {

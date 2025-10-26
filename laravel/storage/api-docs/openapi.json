@@ -1,45 +1,64 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "My Laravel API",
+        "title": "CMS Project API",
         "version": "1.0.0"
     },
     "servers": [
         {
-            "url": "{host}",
-            "description": "API Server",
-            "variables": {
-                "host": {
-                    "default": "http://localhost:8000"
-                }
-            }
+            "url": "http://localhost:8000",
+            "description": "API Server"
         }
     ],
     "paths": {
-        "/api/v1/user": {
+        "/api/v1/admin/user": {
             "get": {
                 "tags": [
-                    "ModelsUsers"
+                    "Users"
                 ],
-                "summary": "Danh sách users",
+                "summary": "Get user list",
                 "description": "Get User",
-                "operationId": "cdf3af2ec4c478ef2ebcea68c7607e05",
+                "operationId": "86315ff3c798413d69807a9a80235fbd",
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ModelsUsers"
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/GetUsersList"
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "$ref": "#/components/responses/Exception401"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/admin/user/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get user by id",
+                "description": "Display the specified resource.",
+                "operationId": "439d958dd380b1c2bd547647cf165687",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GetUserById"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
                     }
                 },
                 "security": [
@@ -52,33 +71,197 @@
     },
     "components": {
         "schemas": {
-            "ModelsUsers": {
+            "Exception": {
                 "required": [
-                    "id",
-                    "name",
-                    "email"
+                    "errorCode",
+                    "errorMessage",
+                    "data"
+                ],
+                "properties": {
+                    "errorCode": {
+                        "type": "string",
+                        "example": "ERROR_CODE"
+                    },
+                    "errorMessage": {
+                        "type": "string",
+                        "example": "Error message."
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        },
+                        "example": []
+                    }
+                },
+                "type": "object"
+            },
+            "Roles": {
+                "required": [
+                    "role_name"
                 ],
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "format": "int64",
-                        "example": 1
+                        "example": "1"
                     },
                     "name": {
                         "type": "string",
-                        "example": "Nguyen Van A"
+                        "uniqueItems": true,
+                        "example": "admin"
+                    },
+                    "guard_name": {
+                        "type": "string",
+                        "example": "web"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00Z",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00Z",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Users": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "5d1e8b2a-0a2b-4c0e-9a1b-f6b9a56a9a11"
+                    },
+                    "user_name": {
+                        "type": "string",
+                        "example": "jdoe"
+                    },
+                    "display_name": {
+                        "type": "string",
+                        "example": "John Doe"
                     },
                     "email": {
                         "type": "string",
                         "format": "email",
-                        "example": "a@example.com"
+                        "example": "john@example.com"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T12:00:00Z",
+                        "nullable": true
+                    },
+                    "password": {
+                        "type": "string",
+                        "writeOnly": true,
+                        "example": "password123"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "123 Main St"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "1234567890"
+                    },
+                    "bio": {
+                        "type": "string",
+                        "example": "A passionate developer",
+                        "nullable": true
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "example": "avatar.jpg",
+                        "nullable": true
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
                     },
                     "created_at": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "role_id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/Roles"
                     }
                 },
                 "type": "object"
+            }
+        },
+        "responses": {
+            "Exception401": {
+                "description": "Unauthorized",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Exception"
+                        }
+                    }
+                }
+            },
+            "GetUserById": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "GetUsersList": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "users_list": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "UserIdPath": {
+                "name": "id",
+                "in": "path",
+                "description": "User UUID",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "format": "uuid"
+                }
             }
         },
         "securitySchemes": {
@@ -91,8 +274,8 @@
     },
     "tags": [
         {
-            "name": "ModelsUsers",
-            "description": "ModelsUsers"
+            "name": "Users",
+            "description": "User management"
         }
     ]
 }
