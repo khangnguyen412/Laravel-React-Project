@@ -8,7 +8,7 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
  *  Services
  */
 import { useDispatch } from 'react-redux';
-import { GetClientSecretThunk } from '../../redux/features/payment';
+import { GetClientSecretThunk } from '@/redux/features/payment';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_KEY);
 

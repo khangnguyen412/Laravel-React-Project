@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { postRequest, getRequest } from '../api/axios';
+import { postRequest, getRequest } from '@/api/axios';
 
 export const GetUserListAdmin = async (token) => {
     try {

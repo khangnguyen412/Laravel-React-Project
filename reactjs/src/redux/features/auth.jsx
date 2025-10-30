@@ -4,12 +4,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 /**
  * Services
  */
-import { Login, Logout, CheckAuth } from "../../services/servicesAuth";
+import { Login, Logout, CheckAuth } from "@/services/servicesAuth";
 
 /**
  * Models
  */
-import LoginModel from "../../models/login";
+import LoginModel from "@/models/login";
 
 export const LoginThunk = createAsyncThunk(
     'auth/login',

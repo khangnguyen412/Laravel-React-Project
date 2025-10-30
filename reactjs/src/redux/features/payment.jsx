@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { Payment } from '../../services/servicesPayment';
+import { Payment } from "@/services/servicesPayment";
 
 export const GetClientSecretThunk = createAsyncThunk(
     'payment/getClientSecret',

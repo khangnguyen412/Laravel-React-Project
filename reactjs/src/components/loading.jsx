@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 /**
  * Style
  */
-import "../assets/css/loading.scss";
+import "@/assets/scss/loading.scss";
 
 export const Loading = ({ IsLoading, FlexLoading  }) => {
     if (IsLoading) {

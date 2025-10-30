@@ -2,12 +2,12 @@
 import { useEffect, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { CheckAuthThunk } from "../../redux/features/auth";
+import { CheckAuthThunk } from "@/redux/features/auth";
 
 /**
  * Component
  */
-import { Loading } from "../../components/Loading";
+import { Loading } from "@/components/Loading";
 
 export const ProtectedAdmin = ({ children }) => {
     const dispatch = useDispatch()

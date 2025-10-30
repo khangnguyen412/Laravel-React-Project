@@ -3,10 +3,11 @@ import React, { Suspense, lazy } from "react";
 import { ProtectedAdmin } from "./ProtectedRoute/protectedRoute";
 
 
-const Template = lazy(() => import('../pages/Pages'))
-const Component = lazy(() => import('../pages/Component'))
-const AdminDashboard = lazy(() => import('../pages/dashboard/Dashboard'))
-const Users = lazy(() => import('../pages/dashboard/UsersList'))
+const Template = lazy(() => import('@/pages/Pages'))
+const Component = lazy(() => import('@/pages/Component'))
+const AdminDashboard = lazy(() => import('@/pages/dashboard/Dashboard'))
+const Users = lazy(() => import('@/pages/dashboard/UsersList'))
+const UsersRole = lazy(() => import('@/pages/dashboard/UsersRole'))
 
 export const AdminRoute = [
     {
@@ -34,6 +35,14 @@ export const AdminRoute = [
         element: (
             <ProtectedAdmin>
                 <Users />
+            </ProtectedAdmin>
+        )
+    },
+    {
+        path: '/admin/users-role',
+        element: (
+            <ProtectedAdmin>
+                <UsersRole />
             </ProtectedAdmin>
         )
     },

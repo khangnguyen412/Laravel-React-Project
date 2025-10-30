@@ -11,8 +11,8 @@ import { Button, theme } from 'antd';
 /**
  * Style
 */
-import "../../assets/css/style.scss";
-import "../../assets/css/page/login.scss";
+import "@/assets/scss/style.scss";
+import "@/assets/scss/page/login.scss";
 
 /**
  *  Component

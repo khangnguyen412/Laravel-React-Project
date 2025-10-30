@@ -7,15 +7,13 @@ import { useDispatch } from 'react-redux';
  */
 import { Breadcrumb, Layout, Grid, Table, Card, Row, Col, Typography, Tag, Space, Button, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import { ProList, ProTable } from '@ant-design/pro-components';
+import { ProList, ProTable, PageContainer } from '@ant-design/pro-components';
 
 /**
  * Component
 */
 import UserProfileModal from "@/components/dashboard/UsersProfileModal.jsx";
 import AdminLayout from "@/components/dashboard/layout/AdminLayout.jsx";
-import FooterLayout from "@/components/dashboard/partials/Footer.jsx";
-
 
 /**
  * Redux
@@ -68,17 +66,20 @@ const UserList = () => {
      * Page Container Config
      */
     const PageContainerConfig = {
-        SideBarActiveKey: 'users-list',
+        SideBarActiveKey: 'users-role',
         SideBarActiveOpenKey: 'users',
-        HeaderTitle: 'Users List',
+        HeaderTitle: 'Users Role',
         BreadcrumbItems: {
             items: [
                 { title: 'Users', path: '/admin' },
-                { title: 'Users List' },
+                { title: 'Users Role' },
             ],
         },
     };
 
+    /**
+     * Search Config
+     */
     const searchConfig = {
         display_name: { label: 'Name', placeholder: 'Search by name...' },
         username: { label: 'Username', placeholder: 'Search by username...' },

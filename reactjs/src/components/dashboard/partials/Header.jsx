@@ -2,7 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { menuItems, menuItemsMobile } from '../../config/menuItem';
+
+/**
+ * Config
+ */
+import { menuItems, menuItemsMobile } from '@/config/menuItem';
 
 /**
  * Ant Design
@@ -13,12 +17,12 @@ import { UserOutlined, MenuOutlined } from '@ant-design/icons';
 /**
  * Redux
  */
-import { LogoutThunk } from '../../redux/features/auth';
+import { LogoutThunk } from '@/redux/features/auth';
 
 /**
  * Style
  */
-import './../../assets/css/layout/header.scss';
+import '@/assets/scss/layout/header.scss';
 
 const { Header } = Layout;
 

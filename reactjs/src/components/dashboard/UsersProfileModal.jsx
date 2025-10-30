@@ -11,22 +11,22 @@ import { EditOutlined, DeleteOutlined, CloseCircleOutlined } from '@ant-design/i
  * Redux
  */
 import { useDispatch } from 'react-redux';
-import { GetUserIDAdminThunk } from '../../redux/features/user';
+import { GetUserIDAdminThunk } from '@/redux/features/user';
 
 /**
  * Style
  */
-import '../../assets/css/loading.scss';
+import '@/assets/scss/loading.scss';
 
 /**
  * Component
  */
-import { Loading } from '../Loading';
+import { Loading } from '@/components/Loading';
 
 /**
  * Hook
  */
-import { HandleDateTime } from '../../hooks/dayTime';
+import { HandleDateTime } from '@/hooks/dayTime';
 
 const CloseBtn = ({ onCancel }) => {
     return (

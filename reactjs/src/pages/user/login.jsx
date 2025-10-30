@@ -13,23 +13,23 @@ import { theme } from 'antd';
 /**
  *  Component
  */
-import { Description, ButtonViewSource, ForgotPassBtn } from "../../components/user/FormLogin";
-import { Loading } from '../../components/Loading'
+import { Description, ButtonViewSource, ForgotPassBtn } from "@/components/user/FormLogin";
+import { Loading } from '@/components/Loading'
 
 /**
  * Image
  */
-import BackgroundImage from "../../assets/images/login-background.png";
+import BackgroundImage from "@/assets/images/login-background.png";
 
 /**
  * Style
  */
-import './../../assets/css/page/login.scss';
+import '@/assets/scss/page/login.scss';
 
 /**
  * Redux
  */
-import { LoginThunk } from "../../redux/features/auth";
+import { LoginThunk } from "@/redux/features/auth";
 
 /**
  *  Login Form Props

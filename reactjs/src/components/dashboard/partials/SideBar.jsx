@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
  * Redux
  */
 import { useDispatch } from 'react-redux';
-import { LogoutThunk } from '../../redux/features/auth';
+import { LogoutThunk } from '@/redux/features/auth';
 
 /**
  * Ant Design
@@ -16,7 +16,7 @@ import { Layout, Menu, Grid } from 'antd';
 /**
  * Config
  */
-import { menuItemsSidebar } from '../../config/menuItem';
+import { menuItemsSidebar } from '@/config/menuItem';
 
 const { Sider } = Layout;
 

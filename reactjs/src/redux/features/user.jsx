@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { GetUserListAdmin, GetUserIDAdmin } from '../../services/servicesUsers';
+import { GetUserListAdmin, GetUserIDAdmin } from "@/services/servicesUsers";
 
 export const GetUserListAdminThunk = createAsyncThunk(
     'user/getUserListAdmin',
