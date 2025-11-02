@@ -12,7 +12,7 @@ use App\Models\ModelsUsers;
 use App\Http\Response\ApiResponse;
 
 #[OA\Tag(name: 'Users', description: 'User management')]
-class ControllerAdminUsers extends Auth {
+class ControllerUsers extends Auth {
 
     /**
      *  Get User

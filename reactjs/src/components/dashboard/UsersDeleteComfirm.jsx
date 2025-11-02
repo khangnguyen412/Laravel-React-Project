@@ -11,7 +11,7 @@ import { EditOutlined, DeleteOutlined, CloseCircleOutlined } from '@ant-design/i
  * Redux
  */
 import { useDispatch } from 'react-redux';
-import { GetUserIDAdminThunk } from '@/redux/features/user';
+import {  } from '@/redux/features/user';
 
 /**
  * Style

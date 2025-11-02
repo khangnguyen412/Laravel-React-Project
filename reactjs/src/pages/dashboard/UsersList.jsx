@@ -20,7 +20,7 @@ import FooterLayout from "@/components/dashboard/partials/Footer.jsx";
 /**
  * Redux
  */
-import { GetUserListAdminThunk } from '@/redux/features/user';
+import { GetUserListThunk } from '@/redux/features/user';
 
 /**
  * Style
@@ -40,7 +40,7 @@ const UserList = () => {
      */
     const getUserListAdmin = async () => {
         try {
-            const response = await dispatch(GetUserListAdminThunk()).unwrap();
+            const response = await dispatch(GetUserListThunk()).unwrap();
             if (response?.data) return response
         } catch (error) {
             console.log(error)

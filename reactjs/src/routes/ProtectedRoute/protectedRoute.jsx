@@ -17,7 +17,6 @@ export const ProtectedAdmin = ({ children }) => {
         dispatch(CheckAuthThunk())
     }, [dispatch])
 
-    console.log(status);
     if (status === 'loading' || status === 'idle') {
         return <Loading IsLoading={true} />;
     }

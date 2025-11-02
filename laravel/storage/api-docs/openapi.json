@@ -11,6 +11,63 @@
         }
     ],
     "paths": {
+        "/api/v1/admin/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login user",
+                "description": "Login user",
+                "operationId": "e07d43b3d475bce63ba55331adc2ea3d",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserLogin"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UserLogin"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "description": "Logout user",
+                "operationId": "5da355df3e2d4c48879a26994a06a7ea",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UserLogout"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    }
+                }
+            }
+        },
+        "/api/v1/admin/profile": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get user profile",
+                "description": "Get user profile",
+                "operationId": "64ffafc37406ecf85d0890a511e83f4a",
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/GetUserProfile"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    }
+                }
+            }
+        },
         "/api/v1/admin/user": {
             "get": {
                 "tags": [
@@ -18,7 +75,7 @@
                 ],
                 "summary": "Get user list",
                 "description": "Get User",
-                "operationId": "86315ff3c798413d69807a9a80235fbd",
+                "operationId": "b9f927009448a15d17ac169a4ae9a433",
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/GetUsersList"
@@ -41,7 +98,7 @@
                 ],
                 "summary": "Get user by id",
                 "description": "Display the specified resource.",
-                "operationId": "439d958dd380b1c2bd547647cf165687",
+                "operationId": "824ebf978e087fbd514a6130ff20dda7",
                 "parameters": [
                     {
                         "name": "id",
@@ -59,6 +116,9 @@
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
                     }
                 },
                 "security": [
@@ -215,6 +275,16 @@
                     }
                 }
             },
+            "Exception404": {
+                "description": "Not Found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Exception"
+                        }
+                    }
+                }
+            },
             "GetUserById": {
                 "description": "OK",
                 "content": {
@@ -222,10 +292,7 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Users"
-                                    }
+                                    "$ref": "#/components/schemas/Users"
                                 }
                             },
                             "type": "object"
@@ -250,17 +317,78 @@
                         }
                     }
                 }
+            },
+            "UserLogin": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "example": "Bearer token"
+                                },
+                                "profile": {
+                                    "$ref": "#/components/schemas/Users"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "UserLogout": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Logout Successfully"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "GetUserProfile": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "profile": {
+                                    "$ref": "#/components/schemas/Users"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
             }
         },
-        "parameters": {
-            "UserIdPath": {
-                "name": "id",
-                "in": "path",
-                "description": "User UUID",
+        "requestBodies": {
+            "UserLogin": {
+                "description": "User login credentials",
                 "required": true,
-                "schema": {
-                    "type": "string",
-                    "format": "uuid"
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "username or email": {
+                                    "type": "string",
+                                    "example": "admin | admin@example.com"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "example": "123456"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
                 }
             }
         },
@@ -273,6 +401,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Auth",
+            "description": "Operations about authentication"
+        },
         {
             "name": "Users",
             "description": "User management"

@@ -45,11 +45,10 @@ const AdminDashboard = () => {
      */
     const PageContainerConfig = {
         SideBarActiveKey: 'dashboard',
-        SideBarActiveOpenKey: 'dashboard',
         HeaderTitle: 'Dashboard',
         BreadcrumbItems: {
             items: [
-                { title: 'Admin', path: '/admin' },
+                { title: 'Admin' },
                 { title: 'Dashboard' },
             ],
         },

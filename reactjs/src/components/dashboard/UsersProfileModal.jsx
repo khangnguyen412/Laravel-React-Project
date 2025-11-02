@@ -11,7 +11,7 @@ import { EditOutlined, DeleteOutlined, CloseCircleOutlined } from '@ant-design/i
  * Redux
  */
 import { useDispatch } from 'react-redux';
-import { GetUserIDAdminThunk } from '@/redux/features/user';
+import { GetUserIDThunk } from '@/redux/features/user';
 
 /**
  * Style
@@ -68,7 +68,7 @@ const UserProfileModal = ({ isOpen, onOk, onCancel, loading, userID }) => {
         (async () => {
             try {
                 SetLoading(true);
-                const response = await dispatch(GetUserIDAdminThunk(userID)).unwrap();
+                const response = await dispatch(GetUserIDThunk(userID)).unwrap();
                 if (response.data) {
                     GetUserData(response.data)
                     SetCreateAt(HandleDateTime(response.data.created_at, 'FullDate'))
