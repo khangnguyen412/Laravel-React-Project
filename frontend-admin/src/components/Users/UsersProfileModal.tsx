@@ -22,12 +22,19 @@ import '@/assets/scss/loading.scss';
 /**
  * Component
  */
-import { Loading } from '@/components/Loading';
 
 /**
  * Hook
  */
 import { HandleDateTime } from '@/hooks/dayTime';
+
+/**
+ * Type
+ */
+import type { RootState } from '@/redux/store';
+import type { Users } from '@/types/admin/users.type';
+import type { Role } from '@/types/admin/roles.type';
+
 
 const CloseBtn: React.FC<{ onCancel: () => void }> = ({ onCancel }) => {
     return (
@@ -57,11 +64,11 @@ const UserProfileModal: React.FC<{ isOpen: boolean, onOk: () => void, onCancel: 
      * Hooks
      */
     const dispatch = useDispatch<AppDispatch>();
-    const userData = useSelector((state: any) => state.user?.userData);
 
     /**
      * State
      */
+    const [userData, SetUserData] = useState<Users>({} as Users)
     const [IsLoading, SetLoading] = useState<boolean>(false)
     const [CreateAt, SetCreateAt] = useState<any>(null)
     const [UpdateAt, SetUpdateAt] = useState<any>(null)
@@ -78,49 +85,55 @@ const UserProfileModal: React.FC<{ isOpen: boolean, onOk: () => void, onCancel: 
     /**
      * Get User Data
      */
-    const getUserHandle = () => {
-        if (!userID) return;
-        dispatch(GetUserIDAdminThunk(userID)).unwrap();
+    const getUserHandle = async () => {
+        SetLoading(true);
+        const response = await dispatch(GetUserIDAdminThunk(userID)).unwrap();
+        SetUserData(response.data);
+        SetLoading(false)
     }
 
     useEffect(() => {
         if (!isOpen || !userID) return;
-        try {
-            SetLoading(true);
-            getUserHandle();
-        } catch (error) {
-            console.log("Lỗi:", error);
-        } finally {
-            SetLoading(false)
-        }
+        getUserHandle();
     }, [isOpen, userID])
 
     useEffect(() => {
-        if (userData) {
-            SetCreateAt(HandleDateTime(userData.created_at, 'FullDate'))
-            SetUpdateAt(HandleDateTime(userData.updated_at, 'FullDate'))
-        }
+        console.log(userData);
+        if (!userData || typeof userData !== 'object') return;
+        SetCreateAt(HandleDateTime(userData.created_at || '', 'FullDate'))
+        SetUpdateAt(HandleDateTime(userData.updated_at || '', 'FullDate'))
     }, [userData])
-    
+
     return (
         <React.Fragment>
-            {userData && (
-                <React.Fragment>
-                    <Loading IsLoading={IsLoading} FlexLoading={true}></Loading>
-                    <Modal open={isOpen} title="Infomations" onOk={onOk} onCancel={onCancel} footer={footer} width={1000}>
-                        <div>
-                            <h1 className="text-2xl font-bold">{userData.display_name}</h1>
-                            <p className="text-gray-600">{userData.roles.name} • Register Date: {CreateAt}</p>
-                        </div>
-                        <ul className="space-y-2 mt-2" key={userData.id}>
-                            <li><span className="font-medium">Email:</span> {userData.email}</li>
-                            <li><span className="font-medium">Number Phone:</span> {userData.phone}</li>
-                            <li><span className="font-medium">Address:</span> {userData.address}</li>
-                            <li><span className="font-medium">Role:</span> {userData.roles.name}</li>
-                            <li><span className="font-medium">Update At:</span> {UpdateAt}</li>
-                        </ul>
-                    </Modal>
-                </React.Fragment>
+            {(userData) && (
+                <Modal open={isOpen} title="Infomations" onOk={onOk} onCancel={onCancel} footer={footer} width={800} style={{ minHeight: 200 }}>
+                    {(!IsLoading) ? (
+                        <React.Fragment>
+                            <div>
+                                <h1 className="text-2xl font-bold">{userData.display_name}</h1>
+                                <p className="text-gray-600">{(userData?.role as Role)?.name || ''} • Register Date: {CreateAt}</p>
+                            </div>
+                            <ul className="space-y-2 mt-2" key={userData.id}>
+                                <li><span className="font-medium">Email:</span> {userData.email}</li>
+                                <li><span className="font-medium">Number Phone:</span> {userData.phone}</li>
+                                <li><span className="font-medium">Address:</span> {userData.address}</li>
+                                <li><span className="font-medium">Role:</span> {(userData?.role as Role)?.name || ''}</li>
+                                <li><span className="font-medium">Update At:</span> {UpdateAt}</li>
+                            </ul>
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            <div className="flex-loading">
+                                <div className="loader">
+                                    <div className="inner one"></div>
+                                    <div className="inner two"></div>
+                                    <div className="inner three"></div>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    )}
+                </Modal>
             )}
         </React.Fragment>
     );

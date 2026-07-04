@@ -38,7 +38,7 @@ interface PermissionServiceInterface {
      * @param array data - Permission data
      * @return bool
      */
-    public function update(string $id, array $data): ?object;
+    public function update(string $id, array $data): ?bool;
 
     /**
      * Delete permission

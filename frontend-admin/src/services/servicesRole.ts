@@ -4,9 +4,9 @@ import { getRequest, postRequest, putRequest, deleteRequest } from '@/api/axios'
 /**
  * Type
  */
-import type { Role, RoleListRequest } from '@/types/admin/roles.type';
+import type { Role, RoleSearchRequest } from '@/types/admin/roles.type';
 
-export const GetRoleList = async (params?: RoleListRequest): Promise<any> => {
+export const GetRoleList = async (params?: RoleSearchRequest): Promise<any> => {
     try {
         return await getRequest('/admin/roles', { withCredentials: true, params });
     } catch (error) {

@@ -1,14 +1,17 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 
 
 /**
  * Redux
  */
-import { useSelector, } from "react-redux";
-import type { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from "react-redux";
+import { GetProfileThunk } from '@/redux/features/auth';
+import type { AppDispatch, RootState } from '@/redux/store';
+
 
 
 export const usePermission = () => {
+    const dispatch = useDispatch<AppDispatch>();
     const permissionsData = useSelector((state: RootState) => state.auth.data?.permissions);
 
     const permissions = useMemo(() => {
@@ -24,6 +27,10 @@ export const usePermission = () => {
     const hasAnyPermission = useCallback((required: string[]): boolean => {
         return required.some((perm) => permissions.includes(perm));
     }, [permissions]);
+
+    useEffect(() => {
+        dispatch(GetProfileThunk());
+    }, [dispatch]);
 
     return { hasPermission, hasAnyPermission };
 }

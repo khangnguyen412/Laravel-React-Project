@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Roles;
+namespace App\Http\Resources\Users;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Permissions\PermissionsSearch;
 
-class RolesUpdate extends JsonResource {
+class UsersUpdate extends JsonResource {
     /**
      * Transform the resource into an array.
      *

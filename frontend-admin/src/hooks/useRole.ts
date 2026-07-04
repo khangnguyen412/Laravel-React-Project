@@ -1,15 +1,18 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 
 /**
  * Redux
  */
-import { useSelector } from "react-redux";
-import type { RootState } from '@/redux/store';
+import { useDispatch, useSelector} from "react-redux";
+import type { AppDispatch, RootState } from "@/redux/store";
+import { GetProfileThunk } from '@/redux/features/auth';
 
 
 
 export const useRoles = () => {
-    const roles = useSelector((state: RootState) => state.auth.data?.roles);
+    const dispatch = useDispatch<AppDispatch>();
+    const roles = useSelector((state: RootState) => state.auth.data?.role);
+
     const roleName = useMemo(() => {
         return roles?.name || '';
     }, [roles]);
@@ -19,6 +22,10 @@ export const useRoles = () => {
         if (!allowedRoles || allowedRoles.length === 0) return true;
         return allowedRoles.includes(roleName);
     }, [roleName]);
+
+    useEffect(() => {
+        dispatch(GetProfileThunk());
+    }, [dispatch]);
 
     return { roleName, hasRole };
 }

@@ -15,7 +15,6 @@ import AdminLayout from "@/components/Layout/AdminLayout";
 import UserProfileModal from "@/components/Users/UsersProfileModal";
 import { TableData } from "@/components/Partials/TableData";
 import { ListData } from "@/components/Partials/ListData";
-import { Loading } from '@/components/Loading.js'
 import type { ProColumns } from '@ant-design/pro-table';
 import type { Breakpoint } from 'antd/es/_util/responsiveObserver';
 import type { PresetColorType } from 'antd/es/_util/colors';
@@ -43,6 +42,8 @@ import "@/assets/scss/page/userList.scss";
 /**
  * type 
  */
+import type { UsersSearch, UsersSearchRequest } from '@/types/admin/users.type';
+
 const CardAction = (item: { key: string }, showModal: (id: string) => void) => [
     <EyeOutlined key="view" onClick={() => showModal(item.key)} />,
     <Link to={`/admin/user/${item.key}/edit`}><EditOutlined key="edit" /></Link>,
@@ -64,7 +65,6 @@ const UserList: React.FC = () => {
      * State
     */
     const [open, setOpen] = useState(false);
-    const [IsLoading, SetLoading] = useState(false)
     const [UserId, SetUserId] = useState<string>()
 
     /**
@@ -91,18 +91,6 @@ const UserList: React.FC = () => {
     const onCancel = () => {
         setOpen(false);
     };
-
-    /**
-
-     * Get User List
-     */
-    const getUserList = async () => {
-        try {
-            await dispatch(GetUserListAdminThunk("")).unwrap();
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     /**
      * Page Container Config
@@ -156,14 +144,14 @@ const UserList: React.FC = () => {
         {
             title: 'Role',
             dataIndex: 'roles',
-            key: 'roles',
-            render: (_dom: any, record: { roles: { id: number; name: string } }) => <Tag color={color({ roles: record.roles }) as LiteralUnion<PresetColorType, string>} key={record.roles?.id}> {record.roles?.name} </Tag>,
+            key: 'role',
+            render: (_dom: any, record: { role: { id: number; name: string } }) => <Tag color={color({ roles: record.role }) as LiteralUnion<PresetColorType, string>} key={record.role?.id}> {record.role?.name} </Tag>,
         },
         {
             title: 'Action',
             dataIndex: 'action',
             key: 'action',
-            responsive: ['md'] as Breakpoint[], // Ép kiểu ở đây,
+            responsive: ['md'] as Breakpoint[],
             search: false,
             render: (_dom: any) => (
                 <Space size="small">
@@ -190,8 +178,17 @@ const UserList: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/users-create') }} type="primary" > Add </Button>
         ],
-        request: async (_: any) => {
-            const response = await dispatch(GetUserListAdminThunk("")).unwrap();
+        request: async (params: UsersSearch) => {
+            const requestParams: UsersSearchRequest = {
+                currentPage: params.current || 1,
+                perPage: params.pageSize || 10,
+                display_name: params?.display_name || undefined,
+                user_name: params?.user_name || undefined,
+                email: params?.email || undefined,
+                address: params?.address || undefined,
+                role: params?.role as string || undefined,
+            }
+            const response = await dispatch(GetUserListAdminThunk(requestParams)).unwrap();
             return {
                 data: response?.data || [],
                 total: response?.data?.total || 0,
@@ -252,8 +249,17 @@ const UserList: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/users-create') }} type="primary" > Add </Button>
         ],
-        request: async (_: any) => {
-            const response = await dispatch(GetUserListAdminThunk("")).unwrap();
+        request: async (params: UsersSearch) => {
+            const requestParams: UsersSearchRequest = {
+                currentPage: params.current || 1,
+                perPage: params.pageSize || 10,
+                display_name: params?.display_name || undefined,
+                user_name: params?.user_name || undefined,
+                email: params?.email || undefined,
+                address: params?.address || undefined,
+                role: params?.role as string || undefined,
+            }
+            const response = await dispatch(GetUserListAdminThunk(requestParams)).unwrap();
             return {
                 data: response?.data || [],
                 // total: response?.total || 0,
@@ -262,20 +268,8 @@ const UserList: React.FC = () => {
         }
     }
 
-    useEffect(() => {
-        try {
-            SetLoading(true);
-            getUserList();
-        } catch (error) {
-            console.log(error)
-        } finally {
-            SetLoading(false)
-        }
-    }, []);
-
     return (
         <React.Fragment>
-            <Loading IsLoading={IsLoading} FlexLoading={true}></Loading>
             <AdminLayout {...PageContainerConfig}>
                 <Row>
                     <Col span={24}>

@@ -38,7 +38,7 @@ import "@/assets/scss/page/userList.scss";
 /**
  * Type
  */
-import type { PermissionListRequest, PermissionListResponse, PermissionDataDomType } from '@/types/admin/permissions.type';
+import type { PermissionSearchRequest, PermissionSearchResponse, PermissionSearch } from '@/types/admin/permissions.type';
 
 const PermissionList: React.FC = () => {
     /**
@@ -46,7 +46,7 @@ const PermissionList: React.FC = () => {
      */
     const { useBreakpoint } = Grid;
     const screens = useBreakpoint();
-    const actionRef = useRef<PermissionListRequest>(null);
+    const actionRef = useRef<PermissionSearchRequest>(null);
     const formRef = useRef<any>(null);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -126,8 +126,8 @@ const PermissionList: React.FC = () => {
             render: (_: any, record: { id: string }) => (
                 <Space size="small">
                     <Button onClick={() => showModal(record.id)} icon={<EyeOutlined />} key="view" color="primary" variant="outlined" />
-                    <Button icon={<EditOutlined />} key="edit" color="primary" variant="outlined" /> {/* /admin/user/${record.key}/edit */}
-                    <Button icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" /> {/* /admin/user/${record.key}/delete */}
+                    <Button onClick={() => navigate(`/admin/permissions/update/${record.id}`)} icon={<EditOutlined />} key="edit" color="primary" variant="outlined" />
+                    <Button onClick={() => navigate(`/admin/permissions/delete/${record.id}`)} icon={<DeleteOutlined />} key="delete" color="danger" variant="outlined" />
                 </Space>
             ),
         },
@@ -144,16 +144,16 @@ const PermissionList: React.FC = () => {
             description: { label: 'Description', placeholder: 'Search by description...' },
         },
         toolBarRender: () => [
-            <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/permissions-create') }} type="primary" > Add </Button>
+            <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/permissions/create') }} type="primary" > Add </Button>
         ],
-        request: async (params: PermissionDataDomType) => {
-            const requestParams: PermissionListRequest = {
+        request: async (params: PermissionSearch) => {
+            const requestParams: PermissionSearchRequest = {
                 currentPage: params.current || 1,
-                perPage: params.perPage || 10,
+                perPage: params.pageSize || 10,
                 name: params.name,
                 description: params.description,
             };
-            const response: PermissionListResponse = await dispatch(GetPermissionsListThunk(requestParams)).unwrap();
+            const response: PermissionSearchResponse = await dispatch(GetPermissionsListThunk(requestParams)).unwrap();
             return {
                 data: response?.data || [],
                 total: response?.meta?.total || 0,
@@ -213,14 +213,14 @@ const PermissionList: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/permissions-create') }} type="primary" > Add </Button>
         ],
-        request: async (params: PermissionDataDomType) => {
-            const requestParams: PermissionListRequest = {
+        request: async (params: PermissionSearch) => {
+            const requestParams: PermissionSearchRequest = {
                 currentPage: params.current || 1,
-                perPage: params.perPage || 10,
+                perPage: params.pageSize || 10,
                 name: params.name,
                 description: params.description,
             };
-            const response: PermissionListResponse = await dispatch(GetPermissionsListThunk(requestParams)).unwrap();
+            const response: PermissionSearchResponse = await dispatch(GetPermissionsListThunk(requestParams)).unwrap();
             return {
                 data: response?.data || [],
                 total: response?.meta?.total || 0,

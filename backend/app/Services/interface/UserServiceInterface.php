@@ -14,27 +14,25 @@ use App\Models\ModelsUsers;
 
 interface UserServiceInterface {
     /**
-     * Get all users
-     * @return Collection
-     */
-    public function all(): Collection;
-
-    /**
      * Get user profile
-     * @param string $uid - User uuid
+     * @param string $uuid - User uuid
      * @return object
      */
-    public function current(string $uid): object;
+    public function current(string $uuid): object;
 
     /**
      * Search user profile
-     * @param int $currentPage - Current page number
-     * @param int $perPage - Per page number
-     * @param string|null $name - Role name
-     * @param string|null $description - Role description
+     * @param object $params - Search params
      * @return LengthAwarePaginator
      */
-    public function search(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator;
+    public function search(array $params): ?LengthAwarePaginator;
+
+    /**
+     * Get user by id
+     * @param string $uuid - User uuid
+     * @return object|null - User profile or null
+     */
+    public function searchById(string $uuid): ?ModelsUsers;
 
     /**
      * Get user by email
@@ -52,16 +50,16 @@ interface UserServiceInterface {
 
     /**
      * Update user
-     * @param string $uid - User uuid
+     * @param string $uuid - User uuid
      * @param array $data - User data
      * @return object|null - User profile or null
      */
-    public function update(string $uid, array $data): ?object;
+    public function update(string $uuid, array $data): ?bool;
 
     /**
      * Delete user
-     * @param string $uid - User uuid
+     * @param string $uuid - User uuid
      * @return bool
      */
-    public function delete(string $uid): ?bool;
+    public function delete(string $uuid): ?bool;
 }

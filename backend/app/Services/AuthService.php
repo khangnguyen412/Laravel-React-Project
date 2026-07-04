@@ -105,11 +105,7 @@ class AuthService implements AuthServiceInterface {
      * Reset password
      */
     public function resetPassword(string $token, string $email, string $password): string {
-        $status = Password::reset([
-            'token'    => $token,
-            'email'    => $email,
-            'password' => $password,
-        ], function ($user, $plainPassword) {
+        $status = Password::reset(['token' => $token, 'email' => $email, 'password' => $password,], function ($user, $plainPassword) {
             $this->usersRepository->updatePassword($user->email, Hash::make($plainPassword));
         });
         return $status;

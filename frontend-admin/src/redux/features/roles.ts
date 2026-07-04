@@ -10,7 +10,7 @@ import { GetRoleList, GetRoleByID, CreateRole, UpdateRole, DeleteRole } from "@/
  * Type
  */
 import type { ErrorType } from "@/types/error.type";
-import type { Role, RoleListRequest } from "@/types/admin/roles.type";
+import type { Role, RoleSearchRequest } from "@/types/admin/roles.type";
 
 export type RoleState = {
     data?: Role[] | Role | null;
@@ -18,7 +18,7 @@ export type RoleState = {
     error?: ErrorType['errors'] | null;
 }
 
-export const GetRolesListThunk = createAsyncThunk<{ data: Role[], meta: any }, RoleListRequest, { rejectValue: ErrorType }>(
+export const GetRolesListThunk = createAsyncThunk<{ data: Role[], meta: any }, RoleSearchRequest, { rejectValue: ErrorType }>(
     'roles/getRolesList',
     async (params, { rejectWithValue }) => {
         try {
@@ -95,6 +95,9 @@ const RolesSlice = createSlice({
     } as RoleState,
     reducers: {},
     extraReducers: (builder) => {
+        /**
+         * Get roles list
+         */
         builder.addCase(GetRolesListThunk.pending, (state) => {
             state.loading = true;
             state.error = null;
@@ -106,6 +109,10 @@ const RolesSlice = createSlice({
             state.loading = false;
             state.error = action?.payload?.errors;
         })
+
+        /**
+         * Get role by ID
+         */
         builder.addCase(GetRoleByIDThunk.pending, (state) => {
             state.loading = true;
         })
@@ -117,6 +124,10 @@ const RolesSlice = createSlice({
             state.loading = false;
             state.error = action?.payload?.errors;
         })
+
+        /**
+         * Create role
+         */
         builder.addCase(CreateRoleThunk.pending, (state) => {
             state.loading = true;
         })
@@ -128,6 +139,10 @@ const RolesSlice = createSlice({
             state.loading = false;
             state.error = action?.payload?.errors;
         })
+
+        /**
+         * Update role
+         */
         builder.addCase(UpdateRoleThunk.pending, (state) => {
             state.loading = true;
         })
@@ -139,6 +154,10 @@ const RolesSlice = createSlice({
             state.loading = false;
             state.error = action?.payload?.errors;
         })
+
+        /**
+         * Delete role
+         */
         builder.addCase(DeleteRoleThunk.pending, (state) => {
             state.loading = true;
         })

@@ -1,24 +1,25 @@
-import type { PaginationResponseType, PaginationRequestType, PaginationAntType } from '@/types/common.type';
+/**
+ * Ant
+ */
+import type { PaginationResponse, PaginationRequest, PaginationAnt } from '@/types/common.type';
 
 export interface Permission {
-    id: number;
-    name: string;
+    id?: number;
+    name?: string;
     description?: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
-export type PermissionDataDomType = PaginationAntType & {
-    name?: string,
-    description?: string
-}
+export type PermissionSearch = PaginationAnt & Permission
 
-export type PermissionListResponse = {
+export type PermissionSearchRequest = PaginationRequest & Permission
+
+export type PermissionSearchResponse = {
     data: Permission[];
-    meta: PaginationResponseType;
+    meta: PaginationResponse;
 }
 
-export type PermissionListRequest = PaginationRequestType & {
-    name?: string,
-    description?: string
-}
+export type PermissionByIDResponse = {
+    data: Permission;
+};

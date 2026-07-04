@@ -43,7 +43,7 @@ import "@/assets/scss/page/userList.scss";
 /**
  * Type
  */
-import type { RoleDataDomType, RoleListRequest } from "@/types/admin/roles.type";
+import type { RoleSearch, RoleSearchRequest } from "@/types/admin/roles.type";
 
 const RoleSearch: React.FC = () => {
     /**
@@ -154,12 +154,12 @@ const RoleSearch: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/roles/create') }} type="primary" > Add </Button>
         ],
-        request: async (params: RoleDataDomType) => {
-            const requestParams: RoleListRequest = {
+        request: async (params: RoleSearch) => {
+            const requestParams: RoleSearchRequest = {
                 name: params.name || '',
                 description: params.description || '',
                 currentPage: params.current || 1,
-                perPage: params.perPage || 10,
+                perPage: params.pageSize || 10,
             }
             const response = await dispatch(GetRolesListThunk(requestParams)).unwrap();
             return {
@@ -220,12 +220,12 @@ const RoleSearch: React.FC = () => {
         toolBarRender: () => [
             <Button key="button" icon={<PlusOutlined />} onClick={() => { navigate('/admin/roles/create') }} type="primary" > Add </Button>
         ],
-        request: async (params: RoleDataDomType) => {
-            const requestParams: RoleListRequest = {
+        request: async (params: RoleSearch) => {
+            const requestParams: RoleSearchRequest = {
                 name: params?.name || '',
                 description: params?.description || '',
                 currentPage: params.current || 1,
-                perPage: params.perPage || 10,
+                perPage: params.pageSize || 10,
             }
             const response = await dispatch(GetRolesListThunk(requestParams)).unwrap();
             return {
