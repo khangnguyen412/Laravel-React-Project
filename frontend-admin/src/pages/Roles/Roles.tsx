@@ -35,12 +35,12 @@ import AdminLayout from "@/components/Layout/AdminLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { GetRoleByIDThunk, CreateRoleThunk, UpdateRoleThunk, DeleteRoleThunk } from "@/redux/features/roles";
 import { GetPermissionsListThunk } from "@/redux/features/permission";
-import type { AppDispatch } from "@/redux/store";
+import type { AppDispatch, RootState } from "@/redux/store";
 
 /**
  * Type
  */
-import type { Permission, PermissionListRequest } from "@/types/admin/permissions.type";
+import type { Permission, PermissionSearchRequest } from "@/types/admin/permissions.type";
 import type { Role } from "@/types/admin/roles.type";
 
 const { Text, Title, Paragraph } = Typography;
@@ -56,7 +56,7 @@ const Roles: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
     const { id } = useParams<{ id: string }>();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const Permissions = useSelector((state: any) => state.permissions?.data || []);
+    const Permissions = useSelector((state: RootState) => state.permissions?.data) as Permission[];
 
     /** 
      * Handle save role 
@@ -84,13 +84,6 @@ const Roles: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
         }
     };
 
-    /** 
-     * Handle temporary delete (reset form) 
-     */
-    const handleFormClear = () => {
-        form.resetFields();
-    };
-
     /**
      * Handle delete role 
      */
@@ -107,10 +100,16 @@ const Roles: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
         }
     };
 
+    /** 
+     * Handle temporary delete (reset form) 
+     */
+    const handleFormClear = () => {
+        form.resetFields();
+    };
 
     const fetchPermission = useCallback(async () => {
         try {
-            const request: PermissionListRequest = { currentPage: 1, perPage: 999 };
+            const request: PermissionSearchRequest = { currentPage: 1, perPage: 999 };
             await dispatch(GetPermissionsListThunk(request)).unwrap();
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -155,9 +154,8 @@ const Roles: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
     };
 
     /**
-     * Field 
+     * Fetch role by ID
      */
-
     useEffect(() => {
         fetchRole();
         fetchPermission();
@@ -192,12 +190,18 @@ const Roles: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
                                             <Text type="secondary">Example: USER_MANAGE_CREATE</Text>
                                             <Text type="secondary">Format: MODULE_ACTION_OBJECT</Text>
                                         </Space>
-                                    } required={false} >
+                                    } required={false}>
                                     <Input placeholder="Role Name (Example: USER_MANAGE_CREATE)" allowClear />
                                 </Form.Item>
 
                                 {/* Role Description */}
-                                <Form.Item name="description" label="Role Description">
+                                <Form.Item name="description"
+                                    label={
+                                        <Space>
+                                            <span>Role Description</span>
+                                            <Tag color="red" style={{ fontSize: 12 }}>Required</Tag>
+                                        </Space>
+                                    }>
                                     <TextArea rows={4} placeholder="Role can..." showCount maxLength={200} />
                                 </Form.Item>
                             </Card>
@@ -206,7 +210,7 @@ const Roles: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
                                 <Form.Item name="permissions">
                                     <Checkbox.Group>
                                         <Row gutter={[24, 24]}>
-                                            {Permissions.map((permission: Permission) => (
+                                            {Permissions?.map((permission: Permission) => (
                                                 <Col className="gutter-row" span={6} xl={6} lg={6} md={12} xs={24} key={permission.id}>
                                                     <div style={{ border: '1px solid #e8e8e8', padding: 8, borderRadius: 4, width: '100%' }}>
                                                         <Checkbox value={permission.id}>

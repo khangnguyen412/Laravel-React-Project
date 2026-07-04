@@ -26,7 +26,7 @@ API.interceptors.response.use(
         return response.data
     },
     (error) => {
-        const PUBLIC_ROUTES = ['/password/reset', '/password/forgot', '/register', '/login'];
+        const PUBLIC_ROUTES = ['/password/reset', '/password/forgot', '/register'];
         const isPublicRoute = PUBLIC_ROUTES.some(route => error.config.url.includes(route));
 
         if (error.response?.status === 401 && !isPublicRoute) {
@@ -47,6 +47,10 @@ export const getRequest = (endpoint: string, config: object = {}) => {
 
 export const putRequest = (endpoint: string, payload: object = {}, config: object = {}) => {
     return API.put(`${Config.API_URL}${endpoint}`, payload, config);
+};
+
+export const patchRequest = (endpoint: string, payload: object = {}, config: object = {}) => {
+    return API.patch(`${Config.API_URL}${endpoint}`, payload, config);
 };
 
 export const deleteRequest = (endpoint: string, config: object = {}) => {

@@ -4,24 +4,25 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 /**
  * Services
  */
-import { GetUserListAdmin, GetUserIDAdmin } from '@/services/servicesUsers';
+import { GetUser, GetUserByID } from '@/services/servicesUsers';
 
 /**
  * Type
  */
+import type { Users, UsersSearchRequest } from '@/types/admin/users.type';
 import type { ErrorType } from '@/types/error.type';
+
 type UserAdminListState = {
-    data?: any;
-    userData: any;
+    data?: Users[] | Users;
     loading: boolean;
     error?: any;
 }
 
-export const GetUserListAdminThunk = createAsyncThunk<{ data: any }, any, { rejectValue: ErrorType }>(
+export const GetUserListAdminThunk = createAsyncThunk<{ data: any }, UsersSearchRequest, { rejectValue: ErrorType }>(
     'user/getUserListAdmin',
-    async (_, { rejectWithValue }) => {
+    async (params: UsersSearchRequest, { rejectWithValue }) => {
         try {
-            const response = await GetUserListAdmin();
+            const response = await GetUser(params);
             return response;
         } catch (error: any) {
             const errorData: ErrorType = error?.data || { errors: "Get User List Failed" };
@@ -30,11 +31,11 @@ export const GetUserListAdminThunk = createAsyncThunk<{ data: any }, any, { reje
     }
 )
 
-export const GetUserIDAdminThunk = createAsyncThunk<{ data: any }, any, { rejectValue: ErrorType }>(
+export const GetUserIDAdminThunk = createAsyncThunk<{data: Users}, any, { rejectValue: ErrorType }>(
     'user/getUserIDAdmin',
     async (id: string, { rejectWithValue }) => {
         try {
-            const response = await GetUserIDAdmin(id);
+            const response = await GetUserByID(id);
             return response;
         } catch (error: any) {
             const errorData: ErrorType = error?.data || { errors: "Get User ID Failed" };
@@ -46,31 +47,38 @@ export const GetUserIDAdminThunk = createAsyncThunk<{ data: any }, any, { reject
 const UserSlice = createSlice({
     name: 'user',
     initialState: {
-        data: null,
+        data: undefined,
         userData: null,
         loading: false,
         error: null,
     } as UserAdminListState,
     reducers: {},
     extraReducers: (builder) => {
+        /**
+         * Get User List Admin
+         */
         builder.addCase(GetUserListAdminThunk.pending, (state) => {
             state.loading = true;
             state.error = null;
         })
         builder.addCase(GetUserListAdminThunk.fulfilled, (state, action) => {
             state.loading = false;
-            state.data = action?.payload?.data;
+            state.data = action?.payload?.data as Users[];
         })
         builder.addCase(GetUserListAdminThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action?.payload?.errors || "Get User List Failed";
         })
+
+        /**
+         * Get User ID Admin
+         */
         builder.addCase(GetUserIDAdminThunk.pending, (state) => {
             state.loading = true;
         })
         builder.addCase(GetUserIDAdminThunk.fulfilled, (state, action) => {
             state.loading = false;
-            state.userData = action?.payload?.data;
+            state.data = action?.payload?.data as Users;
         })
         builder.addCase(GetUserIDAdminThunk.rejected, (state, action) => {
             state.loading = false;

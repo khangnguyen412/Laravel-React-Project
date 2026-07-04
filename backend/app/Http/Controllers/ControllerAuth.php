@@ -33,7 +33,7 @@ use App\Services\UserService;
 use App\Http\Resources\Auths\AuthsLogout;
 use App\Http\Resources\Auths\AuthsForgotPassword;
 use App\Http\Resources\Auths\AuthsResetPassword;
-use App\Http\Resources\UsersResource;
+use App\Http\Resources\Auths\AuthsLogin;
 
 
 
@@ -93,7 +93,10 @@ class ControllerAuth extends Controller {
         requestBody: new OA\RequestBody(ref: '#/components/requestBodies/AuthsLogin'),
         responses: [
             new OA\Response(response: 200, ref: '#/components/responses/AuthsLogin'),
-            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500')
         ]
     )]
     public function login(Request $request) {
@@ -102,15 +105,15 @@ class ControllerAuth extends Controller {
             "username" => "nullable|string",
             "password" => "required"
         ]);
-        if ($valid->fails() || (empty($request->email) && empty($request->username))) {
+        if ($valid->fails() || (empty($request->input("email")) && empty($request->input("username")))) {
             throw ValidationException::withMessages(['email' => ['email' => 'Invalid email or password']]);
         }
 
         $credentials = $request->only("password");
         if ($request->filled("username")) {
-            $credentials["user_name"] = $request->username;
+            $credentials["user_name"] = $request->input("username");
         } else {
-            $credentials["email"] = $request->email;
+            $credentials["email"] = $request->input("email");
         }
 
         $result = $this->authService->login($credentials, $credentials['email'] ?? null, $credentials['user_name'] ?? null);
@@ -128,7 +131,7 @@ class ControllerAuth extends Controller {
          * @param string|null samesite - Sameamesite of cookie
          */
         $cookie = cookie("jwt", $result['token'], config('jwt.ttl'), '/', null, false, true, false, 'Lax');
-        return (new UsersResource($result['profile'], true))->response()->withCookie($cookie);
+        return (new AuthsLogin($result['profile']))->response()->withCookie($cookie);
     }
 
     /**
@@ -141,7 +144,10 @@ class ControllerAuth extends Controller {
         description: 'Logout user',
         responses: [
             new OA\Response(response: 203, ref: '#/components/responses/AuthsLogout'),
-            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500')
         ]
     )]
     public function logout(Request $request) {
@@ -167,14 +173,17 @@ class ControllerAuth extends Controller {
         description: 'Get current user',
         responses: [
             new OA\Response(response: 200, ref: '#/components/responses/AuthsMe'),
-            new OA\Response(response: 401, ref: '#/components/responses/Exception401')
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500')
         ]
     )]
     public function currentUser(Request $request) {
         try {
-            $uid = $request->user()->uuid;
-            $currentUser = $this->userService->current($uid);
-            return new UsersResource($currentUser, true);
+            $uuid = $request->user()->uuid;
+            $currentUser = $this->userService->current($uuid);
+            return new AuthsLogin($currentUser);
         } catch (Exception $e) {
             throw new AuthenticationException($e->getMessage());
         }
@@ -230,14 +239,24 @@ class ControllerAuth extends Controller {
         ]
     )]
     public function resetPassword(Request $request) {
-        $valid = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             "email"                 => "required|email",
             "password"              => "required|min:8|confirmed",
             "password_confirmation" => "required|same:password",
             "token"                 => "required|string",
+        ], [
+            "email.required"                 => "Email is required",
+            "email.email"                    => "Invalid email format",
+            "password.required"              => "Password is required",
+            "password.min"                   => "Password must be at least 8 characters",
+            "password.confirmed"             => "Password and confirmation must match",
+            "password_confirmation.required" => "Password confirmation is required",
+            "password_confirmation.same"     => "Password confirmation must match password",
+            "token.required"                 => "Token is required",
+            "token.string"                   => "Token must be a string",
         ]);
-        if ($valid->fails()) {
-            throw ValidationException::withMessages(['password' => ['required' => 'Password is required']]);
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
 
         $status = $this->authService->resetPassword($request->input('token'), $request->input('email'), $request->input('password'));

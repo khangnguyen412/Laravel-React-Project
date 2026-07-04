@@ -1,9 +1,9 @@
 /**
  * Type
  */
-export type PaginationAntType = {
+export type PaginationAnt = {
     current: number;
-    perPage: number;
+    pageSize: number;
     total?: number;
 }
 
@@ -11,7 +11,7 @@ export type PaginationAntType = {
  * Request Type
  * Send form react to laravel controller
  */
-export type PaginationRequestType = {
+export type PaginationRequest = {
     currentPage?: number;
     perPage?: number;
 }
@@ -20,7 +20,7 @@ export type PaginationRequestType = {
  * Pagination Meta Type
  * Receive from laravel controller
  */
-export type PaginationResponseType = {
+export type PaginationResponse = {
     current_page?: number;
     per_page?: number;
     total?: number;

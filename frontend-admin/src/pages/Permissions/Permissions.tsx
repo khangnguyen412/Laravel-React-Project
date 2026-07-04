@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React, { useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 /**
  * Ant Design
@@ -28,7 +29,7 @@ import AdminLayout from "@/components/Layout/AdminLayout";
  * Redux
  */
 import { useDispatch } from "react-redux";
-import { GetPermissionByIDThunk } from "@/redux/features/permission";
+import { GetPermissionByIDThunk, CreatePermissionThunk, UpdatePermissionThunk, DeletePermissionThunk } from "@/redux/features/permission";
 import type { AppDispatch } from "@/redux/store";
 
 /**
@@ -46,6 +47,7 @@ const Permissions: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
     const [form] = Form.useForm();
     const { token } = theme.useToken();
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
     /** 
@@ -53,18 +55,65 @@ const Permissions: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
      */
     const handleSave = async () => {
         const values = await form.validateFields();
-        // Simulate save operation
-        console.log('Saved permission:', values);
-        message.success('Lưu quyền hạn thành công!');
+        const permission = {
+            name: values.permissionName,
+            description: values.description,
+        };
+        try {
+            if (isUpdate) {
+                await dispatch(UpdatePermissionThunk({ ...permission, id: Number(id) })).unwrap();
+            } else {
+                await dispatch(CreatePermissionThunk(permission)).unwrap();
+            }
+            navigate('/admin/permissions');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                message.error(error.message);
+            } else {
+                message.error('Something went wrong');
+            }
+        }
+    };
+
+    /**
+     * Handle delete role 
+     */
+    const handleDelete = async () => {
+        try {
+            await dispatch(DeletePermissionThunk(Number(id))).unwrap();
+            navigate('/admin/permissions');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                message.error(error.message);
+            } else {
+                message.error('Something went wrong');
+            }
+        }
     };
 
     /** 
      * Handle temporary delete (reset form) 
      */
-    const handleTempDelete = () => {
+    const handleFormClear = () => {
         form.resetFields();
     };
 
+    const fetchPermission = useCallback(async () => {
+        if (!isUpdate || !id) return;
+        try {
+            const response = await dispatch(GetPermissionByIDThunk(Number(id))).unwrap();
+            form.setFieldsValue({
+                permissionName: response.data.name,
+                description: response.data.description,
+            });
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                message.error(error.message);
+            } else {
+                message.error('Something went wrong');
+            }
+        }
+    }, [dispatch, id, isUpdate, form]);
 
     /**
      * Page Container Config
@@ -81,24 +130,9 @@ const Permissions: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
         },
     };
 
-    const fetchPermission = useCallback(async () => {
-        if (!isUpdate || !id) return;
-        try {
-            const response = await dispatch(GetPermissionByIDThunk(Number(id))).unwrap();
-            form.setFieldsValue({
-                name: response.data.name,
-                description: response.data.description,
-                description_editor: response.data.description_editor,
-            });
-        } catch (error: unknown) {
-            if (error instanceof Error) {
-                message.error(error.message);
-            } else {
-                message.error('Something went wrong');
-            }
-        }
-    }, [dispatch, id, isUpdate, form]);
-
+    /**
+     * Fetch permission by ID
+     */
     useEffect(() => {
         fetchPermission();
     }, [fetchPermission]);
@@ -125,19 +159,30 @@ const Permissions: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
                                 {/* Permission Name */}
 
                                 <Form.Item name="permissionName"
-                                    label={<React.Fragment> <span>Permission Name </span> <Tag color="blue" style={{ fontSize: 12 }}>Required</Tag> </React.Fragment>}
+                                    label={
+                                        <Space>
+                                            <span>Permission Name </span>
+                                            <Tag color="red" style={{ fontSize: 12 }}>Required</Tag>
+                                        </Space>
+                                    }
                                     rules={[{ required: true, message: 'Permission name is required' }]}
                                     extra={
                                         <Space direction="vertical" size={2}>
                                             <Text type="secondary">Example: USER_MANAGE_CREATE</Text>
                                             <Text type="secondary">Format: MODULE_ACTION_OBJECT</Text>
                                         </Space>
-                                    } >
+                                    }>
                                     <Input placeholder="Permission Name (Example: USER_MANAGE_CREATE)" allowClear />
                                 </Form.Item>
 
                                 {/* Permission Description */}
-                                <Form.Item name="description" label="Permission Description">
+                                <Form.Item name="description"
+                                    label={
+                                        <Space>
+                                            <span>Permission Description</span>
+                                            <Tag color="red" style={{ fontSize: 12 }}>Required</Tag>
+                                        </Space>
+                                    }>
                                     <TextArea rows={4} placeholder="Permission can..." showCount maxLength={200} />
                                 </Form.Item>
                             </Form>
@@ -155,13 +200,15 @@ const Permissions: React.FC<{ isUpdate: boolean }> = ({ isUpdate = false }) => {
 
                             {/* Action buttons group */}
                             <Row gutter={[8, 8]}>
-                                <Col>
-                                    <Button danger icon={<DeleteOutlined />} onClick={handleTempDelete} >
-                                        Delete Permission
-                                    </Button>
+                                <Col span={24}>
+                                    {isUpdate ? (
+                                        <Button danger icon={<DeleteOutlined />} onClick={handleDelete} style={{ minWidth: '100%' }}>Delete Permission</Button>
+                                    ) : (
+                                        <Button danger icon={<DeleteOutlined />} onClick={handleFormClear} style={{ minWidth: '100%' }}> Clear Form </Button>
+                                    )}
                                 </Col>
-                                <Col>
-                                    <Button type="primary" icon={<SaveOutlined />} onClick={handleSave} style={{ minWidth: 120 }}>
+                                <Col span={24}>
+                                    <Button type="primary" icon={<SaveOutlined />} onClick={handleSave} style={{ minWidth: '100%' }}>
                                         Save Permission
                                     </Button>
                                 </Col>

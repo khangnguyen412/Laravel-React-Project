@@ -2,6 +2,12 @@
 
 namespace App\Services;
 
+use Exception;
+
+/**
+ * Illuminate
+ */
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\AuthenticationException;
@@ -42,8 +48,7 @@ class PermissionService implements PermissionServiceInterface {
      * @return LengthAwarePaginator
      */
     public function search(int $currentPage, int $perPage, ?string $description, ?string $name): LengthAwarePaginator {
-        $cacheKey = "permissions_page{$currentPage}_per{$perPage}_desc{$description}_name{$name}";
-        return Cache::tags(['permissions'])->remember($cacheKey, 300, fn() => $this->permissionsRepository->search($currentPage, $perPage, $description, $name));
+        return Cache::tags(['permissions'])->remember("permissions_page{$currentPage}_per{$perPage}_desc{$description}_name{$name}", 300, fn() => $this->permissionsRepository->search($currentPage, $perPage, $description, $name));
     }
 
     /**
@@ -52,8 +57,7 @@ class PermissionService implements PermissionServiceInterface {
      * @return object|null
      */
     public function searchById(string $id): ?ModelsPermissions {
-        $cacheKey = "permission_id_{$id}";
-        return Cache::tags(['permissions'])->remember($cacheKey, 300, fn() => $this->permissionsRepository->searchById($id));
+        return Cache::tags(['permissions'])->remember("permission_id_{$id}", 300, fn() => $this->permissionsRepository->searchById($id));
     }
 
     /**
@@ -62,7 +66,9 @@ class PermissionService implements PermissionServiceInterface {
      * @return bool
      */
     public function create(array $data): ?ModelsPermissions {
-        $permission = $this->permissionsRepository->create($data);
+        $permission = DB::transaction(function () use ($data) {
+            return $this->permissionsRepository->create($data);
+        });
         Cache::tags(['permissions'])->flush();
         return $permission;
     }
@@ -73,8 +79,10 @@ class PermissionService implements PermissionServiceInterface {
      * @param array data - Permission data
      * @return bool
      */
-    public function update(string $id, array $data): ?ModelsPermissions {
-        $permission = $this->permissionsRepository->update($id, $data);
+    public function update(string $id, array $data): ?bool {
+        $permission = DB::transaction(function () use ($id, $data) {
+            return $this->permissionsRepository->update($id, $data);
+        });
         Cache::tags(['permissions'])->flush();
         return $permission;
     }
@@ -85,8 +93,11 @@ class PermissionService implements PermissionServiceInterface {
      * @return bool
      */
     public function delete(string $id): bool {
-        $this->permissionsRepository->delete($id);
+        $permission = DB::transaction(function () use ($id) {
+            return $this->permissionsRepository->delete($id);
+        });
         Cache::tags(['permissions'])->flush();
-        return true;
+        return $permission;
     }
+
 }

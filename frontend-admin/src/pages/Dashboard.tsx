@@ -28,7 +28,6 @@ import '@/assets/scss/page/dashboard.scss'
  * Components
  */
 import AdminLayout from "@/components/Layout/AdminLayout";
-import { Loading } from '@/components/Loading'
 
 const onPanelChange = (value: dayjs.Dayjs, mode: string) => {
     console.log(value.format('YYYY-MM-DD'), mode);
@@ -42,7 +41,6 @@ const AdminDashboard: React.FC = () => {
     /**
      * Hook
      */
-    const loading = useSelector((state: any) => state.auth?.loading);
     const profile = useSelector((state: any) => state.auth?.data);
 
     /**
@@ -77,9 +75,8 @@ const AdminDashboard: React.FC = () => {
 
     return (
         <React.Fragment>
-            <Loading IsLoading={loading} FlexLoading={true} />
             <AdminLayout {...PageContainerConfig}>
-                <Row className="dashboard-container">
+                <Row className="dashboard-container" gutter={[24, 24]}>
                     <Col md={24} lg={12} className="dashboard-col">
                         <div className="dashboard-col-wrapper">
                             <Alert message={`You selected date: ${selectedValue?.format('YYYY-MM-DD')}`} />

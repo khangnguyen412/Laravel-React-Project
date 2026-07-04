@@ -1,14 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Auths;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UsersResource extends JsonResource {
-    public function __construct($resource, protected bool $withPermissions = false) {
-        parent::__construct($resource);
-    }
+class AuthsLogin extends JsonResource {
 
     /**
      * Transform the resource into an array.
@@ -29,12 +26,13 @@ class UsersResource extends JsonResource {
             "deleted_at"        => $this["deleted_at"],
             "created_at"        => $this["created_at"],
             "updated_at"        => $this["updated_at"],
-            "roles"             => $this->whenLoaded("roles", fn() => ([
+            "role"             => $this->whenLoaded("roles", fn() => ([
                 "id"          => $this["roles"]["id"],
                 "name"        => $this["roles"]["name"],
                 "description" => $this["roles"]["description"],
             ])),
-            'permissions'       => $this->when($this->withPermissions, $this["permissions"]),
+            'permissions'       => $this["permissions"],
         ];
     }
+
 }

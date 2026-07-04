@@ -7,8 +7,11 @@ use App\Http\Controllers\ControllerUsers;
 
 Route::prefix('/admin')->middleware(["jwt.cookie", "auth:api"])->group(function () {
     /** User */
-    Route::middleware(['auth.permission:READ_USER'])->apiResource('/users', ControllerUsers::class)->only(['index', 'show']);
-    Route::middleware(['auth.permission:CREATE_USER'])->apiResource('/users', ControllerUsers::class)->only(['store']);
-    Route::middleware(['auth.permission:UPDATE_USER'])->apiResource('/users', ControllerUsers::class)->only(['update']);
-    Route::middleware(['auth.permission:DELETE_USER'])->apiResource('/users', ControllerUsers::class)->only(['destroy']);
+    Route::middleware([
+        'index'   => 'auth.permission:READ_USER',
+        'show'    => 'auth.permission:READ_USER',
+        'store'   => 'auth.permission:CREATE_USER',
+        'update'  => 'auth.permission:UPDATE_USER',
+        'destroy' => 'auth.permission:DELETE_USER',
+    ])->apiResource('/users', ControllerUsers::class)->parameters([ 'user' => 'id',]);
 });

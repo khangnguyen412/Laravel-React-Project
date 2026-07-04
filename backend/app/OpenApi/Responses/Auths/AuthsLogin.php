@@ -9,7 +9,7 @@ use OpenApi\Attributes as OA;
     content: new OA\JsonContent(
         type: 'object',
         properties: [
-            new OA\Property(property: 'data', ref: '#/components/schemas/Users'),
+            new OA\Property(property: 'data', type: 'object', ref: '#/components/schemas/AuthSchema'),
         ]
     )
 )]

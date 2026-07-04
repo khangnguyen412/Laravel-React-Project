@@ -17,7 +17,7 @@ class DatabaseSeederUser extends Seeder {
                 'uuid'                => Str::uuid()->toString(),
                 'user_name'         => "admin",
                 'display_name'      => "Admin CMS",
-                'email'             => "admin@example.com",
+                'email'             => "admin@admin.com",
                 'email_verified_at' => now(),
                 'password'          => bcrypt('admin123'),
                 'address'           => "Lạc Long Quân",

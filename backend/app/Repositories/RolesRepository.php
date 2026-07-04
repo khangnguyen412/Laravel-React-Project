@@ -27,6 +27,18 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
     }
 
     /**
+     * Get default role id
+     * @return int|null
+     */
+    public function getDefaultRoleId(): ?int {
+        $role = $this->model->orderBy('level', 'asc')->first();
+        if (!$role) {
+            throw new ModelNotFoundException("Default role not found");
+        }
+        return $role->getAttribute('id');
+    }
+
+    /**
      * Get role list
      * @return object|null
      */
@@ -48,7 +60,11 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
      * Get role by id
      */
     public function searchById(string $id): ?ModelsRoles {
-        return $this->model->with('permissions')->find($id);
+        $role = $this->model->with('permissions')->find($id);
+        if (!$role) {
+            throw new ModelNotFoundException("Role not found");
+        }
+        return $role;
     }
 
     /**
@@ -62,7 +78,6 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
         if (filled($roleId)) {
             $query->having("roles.id", "=", $roleId);
         }
-        \Log::info($query->toSql());
         return $query->get();
     }
 
@@ -70,40 +85,37 @@ class RolesRepository extends BasesRepository implements RoleRepositoryInterface
      * Create role
      */
     public function create(string $name, string $description, array $permissions): ?ModelsRoles {
-        return DB::transaction(function () use ($name, $description, $permissions) {
-            $role = $this->model->create([
-                'name'        => $name,
-                'description' => $description,
-            ]);
-            $role->permissions()->sync($permissions);
-            return $role->load(['permissions']);
-        });
+        $role = $this->model->create([
+            'name'        => $name,
+            'description' => $description,
+        ]);
+        $role->permissions()->sync($permissions);
+        return $role->load(['permissions']);
     }
 
     /**
      * Update role
      */
-    public function update(string $id, string $name, string $description, array $permissions): ?ModelsRoles {
-        return DB::transaction(function () use ($id, $name, $description, $permissions) {
-            $role = $this->model->findOrFail($id);
-            $role->update([
-                'name'        => $name ?? $role->getAttribute('name'),
-                'description' => $description ?? $role->getAttribute('description'),
-            ]);
-            if (filled($permissions)) {
-                $role->permissions()->sync($permissions);
-            }
-            return $role->fresh()->load(['permissions']);
-        });
+    public function update(string $id, string $name, string $description, array $permissions): ?bool {
+        $role = $this->searchById($id);
+        $isUpdated = $role->update([
+            'name'        => $name ?? $role->getAttribute('name'),
+            'description' => $description ?? $role->getAttribute('description'),
+        ]);
+        if (filled($permissions)) {
+            $role->permissions()->sync($permissions);
+        }
+        return $isUpdated;
     }
 
     /**
      * Delete role
      */
     public function delete(string $id): bool {
-        return DB::transaction(
-            fn() => ($this->model->findOrFail($id)->delete())
-        );
+        $role = $this->searchById($id);
+        $role->permissions()->detach();
+        $role->delete();
+        return true;
     }
 
 }
