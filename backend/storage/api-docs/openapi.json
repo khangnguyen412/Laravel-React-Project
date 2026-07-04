@@ -27,8 +27,17 @@
                     "200": {
                         "$ref": "#/components/responses/AuthsLogin"
                     },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 }
             }
@@ -42,19 +51,20 @@
                 "description": "Logout user",
                 "operationId": "4cdd245e58e1b22a0119bd159fb8e5c1",
                 "responses": {
-<<<<<<< HEAD
                     "203": {
-=======
-<<<<<<< HEAD
-                    "200": {
-=======
-                    "203": {
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
                         "$ref": "#/components/responses/AuthsLogout"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
                     },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 }
             }
@@ -71,8 +81,17 @@
                     "200": {
                         "$ref": "#/components/responses/AuthsMe"
                     },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 }
             }
@@ -201,15 +220,7 @@
                     "$ref": "#/components/requestBodies/PermissionsCreate"
                 },
                 "responses": {
-<<<<<<< HEAD
                     "201": {
-=======
-<<<<<<< HEAD
-                    "200": {
-=======
-                    "201": {
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
                         "$ref": "#/components/responses/PermissionsCreate"
                     },
                     "400": {
@@ -248,15 +259,7 @@
                         "required": true,
                         "schema": {
                             "type": "string",
-<<<<<<< HEAD
                             "example": "1"
-=======
-<<<<<<< HEAD
-                            "example": "123456"
-=======
-                            "example": "1"
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
                         }
                     }
                 ],
@@ -348,18 +351,53 @@
                     }
                 ],
                 "responses": {
-<<<<<<< HEAD
                     "200": {
                         "$ref": "#/components/responses/PermissionsDelete"
                     },
-=======
-<<<<<<< HEAD
-=======
-                    "200": {
-                        "$ref": "#/components/responses/PermissionsDelete"
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
                     },
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Update permission",
+                "operationId": "b6a44dba2c46196446d899b39044b485",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Permission id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "123456"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/PermissionsUpdate"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/PermissionsUpdate"
+                    },
                     "400": {
                         "$ref": "#/components/responses/Exception400"
                     },
@@ -596,6 +634,50 @@
                         "bearerAuth": []
                     }
                 ]
+            },
+            "patch": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Update role",
+                "operationId": "40a46a59c75e239661f716ff71245dc9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Role id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/RolesUpdate"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/RolesUpdate"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/v1/admin/users": {
@@ -606,12 +688,43 @@
                 "summary": "Get user list",
                 "description": "Get User",
                 "operationId": "a148444ffccef37f5450d54fc6cfa160",
+                "parameters": [
+                    {
+                        "name": "perPage",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "currentPage",
+                        "in": "query",
+                        "description": "Current page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "$ref": "#/components/responses/UsersSearch"
                     },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 },
                 "security": [
@@ -642,6 +755,9 @@
                     },
                     "404": {
                         "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 },
                 "security": [
@@ -674,11 +790,145 @@
                     "200": {
                         "$ref": "#/components/responses/UsersGetById"
                     },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
                     "401": {
                         "$ref": "#/components/responses/Exception401"
                     },
                     "404": {
                         "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user",
+                "description": "Update the specified resource in storage.",
+                "operationId": "b2c77520132db6864919debd127969f7",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UsersUpdate"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UsersUpdate"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete user",
+                "description": "Remove the specified resource from storage.",
+                "operationId": "67b6086f80523ebdfb4f02b72adf053a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UsersDelete"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user",
+                "operationId": "3712a3829526fe787d977d15d2d2a9f4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UsersUpdate"
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/UsersUpdate"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Exception400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Exception401"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/Exception404"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/Exception500"
                     }
                 },
                 "security": [
@@ -840,6 +1090,91 @@
     },
     "components": {
         "schemas": {
+            "AuthSchema": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "5d1e8b2a-0a2b-4c0e-9a1b-f6b9a56a9a11"
+                    },
+                    "user_name": {
+                        "type": "string",
+                        "example": "jdoe"
+                    },
+                    "display_name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T12:00:00Z",
+                        "nullable": true
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "123 Main St"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "1234567890"
+                    },
+                    "bio": {
+                        "type": "string",
+                        "example": "A passionate developer",
+                        "nullable": true
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "example": "avatar.jpg",
+                        "nullable": true
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "role": {
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "1"
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "admin"
+                            },
+                            "description": {
+                                "type": "string",
+                                "example": "Admin Role"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "Exception": {
                 "required": [
                     "errorCode",
@@ -956,11 +1291,6 @@
                         "example": "2023-01-01T12:00:00Z",
                         "nullable": true
                     },
-                    "password": {
-                        "type": "string",
-                        "writeOnly": true,
-                        "example": "password123"
-                    },
                     "address": {
                         "type": "string",
                         "example": "123 Main St"
@@ -994,29 +1324,28 @@
                         "format": "date-time",
                         "nullable": true
                     },
-                    "role_id": {
-                        "type": "string",
-                        "example": "1"
-                    },
                     "role": {
-                        "$ref": "#/components/schemas/Roles"
-                    },
-                    "permissions": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "example": "1"
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "admin"
+                            },
+                            "description": {
+                                "type": "string",
+                                "example": "Admin Role"
+                            }
+                        },
+                        "type": "object"
                     }
                 },
                 "type": "object"
             }
         },
         "responses": {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 3e71039 (merge from dev branch)
             "AuthsForgotPassword": {
                 "description": "OK",
                 "content": {
@@ -1038,10 +1367,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
             "AuthsLogin": {
                 "description": "OK",
                 "content": {
@@ -1049,7 +1374,7 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "$ref": "#/components/schemas/Users"
+                                    "$ref": "#/components/schemas/AuthSchema"
                                 }
                             },
                             "type": "object"
@@ -1067,7 +1392,7 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "$ref": "#/components/schemas/Users"
+                                    "$ref": "#/components/schemas/AuthSchema"
                                 }
                             },
                             "type": "object"
@@ -1075,11 +1400,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 3e71039 (merge from dev branch)
             "AuthsResetPassword": {
                 "description": "OK",
                 "content": {
@@ -1101,10 +1421,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
             "Exception400": {
                 "description": "Bad Request",
                 "content": {
@@ -1165,11 +1481,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 3e71039 (merge from dev branch)
             "VnPaysIPN": {
                 "description": "OK",
                 "content": {
@@ -1195,10 +1506,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
             "PermissionsCreate": {
                 "description": "OK",
                 "content": {
@@ -1206,13 +1513,6 @@
                         "schema": {
                             "properties": {
                                 "data": {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-                                    "type": "string",
-                                    "example": "success"
-=======
->>>>>>> 3e71039 (merge from dev branch)
                                     "properties": {
                                         "message": {
                                             "type": "string",
@@ -1241,10 +1541,6 @@
                                         }
                                     },
                                     "type": "object"
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
                                 }
                             },
                             "type": "object"
@@ -1292,7 +1588,13 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "$ref": "#/components/schemas/Permissions"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -1300,12 +1602,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            "GetRolesList": {
-=======
->>>>>>> 3e71039 (merge from dev branch)
             "RolesCreate": {
                 "description": "OK",
                 "content": {
@@ -1364,10 +1660,6 @@
                 }
             },
             "RolesSearch": {
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
                 "description": "OK",
                 "content": {
                     "application/json": {
@@ -1385,11 +1677,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 3e71039 (merge from dev branch)
             "RolesUpdate": {
                 "description": "OK",
                 "content": {
@@ -1397,7 +1684,13 @@
                         "schema": {
                             "properties": {
                                 "data": {
-                                    "$ref": "#/components/schemas/Roles"
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "success"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -1405,10 +1698,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
             "UsersCreate": {
                 "description": "OK",
                 "content": {
@@ -1420,6 +1709,27 @@
                                     "items": {
                                         "$ref": "#/components/schemas/Users"
                                     }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "UsersDelete": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -1459,14 +1769,30 @@
                         }
                     }
                 }
+            },
+            "UsersUpdate": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "data": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
             }
         },
         "requestBodies": {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 3e71039 (merge from dev branch)
             "AuthsForgotPassword": {
                 "description": "User forgot password credentials, email is required",
                 "required": true,
@@ -1484,10 +1810,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
             "AuthsLogin": {
                 "description": "User login credentials, email or username is required",
                 "required": true,
@@ -1513,11 +1835,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 3e71039 (merge from dev branch)
             "AuthsResetPassword": {
                 "description": "User reset password credentials, email is required",
                 "required": true,
@@ -1547,10 +1864,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
             "PermissionsCreate": {
                 "description": "Create permission",
                 "required": true,
@@ -1559,7 +1872,7 @@
                         "schema": {
                             "required": [
                                 "name",
-                                "display_name"
+                                "description"
                             ],
                             "properties": {
                                 "name": {
@@ -1601,11 +1914,6 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 3e71039 (merge from dev branch)
             "RolesCreate": {
                 "description": "Create role",
                 "required": true,
@@ -1678,11 +1986,54 @@
                     }
                 }
             },
-<<<<<<< HEAD
-=======
->>>>>>> origin/develop
->>>>>>> 3e71039 (merge from dev branch)
             "UsersCreate": {
+                "description": "User login credentials, email or username is required",
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "required": [
+                                "user_name",
+                                "display_name",
+                                "email",
+                                "password"
+                            ],
+                            "properties": {
+                                "user_name": {
+                                    "type": "string",
+                                    "example": "admin"
+                                },
+                                "display_name": {
+                                    "type": "string",
+                                    "example": "Admin"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "example": "example@example.com"
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "example": "123456"
+                                },
+                                "address": {
+                                    "type": "string",
+                                    "example": "123 Main St"
+                                },
+                                "phone": {
+                                    "type": "string",
+                                    "example": "0987654321"
+                                },
+                                "role_id": {
+                                    "type": "integer",
+                                    "example": "1"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "UsersUpdate": {
                 "description": "User login credentials, email or username is required",
                 "required": true,
                 "content": {

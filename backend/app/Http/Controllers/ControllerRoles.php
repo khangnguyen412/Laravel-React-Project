@@ -9,6 +9,7 @@ use Exception;
  */
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
@@ -66,25 +67,23 @@ class ControllerRoles extends Controller {
         ]
     )]
     public function index(Request $request) {
-        try {
-            $validator = Validator::make($request->all(), [
-                'perPage'     => 'nullable|integer|min:1',
-                'currentPage' => 'nullable|integer|min:1',
-            ]);
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
-            $perPage = $request->input('perPage', 10);
-            $currentPage = $request->input('currentPage', 1);
-            $name = $request->input('name', null);
-            $description = $request->input('description', null);
-            $roles = $this->roleService->search($currentPage, $perPage, $name, $description);
-            return RolesSearch::collection($roles);
-        } catch (ValidationException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        $validator = Validator::make($request->all(), [
+            'perPage'     => 'nullable|integer|min:1',
+            'currentPage' => 'nullable|integer|min:1',
+        ], [
+            'perPage.min'     => 'Items per page must be at least 1',
+            'currentPage.min' => 'Current page number must be at least 1',
+        ]);
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
+
+        $perPage = $request->input('perPage', 10);
+        $currentPage = $request->input('currentPage', 1);
+        $name = $request->input('name', null);
+        $description = $request->input('description', null);
+        $roles = $this->roleService->search($currentPage, $perPage, $name, $description);
+        return RolesSearch::collection($roles);
     }
 
     /**
@@ -112,23 +111,28 @@ class ControllerRoles extends Controller {
         ]
     )]
     public function store(Request $request) {
-        try {
-            $inputs = $request->input('data', $request->all());
-            $validator = Validator::make($inputs, [
-                'name'        => 'required|string|max:255|unique:roles,name',
-                'description' => 'nullable|string|max:255',
-                'permissions' => 'nullable|array',
-            ]);
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
-            $this->roleService->create($inputs);
-            return RolesCreate::make(['message' => 'success']);
-        } catch (ValidationException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        $inputs = $request->input('data', $request->all());
+
+        $validator = Validator::make($inputs, [
+            'name'        => 'required|string|max:255|unique:roles,name',
+            'description' => 'required|string|max:255',
+            'permissions' => 'nullable|array',
+        ], [
+            'name.required'        => 'Role name is required',
+            'name.string'          => 'Role name must be a string',
+            'name.max'             => 'Role name must be less than 255 characters',
+            'name.unique'          => 'Role name already exists',
+            'description.required' => 'Role description is required',
+            'description.string'   => 'Role description must be a string',
+            'description.max'      => 'Role description must be less than 255 characters',
+            'permissions.array'    => 'Permissions must be an array',
+        ]);
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
+
+        $this->roleService->create($inputs);
+        return RolesCreate::make(['message' => 'success']);
     }
 
     /**
@@ -151,14 +155,8 @@ class ControllerRoles extends Controller {
         ]
     )]
     public function show(string $id) {
-        try {
-            $role = $this->roleService->searchById($id);
-            return RolesSearch::make($role);
-        } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException("Role not found");
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        $role = $this->roleService->searchById($id);
+        return RolesSearch::make($role);
     }
 
     /**
@@ -188,27 +186,56 @@ class ControllerRoles extends Controller {
             new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
         ]
     )]
+    #[OA\Patch(
+        path: '/api/v1/admin/roles/{id}',
+        summary: 'Update role',
+        security: [['bearerAuth' => []]],
+        tags: ['Roles'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', description: 'Role id', required: true, schema: new OA\Schema(type: 'string', example: '1')),
+        ],
+        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/RolesUpdate'),
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/RolesUpdate'),
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
+        ]
+    )]
     public function update(Request $request, string $id) {
-        try {
-            $inputs = $request->input('data', $request->all());
-            $validator = Validator::make($inputs, [
-                'name'          => 'sometimes|string|max:255',
-                'description'   => 'sometimes|string|max:255',
-                'permissions'   => 'nullable|array',
-                'permissions.*' => 'required|integer|exists:permissions,id',
-            ]);
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
-            $role = $this->roleService->update($id, $inputs);
-            return RolesSearch::make($role);
-        } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException('Role not found');
-        } catch (ValidationException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        $inputs = $request->input('data', $request->all());
+
+        $isPatch = $request->isMethod('PATCH');
+
+        $validator = Validator::make($inputs, [
+            'name'          => $isPatch ? 'sometimes|string|max:255' : 'required|string|max:255',
+            'description'   => $isPatch ? 'sometimes|string|max:255' : 'required|string|max:255',
+            'permissions'   => 'nullable|array',
+            'permissions.*' => 'required|integer|exists:permissions,id',
+        ], [
+            'name.required'         => 'Role name is required',
+            'name.string'           => 'Role name must be a string',
+            'name.max'              => 'Role name must be less than 255 characters',
+            'description.required'  => 'Role description is required',
+            'description.string'    => 'Role description must be a string',
+            'description.max'       => 'Role description must be less than 255 characters',
+            'permissions.array'     => 'Permissions must be an array',
+            'permissions.*.integer' => 'Permission must be an integer',
+            'permissions.*.exists'  => 'Permission does not exist',
+        ]);
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
+
+        $role = $this->roleService->searchById($id);
+
+        if (Gate::denies('update', $role)) {
+            throw new AuthorizationException('You do not have permission to update this role');
+        }
+
+        $role = $this->roleService->update($id, $inputs);
+        return RolesUpdate::make(['message' => 'success']);
     }
 
     /**
@@ -231,13 +258,14 @@ class ControllerRoles extends Controller {
         ]
     )]
     public function destroy(string $id) {
-        try {
-            $this->roleService->delete($id);
-            return RolesDelete::make(['message' => 'success']);
-        } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException("Role not found");
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        $role = $this->roleService->searchById($id);
+
+        if (Gate::denies('delete', $role)) {
+            throw new AuthorizationException('You do not have permission to delete this role');
         }
+
+        $this->roleService->delete($id);
+        return RolesDelete::make(['message' => 'success']);
     }
+
 }

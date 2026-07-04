@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use Exception;
 /**
  * Illuminate
  */
@@ -51,7 +52,11 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * @return object|null
      */
     public function searchById(string $id): ?ModelsPermissions {
-        return $this->model->find($id);
+        $permission = $this->model->find($id);
+        if (!$permission) {
+            throw new ModelNotFoundException('Permission not found');
+        }
+        return $permission;
     }
 
     /**
@@ -60,9 +65,8 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * @return bool
      */
     public function create(array $data): ?ModelsPermissions {
-        $result = $this->model->create($data);
-        return $result ?? null;
-
+        $permission = $this->model->create($data);
+        return $permission ?? null;
     }
 
     /**
@@ -71,23 +75,16 @@ class PermissionsRepository extends BasesRepository implements PermissionReposit
      * @param array $data
      * @return bool
      */
-    public function update(string $id, array $data): ?ModelsPermissions {
+    public function update(string $id, array $data): ?bool {
         $permission = $this->searchById($id);
-        if (!$permission) {
-            throw new ModelNotFoundException('Permission not found');
-        }
-        $permission->update($data);
-        return $permission;
+        return $permission->update($data);
     }
 
     /**
      * Delete permission
      */
-    public function delete(string $id): bool {
+    public function delete(string $id): ?bool {
         $permission = $this->searchById($id);
-        if (!$permission) {
-            throw new ModelNotFoundException('Permission not found');
-        }
         $permission->delete();
         return true;
     }

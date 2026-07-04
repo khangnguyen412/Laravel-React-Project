@@ -25,6 +25,7 @@ use App\Services\Interface\PermissionServiceInterface;
  */
 use App\Http\Resources\Permissions\PermissionsSearch;
 use App\Http\Resources\Permissions\PermissionsCreate;
+use App\Http\Resources\Permissions\PermissionsUpdate;
 use App\Http\Resources\Permissions\PermissionsDelete;
 
 #[OA\Tag(name: 'Permissions', description: 'Permission management')]
@@ -56,25 +57,23 @@ class ControllerPermissions extends Controller {
         ]
     )]
     public function index(Request $request) {
-        try {
-            $validator = Validator::make($request->all(), [
-                'perPage'     => 'nullable|integer|min:1',
-                'currentPage' => 'nullable|integer|min:1',
-            ]);
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
-            $currentPage = $request->input('currentPage', 1);
-            $perPage = $request->input('perPage', 10);
-            $description = $request->input('description', null);
-            $name = $request->input('name', null);
-            $permissions = $this->permissionService->search($currentPage, $perPage, $description, $name);
-            return PermissionsSearch::collection($permissions);
-        } catch (ValidationException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        $validator = Validator::make($request->all(), [
+            'perPage'     => 'nullable|integer|min:1',
+            'currentPage' => 'nullable|integer|min:1',
+        ], [
+            'perPage.min'     => 'Items per page must be at least 1',
+            'currentPage.min' => 'Current page number must be at least 1',
+        ]);
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
+
+        $currentPage = $request->input('currentPage', 1);
+        $perPage = $request->input('perPage', 10);
+        $description = $request->input('description', null);
+        $name = $request->input('name', null);
+        $permissions = $this->permissionService->search($currentPage, $perPage, $description, $name);
+        return PermissionsSearch::collection($permissions);
     }
 
     /**
@@ -102,22 +101,26 @@ class ControllerPermissions extends Controller {
         ]
     )]
     public function store(Request $request) {
-        try {
-            $inputs = $request->input('data', $request->all());
-            $validator = Validator::make($inputs, [
-                'name'        => 'required|string|max:255|unique:permissions,name',
-                'description' => 'nullable|string|max:255',
-            ]);
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
-            $this->permissionService->create($inputs);
-            return PermissionsCreate::make(['message' => 'success']);
-        } catch (ValidationException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        $inputs = $request->input('data', $request->all());
+
+        $validator = Validator::make($inputs, [
+            'name'        => 'required|string|max:255|unique:permissions,name',
+            'description' => 'required|string|max:255',
+        ], [
+            'name.required'        => 'Permission name is required',
+            'name.string'          => 'Permission name must be a string',
+            'name.max'             => 'Permission name must be less than 255 characters',
+            'name.unique'          => 'Permission name already exists',
+            'description.required' => 'Permission description is required',
+            'description.string'   => 'Permission description must be a string',
+            'description.max'      => 'Permission description must be less than 255 characters',
+        ]);
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
         }
+
+        $this->permissionService->create($inputs);
+        return PermissionsCreate::make(['message' => 'success']);
     }
 
     /**
@@ -140,17 +143,8 @@ class ControllerPermissions extends Controller {
         ]
     )]
     public function show(string $id) {
-        try {
-            $permission = $this->permissionService->searchById($id);
-            if (!$permission) {
-                throw new ModelNotFoundException('Permission not found');
-            }
-            return PermissionsSearch::make($permission);
-        } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException($e->getMessage());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        $permission = $this->permissionService->searchById($id);
+        return PermissionsSearch::make($permission);
     }
 
     /**
@@ -180,26 +174,48 @@ class ControllerPermissions extends Controller {
             new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
         ]
     )]
+    #[OA\Patch(
+        path: '/api/v1/admin/permissions/{id}',
+        summary: 'Update permission',
+        security: [['bearerAuth' => []]],
+        tags: ['Permissions'],
+        parameters: [
+            new OA\Parameter(name: 'id', in: 'path', description: 'Permission id', required: true, schema: new OA\Schema(type: 'string', example: '123456')),
+        ],
+        requestBody: new OA\RequestBody(ref: '#/components/requestBodies/PermissionsUpdate'),
+        responses: [
+            new OA\Response(response: 200, ref: '#/components/responses/PermissionsUpdate'),
+            new OA\Response(response: 400, ref: '#/components/responses/Exception400'),
+            new OA\Response(response: 401, ref: '#/components/responses/Exception401'),
+            new OA\Response(response: 404, ref: '#/components/responses/Exception404'),
+            new OA\Response(response: 500, ref: '#/components/responses/Exception500'),
+        ]
+    )]
     public function update(Request $request, string $id) {
-        try {
-            $inputs = $request->input('data', $request->all());
-            if (!$id) {
-                throw new ModelNotFoundException('Permission not found');
-            }
-            $validator = Validator::make($inputs, [
-                'name'        => 'sometimes|string|max:255',
-                'description' => 'nullable|string|max:255',
-            ]);
-            if ($validator->fails()) {
-                throw new ValidationException($validator);
-            }
-            $permission = $this->permissionService->update($id, $inputs);
-            return PermissionsSearch::make($permission);
-        } catch (ValidationException $e) {
-            throw $e;
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        $inputs = $request->input('data', $request->all());
+        if (!$id) {
+            throw new ModelNotFoundException('Permission not found');
         }
+
+        $isPatch = $request->isMethod('PATCH');
+
+        $validator = Validator::make($inputs, [
+            'name'        => $isPatch ? 'sometimes|string|max:255' : 'required|string|max:255',
+            'description' => $isPatch ? 'sometimes|nullable|string|max:255' : 'sometimes|nullable|string|max:255',
+        ], [
+            'name.required'        => 'Permission name is required',
+            'name.string'          => 'Permission name must be a string',
+            'name.max'             => 'Permission name must be less than 255 characters',
+            'description.required' => 'Permission description is required',
+            'description.string'   => 'Permission description must be a string',
+            'description.max'      => 'Permission description must be less than 255 characters',
+        ]);
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+
+        $permission = $this->permissionService->update($id, $inputs);
+        return PermissionsUpdate::make(['message' => 'success']);
     }
 
     /**
@@ -222,14 +238,8 @@ class ControllerPermissions extends Controller {
         ]
     )]
     public function destroy(string $id) {
-        try {
-            $this->permissionService->delete($id);
-            return PermissionsDelete::make(['message' => 'success']);
-        } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException($e->getMessage());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        $this->permissionService->delete($id);
+        return PermissionsDelete::make(['message' => 'success']);
     }
 
 }

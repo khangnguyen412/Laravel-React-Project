@@ -7,15 +7,17 @@ use Exception;
 /**
  * Illuminate Package
  */
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
+
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -49,13 +51,13 @@ class RoleService implements RoleServiceInterface {
      * @return LengthAwarePaginator
      */
     public function search(int $currentPage, int $perPage, ?string $name, ?string $description): ?LengthAwarePaginator {
-        $key = "role_search_{$currentPage}_{$perPage}_{$name}_{$description}";
-        $cacheKey = 300;
-        $roles = $this->rolesRepository->search($currentPage, $perPage, $name, $description);
-        $roles->each(function ($role) {
-            $role->userCount = $this->countUserById($role->id)->count();
+        return Cache::tags('roles')->remember("role_search_{$currentPage}_{$perPage}_{$name}_{$description}", 300, function () use ($currentPage, $perPage, $name, $description) {
+            $roles = $this->rolesRepository->search($currentPage, $perPage, $name, $description);
+            $roles->each(function ($role) {
+                $role->userCount = $this->countUserById($role->id)->count();
+            });
+            return $roles;
         });
-        return Cache::tags('roles')->remember($key, $cacheKey, fn() => ($roles));
     }
 
     /**
@@ -64,9 +66,7 @@ class RoleService implements RoleServiceInterface {
      * @return ModelsRoles|null - Role profile or null
      */
     public function searchById(string $id): ?ModelsRoles {
-        $key = "role_search_by_id_{$id}";
-        $cacheKey = 300;
-        return Cache::tags('roles')->remember($key, $cacheKey, fn() => ($this->rolesRepository->searchById($id)));
+        return Cache::tags('roles')->remember("role_search_by_id_{$id}", 300, fn() => $this->rolesRepository->searchById($id));
     }
 
     /**
@@ -84,7 +84,9 @@ class RoleService implements RoleServiceInterface {
      * @return object|null - Role profile or null
      */
     public function create(array $data): ?object {
-        $role = $this->rolesRepository->create($data['name'], $data['description'], $data['permissions']);
+        $role = DB::transaction(function () use ($data) {
+            return $this->rolesRepository->create($data['name'], $data['description'], $data['permissions']);
+        });
         Cache::tags('roles')->flush();
         return $role;
     }
@@ -93,12 +95,15 @@ class RoleService implements RoleServiceInterface {
      * Update role
      * @param string $id - Role id
      * @param array $data - Role data
-     * @return object|null - Role profile or null
+     * @return bool|null - Is updated or null
      */
-    public function update(string $id, array $data): ?object {
-        $role = $this->rolesRepository->update($id, $data['name'], $data['description'], $data['permissions']);
+    public function update(string $id, array $data): ?bool {
+        $role = DB::transaction(function () use ($id, $data) {
+            return $this->rolesRepository->update($id, $data['name'], $data['description'], $data['permissions']);
+        });
         Cache::tags('roles')->flush();
         return $role;
+
     }
 
     /**
@@ -107,9 +112,11 @@ class RoleService implements RoleServiceInterface {
      * @return bool
      */
     public function delete(string $id): bool {
-        $this->rolesRepository->delete($id);
+        $role = DB::transaction(function () use ($id) {
+            return $this->rolesRepository->delete($id);
+        });
         Cache::tags('roles')->flush();
-        return true;
+        return $role;
     }
 
 }

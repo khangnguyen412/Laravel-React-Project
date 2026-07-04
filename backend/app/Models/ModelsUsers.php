@@ -22,7 +22,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class ModelsUsers extends Authenticatable implements JWTSubject {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, CanResetPassword;
+    use HasFactory, Notifiable, CanResetPassword, HasUuids;
     protected $table = "users";
     protected $primaryKey = "uuid";
     protected $keyType = 'string';

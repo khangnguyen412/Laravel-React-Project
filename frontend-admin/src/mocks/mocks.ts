@@ -12,7 +12,7 @@ import { API } from '@/api/axios';
 /**
  * Mock Permission API
  */
-import { mockGetPermissionByID } from './permission/permission.mocks';
+// import { mockGetPermissionByID } from './permission/permission.mocks';
 
 export const setupMockServer = () => {
     const mock = new AxiosMockAdapter(API, { delayResponse: 400 });
@@ -20,7 +20,7 @@ export const setupMockServer = () => {
     /**
      * Mock API
      */
-    mockGetPermissionByID(mock);
+    // mockGetPermissionByID(mock);
 
     mock.onAny().passThrough();
 }

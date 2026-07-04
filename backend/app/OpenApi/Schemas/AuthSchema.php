@@ -3,8 +3,8 @@ namespace App\OpenApi\Schemas;
 
 use OpenApi\Attributes as OA;
 
-#[OA\Schema(schema: 'Users')]
-final class UserSchema {
+#[OA\Schema(schema: 'AuthSchema')]
+final class AuthSchema {
     #[OA\Property(property: 'id', type: 'string', format: 'uuid', example: '5d1e8b2a-0a2b-4c0e-9a1b-f6b9a56a9a11')]
     #[OA\Property(property: 'user_name', type: 'string', example: 'jdoe')]
     #[OA\Property(property: 'display_name', type: 'string', example: 'John Doe')]
@@ -22,5 +22,6 @@ final class UserSchema {
         new OA\Property(property: 'name', type: 'string', example: 'admin'),
         new OA\Property(property: 'description', type: 'string', example: 'Admin Role'),
     ])]
+    #[OA\Property(property: 'permissions', type: 'array', items: new OA\Items(type: 'string'))]
     public array $dummy = [];
 }

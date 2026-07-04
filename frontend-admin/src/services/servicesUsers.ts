@@ -1,15 +1,23 @@
 /* eslint-disable */
+/**
+ * axios
+ */
 import { getRequest } from '../api/axios';
 
-export const GetUserListAdmin = async (): Promise<any> => {
+/**
+ * Type
+ */
+import type { UsersSearchRequest } from '@/types/admin/users.type';
+
+export const GetUser = async (params: UsersSearchRequest): Promise<any> => {
     try {
-        return await getRequest('/admin/users', { withCredentials: true });
+        return await getRequest('/admin/users', { withCredentials: true, params: params });
     } catch (error) {
         throw error
     }
 }
 
-export const GetUserIDAdmin = async (id?: string): Promise<any> => {
+export const GetUserByID = async (id?: string): Promise<any> => {
     try {
         return await getRequest(`/admin/users/${id}`, { withCredentials: true });
     } catch (error) {

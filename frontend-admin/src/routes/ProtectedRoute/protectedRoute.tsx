@@ -13,12 +13,16 @@ import { CheckAuthThunk } from "@/redux/features/auth";
  * Hook
  */
 import { usePermission } from "@/hooks/usePermission";
-import { useRoles } from "@/hooks/useRole";
+import { useRoles } from "@/hooks/useRole"; 
 
 /**
  * Component
  */
-import { Loading } from "@/components/Loading";
+
+/**
+ * Style
+ */
+import "@/assets/scss/loading.scss";
 
 /**
  * Type
@@ -48,18 +52,28 @@ export const ProtectedRoute = ({ children, requiredPermission, requiredRole }: {
     }, [dispatch])
 
     if (!checked) {
-        return <Loading IsLoading={true} />;
+        return (
+            <div className="flex-loading flex-col flex-col-fixed" >
+                <div className="wrap-loader--background">
+                    <div className="loader">
+                        <div className="inner one"></div>
+                        <div className="inner two"></div>
+                        <div className="inner three"></div>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     if (!authenticated) {
         return <Navigate to="/login" replace />
     }
 
-    if (requiredPermission && !hasPermission(requiredPermission)) {
+    if (requiredRole && !hasRole(requiredRole)) {
         return <Navigate to="/403" replace />;
     }
 
-    if (requiredRole && !hasRole(requiredRole)) {
+    if (requiredPermission && !hasPermission(requiredPermission)) {
         return <Navigate to="/403" replace />;
     }
 

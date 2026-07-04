@@ -4,9 +4,10 @@ namespace App\Repositories\Interface;
 interface UserRepositoryInterface {
     /**
      * Get user list
+     * @param array $filter - Search params
      * @return object|null
      */
-    public function search(): ?object;
+    public function search(array $filter): ?object;
 
     /**
      * Find user by email or username
@@ -15,6 +16,13 @@ interface UserRepositoryInterface {
      * @return object|null
      */
     public function getByEmailOrUserName(?string $email, ?string $username): ?object;
+
+    /**
+     * Find user by uuid
+     * @param string $uuid - User uuid
+     * @return object|null
+     */
+    public function getByUuid(string $uuid): ?object;
 
     /**
      * Find user by email
@@ -38,9 +46,12 @@ interface UserRepositoryInterface {
     public function create(array $data): ?object;
 
     /**
-     * 
+     * Update user
+     * @param string $uuid
+     * @param array $data
+     * @return bool|null
      */
-    public function update(string $uuid, array $data): ?object;
+    public function update(string $uuid, array $data): ?bool;
 
     /**
      * Update user password
@@ -48,7 +59,7 @@ interface UserRepositoryInterface {
      * @param string $password
      * @return bool|null
      */
-    public function updatePassword(string $email, string $password): ?int;
+    public function updatePassword(string $email, string $password): ?bool;
 
     /**
      * Delete user

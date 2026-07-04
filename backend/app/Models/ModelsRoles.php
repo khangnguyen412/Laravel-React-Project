@@ -12,6 +12,7 @@ class ModelsRoles extends Model {
     protected $fillable = [
         "name",
         "description",
+        "level",
         "created_at",
         "updated_at",
     ];

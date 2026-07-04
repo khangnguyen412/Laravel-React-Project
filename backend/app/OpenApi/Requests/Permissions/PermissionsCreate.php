@@ -9,7 +9,7 @@ use OpenApi\Attributes as OA;
     description: 'Create permission',
     content: new OA\JsonContent(
         type: 'object',
-        required: ['name', 'display_name'],
+        required: ['name', 'description'],
         properties: [
             new OA\Property(property: 'name', type: 'string', example: 'CREATE_PERMISSION'),
             new OA\Property(property: 'description', type: 'string', example: 'Create Permission'),

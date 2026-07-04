@@ -14,6 +14,12 @@ use App\Models\ModelsRoles;
 
 interface RoleRepositoryInterface extends BaseRepositoryInterface {
     /**
+     * Function get default role id
+     * @return int|null
+     */
+    public function getDefaultRoleId(): ?int;
+
+    /**
      * Function search role list
      * @param int $currentPage
      * @param int $perPage
@@ -47,7 +53,7 @@ interface RoleRepositoryInterface extends BaseRepositoryInterface {
     /**
      * Function update role
      */
-    public function update(string $id, string $name, string $description, array $permissions): ?ModelsRoles;
+    public function update(string $id, string $name, string $description, array $permissions): ?bool;
 
     /**
      * Function delete role

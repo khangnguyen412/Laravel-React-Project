@@ -50,7 +50,7 @@ interface RoleServiceInterface {
      * @param array $data - Role data
      * @return object|null - Role profile or null
      */
-    public function update(string $id, array $data): ?object;
+    public function update(string $id, array $data): ?bool;
 
     /**
      * Delete role

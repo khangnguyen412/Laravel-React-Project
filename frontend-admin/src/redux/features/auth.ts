@@ -135,6 +135,10 @@ const AuthSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+
+        /**
+         * Check Auth
+         */
         builder.addCase(CheckAuthThunk.fulfilled, (state) => {
             state.checked = true;
             state.authenticated = true;
@@ -143,6 +147,10 @@ const AuthSlice = createSlice({
             state.checked = true;
             state.authenticated = false;
         })
+
+        /**
+         * Get Profile
+         */
         builder.addCase(GetProfileThunk.pending, (state) => {
             state.loading = true;
         })
@@ -150,12 +158,20 @@ const AuthSlice = createSlice({
             state.loading = false;
             state.data = action.payload?.data;
         })
+
+        /**
+         * Logout
+         */
         builder.addCase(LogoutThunk.fulfilled, (state) => {
             state.data = undefined;
         })
         builder.addCase(LogoutThunk.rejected, (state, action) => {
             state.error = action.payload?.errors;
         })
+
+        /**
+         * Login
+         */
         builder.addCase(LoginThunk.pending, (state) => {
             state.loading = true;
         })
@@ -167,6 +183,13 @@ const AuthSlice = createSlice({
             state.loading = false;
             state.error = action.payload?.errors;
         });
+
+        /**
+         * Forgot Password
+         */
+        builder.addCase(ForgotPasswordThunk.pending, (state) => {
+            state.loading = true;
+        })
         builder.addCase(ForgotPasswordThunk.fulfilled, (state, action) => {
             state.loading = false;
             state.message = action.payload?.data?.message;
@@ -175,11 +198,18 @@ const AuthSlice = createSlice({
             state.loading = false;
             state.error = action.payload?.errors;
         })
+
+        /**
+         * Reset Password
+         */
+        builder.addCase(ResetPasswordThunk.pending, (state) => {
+            state.loading = true;
+        })
         builder.addCase(ResetPasswordThunk.fulfilled, (state, action) => {
             state.loading = false;
             state.message = action.payload?.data?.message;
         })
-        builder.addCase(ResetPasswordThunk.rejected, (state, action) => {   
+        builder.addCase(ResetPasswordThunk.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload?.errors;
         })

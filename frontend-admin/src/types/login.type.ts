@@ -5,5 +5,5 @@ export type LoginType = {
     username?: string;
     password?: string;
     permissions?: string[];
-    roles?: Role;
+    role?: Role;
 }
